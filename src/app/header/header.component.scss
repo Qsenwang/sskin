@@ -1,0 +1,65 @@
+@import '../../styles.scss';
+.navbar-light {
+  background-color: $color-theme !important;
+}
+
+.nav-link {
+  color: $color-grey3;
+  font-family: Verdana, Helvetica, sans-serif;
+}
+@media screen and (min-width: 992px){
+
+  .navbar {
+    padding-bottom: 0;
+    height: 150px;
+    align-items: end;
+  }
+
+  .navbar-light {
+    background-color: $color-theme !important;
+  }
+  .navbar-brand {
+    margin-bottom: 20px;
+  }
+  .navbar-nav {
+    width: 90%;
+    margin-left: 20px;
+  }
+  .nav-item {
+    text-align: center;
+    width: 204px;
+    font-size: 24px;
+    border-right: $color-grey3 2px solid;
+  }
+
+  .nav-link {
+    font-size: 24px;
+  }
+  .active {
+    background-color: $color-selected;
+  }
+
+  .nav-item:hover:not(.active) {
+    background-color: $color-grey3;
+  }
+}
+
+@media screen and (max-width: 991px){
+
+  .navbar-brand {
+    margin-bottom: 20px;
+  }
+
+  .nav-item {
+    text-align:center;
+    font-size: large;
+  }
+
+  .active {
+    background-color: $color-selected;
+  }
+
+  .nav-item:hover:not(.active) {
+    background-color: $color-grey3;
+  }
+}

@@ -1,0 +1,82 @@
+@import '../../styles.scss';
+
+.scheduler {
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  padding: 50px;
+  margin: 10px;
+}
+//80px left + 160px wid
+.timeline{
+  margin-left: 100px;
+  display: flex;
+  flex-direction: row;
+}
+
+.no-cursor {
+  user-select: none;
+  cursor: pointer; /* 添加 pointer 光标，使用户知道该元素是可点击的 */
+}
+
+.time-slot {
+  flex-grow: 1;
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+  box-sizing:border-box;;
+  min-width: 150px;
+  max-width: 150px;
+}
+.task-board-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.board-test {
+  position: relative;
+}
+
+
+.employee-task-board {
+  display: flex;
+  flex-direction: row;
+}
+.employee-name {
+  border: 1px solid #ccc;
+  border-top: 0;
+  min-width: 120px;
+  display: grid;
+  place-items: center;
+}
+
+
+.board-cell-grid {
+  display: flex;
+  flex-direction: row;
+}
+
+.cell {
+  border: 1px solid #ccc;
+  border-top: 0;
+  width: 75px;
+  height: 50px;
+}
+
+spaceOccupy {
+
+}
+appointment:hover {
+  cursor : pointer;
+}
+
+.appointment {
+  position: absolute;
+  top:0;
+  border: 1px solid #ccc;
+  height: 50px;
+  background-color:$color-selected ;
+  z-index: 999;
+  min-width: 30px;
+}
