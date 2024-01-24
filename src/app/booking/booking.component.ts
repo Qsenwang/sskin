@@ -2,6 +2,12 @@ import { Component } from '@angular/core';
 import {BrowserModule} from "@angular/platform-browser";
 import {CommonModule} from "@angular/common";
 import {left} from "@popperjs/core";
+import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+import {AppointmentDialogComponent} from "./appointment-dialog/appointment-dialog.component";
+import {Appointment, employeeTask} from "@shared/sskinModel/booking.model"
+import {FormBuilder, FormGroup} from "@angular/forms";
+import {BookingService} from "./booking.service";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 interface TimeSlot {
   time: string;
@@ -9,36 +15,29 @@ interface TimeSlot {
 interface gridCell {
   emptyContent: string;
 }
-interface Employee {
-  id: number;
-  name: string;
-  appointments: Appointment[];
-}
-interface Appointment {
-  startTime: string;
-  endTime: string;
-  overLap:boolean;
-  layer:number;
-}
+
 @Component({
   selector: 'app-booking',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,MatDialogModule],
+  providers:[BookingService],
   templateUrl: './booking.component.html',
   styleUrl: './booking.component.scss'
 })
 export class BookingComponent {
-  //test data
-  employees: Employee[] = [
-    { id: 1, name: 'Employee 1', appointments: [{ startTime: '11:00', endTime: '13:00', overLap:true, layer: 0 },{ startTime: '12:15', endTime: '13:00', overLap:true, layer: 1 },{ startTime: '13:25', endTime: '15:30',overLap:false, layer: 0 }] },
-    { id: 1, name: 'Employee 1', appointments: [{ startTime: '11:00', endTime: '13:00', overLap:true, layer: 0 },{ startTime: '12:15', endTime: '13:00', overLap:true, layer: 1 },{ startTime: '13:25', endTime: '15:30',overLap:false, layer: 2 }] },
-  ];
-
 
   timeSlots: TimeSlot[] = this.generateTimeSlots();
   gridMatrix:gridCell[] = this.generateGrid();
-  startTime: Number=10;
-  endTime: Number=19;
+  staffTasks:employeeTask[];
+  constructor(public dialog: MatDialog, private bookingService:BookingService) {
+    this.staffTasks = this.bookingService.getAllEmployeeTasks()
+  }
+  //test data
+
+  ngOnInit() {
+
+  }
+
   generateTimeSlots(): TimeSlot[] {
     const timeSlots: TimeSlot[] = [];
     for (let i = 10; i < 20; i++) {
@@ -62,12 +61,41 @@ export class BookingComponent {
     return matrix;
   }
 
-  addAppointment(employee:Employee) {
-    employee.appointments.push({startTime: '10:00', endTime: '10:19', overLap:false, layer: 0})
+  addAppointment(employeeId:string) {
+
+    const appointmentEditDialog = this.dialog.open(AppointmentDialogComponent,
+      {
+        width:"900px",
+        height:"600px",
+        panelClass:"customAppointment",
+        disableClose:true,
+        data:{
+          mode: "new",
+          employeeId : employeeId,
+          appointment : null
+        }
+      })
+    appointmentEditDialog.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
-  editAppointment(appointment: Appointment){
-    //todo mnodalDialog
+  editAppointment(employeeId: string, appointment: Appointment){
+      const appointmentEditDialog = this.dialog.open(AppointmentDialogComponent,
+        {
+          width:"900px",
+          height:"600px",
+          panelClass:"customAppointment",
+          disableClose:true,
+          data:{
+            mode:"edit",
+            employeeId : employeeId,
+            appointment : appointment,
+          }
+        })
+    appointmentEditDialog.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
   calculateHeight(appointments: Appointment[]):any {
@@ -102,5 +130,6 @@ export class BookingComponent {
       width: `${width}px`
     };
   }
+
 
 }
