@@ -7,7 +7,7 @@ import {AppointmentDialogComponent} from "./appointment-dialog/appointment-dialo
 import {Appointment, employeeTask} from "@shared/sskinModel/booking.model"
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {BookingService} from "./booking.service";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {BrowserAnimationsModule, provideAnimations} from "@angular/platform-browser/animations";
 
 interface TimeSlot {
   time: string;

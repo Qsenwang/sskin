@@ -20,6 +20,7 @@ import {MatOption, MatSelect} from "@angular/material/select";
   selector: 'app-appointment-dialog',
   standalone: true,
   imports: [
+    CommonModule,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
@@ -40,12 +41,8 @@ import {MatOption, MatSelect} from "@angular/material/select";
 export class AppointmentDialogComponent {
 
   appointmentFrm : FormGroup = this.initFrm()
-  treatmentItems: TreatMentItem [] =[
-    {id:"11",name: 't11'},
-    {id:"2",name: 't2'},
-    {id:"3",name: 't3'}
-  ]
-
+  treatmentItems: string [] =["t1", "t2","t3"]
+  selectedItem : any;
   constructor(
     public dialogRef: MatDialogRef<AppointmentDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {mode: string, employeeId: string, appointment:Appointment},
@@ -60,7 +57,7 @@ export class AppointmentDialogComponent {
         {
           name: this.fb.control(undefined),
           phone: this.fb.control(undefined),
-          treatmentItem: this.fb.control(undefined),
+          serviceName: this.fb.control(undefined),
           startTime: this.fb.control(undefined),
           endTime: this.fb.control(undefined),
           type: this.fb.control(undefined),
@@ -74,20 +71,22 @@ export class AppointmentDialogComponent {
       return this.fb.group(
         {
           employeeId: this.fb.control(this.data.employeeId),
-          name: this.fb.control(this.data.appointment.name),
-          phone: this.fb.control(this.data.appointment.phone),
-          treatmentItem: this.fb.control(this.data.appointment.treatmentItem),
-          startTime: this.fb.control(this.data.appointment.startTime),
-          endTime: this.fb.control(this.data.appointment.endTime),
-          type: this.fb.control(this.data.appointment.type),
-          price: this.fb.control(this.data.appointment.price),
-          paymentMethod: this.fb.control(this.data.appointment.paymentMethod),
-          employeeBonus: this.fb.control(this.data.appointment.employeeBonus)
+          name: this.fb.control(this.data.appointment?.name),
+          phone: this.fb.control(this.data.appointment?.phone),
+          serviceName: this.fb.control(this.data.appointment?.serviceName),
+          startTime: this.fb.control(this.data.appointment?.startTime),
+          endTime: this.fb.control(this.data.appointment?.endTime),
+          type: this.fb.control(this.data.appointment?.type),
+          price: this.fb.control(this.data.appointment?.price),
+          paymentMethod: this.fb.control(this.data.appointment?.paymentMethod),
+          employeeBonus: this.fb.control(this.data.appointment?.employeeBonus)
         })
     }
-    return this.appointmentFrm;
+  return this.appointmentFrm;
   }
 
+  ngOnInit(){
+  }
   updateAppointment() {
     this.bookingService.updateTask(this.appointmentFrm)
   }

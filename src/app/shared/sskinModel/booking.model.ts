@@ -7,7 +7,7 @@
   export interface Appointment {
     name: string,
     phone: string,
-    treatmentItem: TreatMentItem,
+    serviceName: string,
     startTime: string;
     endTime: string;
     type: string,
