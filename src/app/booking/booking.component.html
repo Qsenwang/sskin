@@ -1,3 +1,11 @@
+<mat-form-field>
+  <mat-label>Angular forms</mat-label>
+  <input matInput [matDatepicker]="picker1" [formControl]="selectedDateControl">
+  <mat-hint>MM/DD/YYYY</mat-hint>
+  <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+  <mat-datepicker #picker1></mat-datepicker>
+</mat-form-field>
+
 <div class="scheduler">
   <div class="timeline">
     <div *ngFor="let timeSlot of timeSlots" class="time-slot">
@@ -15,8 +23,8 @@
         </div>
       </div>
       <div *ngFor="let appointment of employeeTask.appointments" class="appointment no-cursor"
-           (click)="editAppointment(employeeTask.employeeId, appointment)"
-           [ngStyle]="calculateAppointmentStyle(appointment)"> {{appointment.name}}
+           (click)="editAppointment(employeeTask.employeeId, appointment.appointmentId)"
+           [ngStyle]="calculateAppointmentStyle(appointment)"> {{appointment.customerName}}
       </div>
     </div>
 

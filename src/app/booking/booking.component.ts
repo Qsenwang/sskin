@@ -1,13 +1,17 @@
-import { Component } from '@angular/core';
-import {BrowserModule} from "@angular/platform-browser";
+import {Component, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
-import {left} from "@popperjs/core";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {AppointmentDialogComponent} from "./appointment-dialog/appointment-dialog.component";
-import {Appointment, employeeTask} from "@shared/sskinModel/booking.model"
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {AppointmentBaseDto, AppointmentDetailDto, staffDailyTaskDto} from "@shared/sskinModel/booking.model"
 import {BookingService} from "./booking.service";
-import {BrowserAnimationsModule, provideAnimations} from "@angular/platform-browser/animations";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {Observable, Subscription} from "rxjs";
+import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ApiService} from "@shared/api/api.service";
+import {RouterLink, RouterLinkActive} from "@angular/router";
+import {MatNativeDateModule} from "@angular/material/core";
 
 interface TimeSlot {
   time: string;
@@ -19,23 +23,42 @@ interface gridCell {
 @Component({
   selector: 'app-booking',
   standalone: true,
-  imports: [CommonModule,MatDialogModule],
-  providers:[BookingService],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,
+    FormsModule
+  ],
+  providers:[BookingService, MatDatepickerModule, MatNativeDateModule ],
   templateUrl: './booking.component.html',
   styleUrl: './booking.component.scss'
 })
-export class BookingComponent {
+export class BookingComponent implements OnInit {
 
-  timeSlots: TimeSlot[] = this.generateTimeSlots();
-  gridMatrix:gridCell[] = this.generateGrid();
-  staffTasks:employeeTask[];
-  constructor(public dialog: MatDialog, private bookingService:BookingService) {
-    this.staffTasks = this.bookingService.getAllEmployeeTasks()
-  }
-  //test data
+  timeSlots = this.generateTimeSlots();
+  gridMatrix= this.generateGrid()
 
-  ngOnInit() {
+  selectedDateControl = new FormControl(new Date());
+  staffTasks: Observable<staffDailyTaskDto[]> | any;
+  _subscriptions : Subscription = new Subscription()
+  constructor(public dialog: MatDialog, private bookingService:BookingService) {}
 
+  ngOnInit(){
+    this._subscriptions.add(
+      this.selectedDateControl.valueChanges.subscribe((newDate) => {
+          if(newDate !== null){
+            this.bookingService.getAllEmployeeTasks(newDate.toISOString())
+              .subscribe({
+                next: (data) => {this.staffTasks = data},
+                error: (error)=> {console.error(error)}
+              })
+          }
+      })
+    )
   }
 
   generateTimeSlots(): TimeSlot[] {
@@ -48,6 +71,7 @@ export class BookingComponent {
         timeSlots.push({ time });
       }
     }
+    console.warn("var init")
     return timeSlots;
   }
   generateGrid() : gridCell[] {
@@ -68,11 +92,10 @@ export class BookingComponent {
         width:"900px",
         height:"600px",
         panelClass:"customAppointment",
-        disableClose:true,
+        // disableClose:true,
         data:{
-          mode: "new",
           employeeId : employeeId,
-          appointment : null
+          appointmentId : null
         }
       })
     appointmentEditDialog.afterClosed().subscribe(result => {
@@ -80,17 +103,16 @@ export class BookingComponent {
     });
   }
 
-  editAppointment(employeeId: string, appointment: Appointment){
+  editAppointment(employeeId: string, appointmentId: string){
       const appointmentEditDialog = this.dialog.open(AppointmentDialogComponent,
         {
           width:"900px",
           height:"600px",
           panelClass:"customAppointment",
-          disableClose:true,
+          // disableClose:true,
           data:{
-            mode:"edit",
             employeeId : employeeId,
-            appointment : appointment,
+            appointmentId : appointmentId,
           }
         })
     appointmentEditDialog.afterClosed().subscribe(result => {
@@ -98,7 +120,7 @@ export class BookingComponent {
     });
   }
 
-  calculateHeight(appointments: Appointment[]):any {
+  calculateHeight(appointments: AppointmentBaseDto[]):any {
     let maxLayer:number   = 0;
     appointments.forEach((a) =>{
         if(a.layer > maxLayer){
@@ -110,7 +132,7 @@ export class BookingComponent {
       height:`${finalHeight}px`,
     }
   }
-  calculateAppointmentStyle(appointment: Appointment): any {
+  calculateAppointmentStyle(appointment: AppointmentBaseDto): any {
 
     //employee name 120px, timeSlot 30min->75px
     const startTime = appointment.startTime.split(':').map(Number);

@@ -1,25 +1,35 @@
 
-  export interface employeeTask {
+  export interface staffDailyTaskDto {
     employeeId: string;
     employeeName: string;
-    appointments: Appointment[];
+    appointments: AppointmentBaseDto[];
   }
-  export interface Appointment {
-    name: string,
-    phone: string,
+
+  export interface AppointmentBaseDto {
+    appointmentId:string;
+    customerName: string,
     serviceName: string,
+    startTime: string;
+    endTime: string;
+    overLap: boolean;
+    layer :number;
+  }
+  export interface AppointmentDetailDto {
+    appointmentId:string;
+    customerName: string,
+    phone: string,
+    treatItem: treatItemDto,
     startTime: string;
     endTime: string;
     type: string,
     price: string,
     paymentMethod:string,
-    employeeBonus: string,
+    staffBonus: string,
     overLap: boolean;
     layer :number;
   }
 
-
-  export interface TreatMentItem {
+  export interface treatItemDto {
     id:string;
     name:string;
 
