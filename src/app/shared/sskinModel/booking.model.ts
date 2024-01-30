@@ -7,11 +7,11 @@
 
   export interface AppointmentBaseDto {
     appointmentId:string;
-    customerName: string,
-    serviceName: string,
+    customerFirstName: string,
+    treatmentName: string,
     startTime: string;
-    endTime: string;
-    overLap: boolean;
+    endTime: Date;
+    overLap: Date;
     layer :number;
   }
   export interface AppointmentDetailDto {
@@ -19,8 +19,8 @@
     customerName: string,
     phone: string,
     treatItem: treatItemDto,
-    startTime: string;
-    endTime: string;
+    startTime: Date;
+    endTime: Date;
     type: string,
     price: string,
     paymentMethod:string,

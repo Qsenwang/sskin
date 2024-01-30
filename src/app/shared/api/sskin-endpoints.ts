@@ -2,7 +2,7 @@ import {dateTimestampProvider} from "rxjs/internal/scheduler/dateTimestampProvid
 
 export const sskinWebApi = {
   bookingEndpoints:{
-    getDayTasks: (date: string)=>`http://localhost:4200/booking/tasks/${date}`,
-    getAppointmentDetail: (appointmentId: string)=>`http://localhost:4200/booking/appointment/${appointmentId}`,
+    getDayTasks: (date: string)=>`http://localhost:8080/booking/tasks/${date}`,
+    getAppointmentDetail: (appointmentId: string)=>`http://localhost:8080/booking/appointment/${appointmentId}`,
   }
 }
