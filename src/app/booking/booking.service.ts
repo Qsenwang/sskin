@@ -17,27 +17,10 @@ export class BookingService {
   constructor(private apiService : ApiService) {
   }
 
-
-  staff1appointment1: AppointmentDetailDto =
-    {
-      appointmentId:"1",
-      customerName:"a1",
-      phone:"11111111",
-      treatItem:{id:"3",name:"t3"},
-      startTime: '11:00',
-      endTime: '13:00',
-      type:"type",
-      price:"100",
-      paymentMethod:"card",
-      staffBonus: "5",
-      overLap:true,
-      layer: 0
-    }
-
   getAllEmployeeTasks(date: string ): Observable<staffDailyTaskDto[]>{
 
-    const url = sskinWebApi.bookingEndpoints.getDayTasks(date);
-    const httpParams = new HttpParams().set('date', date)
+    const url = sskinWebApi.bookingEndpoints.getDayTasks();
+    const httpParams = new HttpParams().set('selectedDate', date)
     return this.apiService.get<staffDailyTaskDto[]>(url, {params: httpParams})
   }
 

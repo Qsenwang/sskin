@@ -1,17 +1,17 @@
 
   export interface staffDailyTaskDto {
-    employeeId: string;
-    employeeName: string;
-    appointments: AppointmentBaseDto[];
+    staffId: number;
+    staffFirstName: string;
+    appointmentBaseDtoList: AppointmentBaseDto[];
   }
 
   export interface AppointmentBaseDto {
     appointmentId:string;
     customerFirstName: string,
     treatmentName: string,
-    startTime: string;
+    startTime: Date;
     endTime: Date;
-    overLap: Date;
+    overLap: string;
     layer :number;
   }
   export interface AppointmentDetailDto {
