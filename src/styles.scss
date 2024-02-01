@@ -5,6 +5,9 @@
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
 
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+
 //color var
 
 $color-theme:#72722F;
@@ -13,7 +16,7 @@ $color-theme:#72722F;
 
 $color-error:#E00000;
 $color-selected:#FD8D14;
-$color-base:#E00000;
+$color-base:#E2E9B7;
 
 $color-button-blue:#1F79DB;
 $color-button-pink:#DA8AFF;

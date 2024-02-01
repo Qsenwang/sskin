@@ -1,0 +1,83 @@
+<div class="appointment-container">
+  <form [formGroup]="appointmentFrmGroup" (ngSubmit)="onSubmit()" >
+
+    <mat-form-field>
+      <mat-label>姓名：</mat-label>
+      <mat-select placeholder="Select Option" formControlName="customer" >
+        <mat-option *ngFor="let customer of customerList" [value]="customer" >{{customer.firstName}} {{customer.middleName}} {{customer.lastName}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+
+    <mat-form-field>
+      <mat-label>电话：</mat-label>
+      <input matInput formControlName="phone">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [matDatepicker]="startTimePicker" placeholder="Enter Time" [pattern]="timePattern" title="Please enter a valid time">
+      <mat-datepicker-toggle matSuffix [for]="startTimePicker"></mat-datepicker-toggle>
+      <mat-datepicker #startTimePicker></mat-datepicker>
+    </mat-form-field>
+
+
+
+
+
+
+
+
+    <mat-form-field>
+      <mat-label>项目：</mat-label>
+      <mat-select placeholder="Select Option" formControlName="treatmentItem" >
+        <mat-option *ngFor="let item of treatmentItems" [value]="item" >{{item.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+
+    <mat-form-field>
+      <input matInput placeholder="Enter Time (HH:mm)"
+
+              formControl="startTime"/>
+    </mat-form-field>
+
+
+
+
+
+
+
+
+
+
+
+    <mat-form-field>
+      <mat-label>类型：</mat-label>
+      <input matInput formControlName="type">
+    </mat-form-field>
+    <mat-form-field>
+    <mat-label>charge：</mat-label>
+    <input matInput formControlName="charge">
+  </mat-form-field>
+    <mat-form-field>
+      <mat-label>paymentMethod：</mat-label>
+      <input matInput formControlName="paymentMethod">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Select Option" formControlName="staff" >
+        <mat-option *ngFor="let staff of staffList" [value]="staff" >{{staff.firstName}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>staffBonus：</mat-label>
+      <input matInput formControlName="staffBonus">
+    </mat-form-field>
+    <button type="submit">保存</button>
+  </form>
+</div>
+
+

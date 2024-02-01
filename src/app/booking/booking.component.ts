@@ -1,7 +1,15 @@
-import { Component } from '@angular/core';
-import {BrowserModule} from "@angular/platform-browser";
-import {CommonModule} from "@angular/common";
-import {left} from "@popperjs/core";
+import {Component, OnInit} from '@angular/core';
+import {CommonModule, DatePipe} from "@angular/common";
+import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+import {AppointmentDialogComponent} from "./appointment-dialog/appointment-dialog.component";
+import {AppointmentBaseDto, AppointmentDetailDto, staffDailyTaskDto} from "@shared/sskinModel/booking.model"
+import {BookingService} from "./booking.service";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {Observable, of, Subscription} from "rxjs";
+import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatNativeDateModule} from "@angular/material/core";
 
 interface TimeSlot {
   time: string;
@@ -9,36 +17,55 @@ interface TimeSlot {
 interface gridCell {
   emptyContent: string;
 }
-interface Employee {
-  id: number;
-  name: string;
-  appointments: Appointment[];
-}
-interface Appointment {
-  startTime: string;
-  endTime: string;
-  overLap:boolean;
-  layer:number;
-}
+
 @Component({
   selector: 'app-booking',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,
+    FormsModule
+  ],
+  providers:[BookingService, MatDatepickerModule, MatNativeDateModule, DatePipe ],
   templateUrl: './booking.component.html',
   styleUrl: './booking.component.scss'
 })
-export class BookingComponent {
-  //test data
-  employees: Employee[] = [
-    { id: 1, name: 'Employee 1', appointments: [{ startTime: '11:00', endTime: '13:00', overLap:true, layer: 0 },{ startTime: '12:15', endTime: '13:00', overLap:true, layer: 1 },{ startTime: '13:25', endTime: '15:30',overLap:false, layer: 0 }] },
-    { id: 1, name: 'Employee 1', appointments: [{ startTime: '11:00', endTime: '13:00', overLap:true, layer: 0 },{ startTime: '12:15', endTime: '13:00', overLap:true, layer: 1 },{ startTime: '13:25', endTime: '15:30',overLap:false, layer: 2 }] },
-  ];
+export class BookingComponent implements OnInit {
 
+  timeSlots = this.generateTimeSlots();
+  gridMatrix= this.generateGrid()
 
-  timeSlots: TimeSlot[] = this.generateTimeSlots();
-  gridMatrix:gridCell[] = this.generateGrid();
-  startTime: Number=10;
-  endTime: Number=19;
+  selectedDateControl = new FormControl('');
+  staffTasks: Observable<staffDailyTaskDto[]> | any;
+  _subscriptions : Subscription = new Subscription()
+  constructor(public dialog: MatDialog, private bookingService:BookingService, private datePipe: DatePipe) {}
+  ngOnInit(){
+    this._subscriptions.add(
+      this.selectedDateControl.valueChanges.subscribe((newDate) => {
+
+        if(newDate !== null){
+          let brisbaneTime = this.datePipe.transform(newDate, 'yyyy-MM-ddTHH:mm:ss.SSS', 'Australia/Brisbane');
+          if (brisbaneTime !== null) {
+            this.bookingService.getAllEmployeeTasks(brisbaneTime)
+              .subscribe({
+                next: (data) => {
+                  this.staffTasks = of(data);
+                  console.warn(this.staffTasks)},
+                error: (error)=> {console.error("error")}
+              })
+          }
+
+        }
+      })
+    )
+    this.selectedDateControl.setValue(new Date().toISOString());
+  }
+
   generateTimeSlots(): TimeSlot[] {
     const timeSlots: TimeSlot[] = [];
     for (let i = 10; i < 20; i++) {
@@ -49,6 +76,7 @@ export class BookingComponent {
         timeSlots.push({ time });
       }
     }
+    console.warn("var init")
     return timeSlots;
   }
   generateGrid() : gridCell[] {
@@ -62,15 +90,42 @@ export class BookingComponent {
     return matrix;
   }
 
-  addAppointment(employee:Employee) {
-    employee.appointments.push({startTime: '10:00', endTime: '10:19', overLap:false, layer: 0})
+  addAppointment(staffId:string) {
+
+    const appointmentEditDialog = this.dialog.open(AppointmentDialogComponent,
+      {
+        width:"900px",
+        height:"600px",
+        panelClass:"customAppointment",
+        // disableClose:true,
+        data:{
+          staffId : staffId,
+          appointmentId : null
+        }
+      })
+    appointmentEditDialog.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
-  editAppointment(appointment: Appointment){
-    //todo mnodalDialog
+  editAppointment(staffId: string, appointmentId: string){
+      const appointmentEditDialog = this.dialog.open(AppointmentDialogComponent,
+        {
+          width:"900px",
+          height:"600px",
+          panelClass:"customAppointment",
+          // disableClose:true,
+          data:{
+            staffId : staffId,
+            appointmentId : appointmentId
+          }
+        })
+    appointmentEditDialog.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
-  calculateHeight(appointments: Appointment[]):any {
+  calculateHeight(appointments: AppointmentBaseDto[]):any {
     let maxLayer:number   = 0;
     appointments.forEach((a) =>{
         if(a.layer > maxLayer){
@@ -82,25 +137,29 @@ export class BookingComponent {
       height:`${finalHeight}px`,
     }
   }
-  calculateAppointmentStyle(appointment: Appointment): any {
+  calculateAppointmentStyle(appointment: AppointmentBaseDto): any {
 
     //employee name 120px, timeSlot 30min->75px
-    const startTime = appointment.startTime.split(':').map(Number);
-    const endTime = appointment.endTime.split(':').map(Number);
+    const startTime = new Date(appointment.startTime);
+    const endTime = new Date(appointment.endTime);
 
-    const startHour = startTime[0];
-    const startMin= startTime[1];
-    const endHour = endTime[0];
-    const endMin= endTime[1];
+    // Extract hours and minutes from the Date objects
+    const startHour = startTime.getHours();
+    const startMin = startTime.getMinutes();
+    const endHour = endTime.getHours();
+    const endMin = endTime.getMinutes();
+
     const leftPos = 120 + (startHour-10)*150 + (startMin/30)*75;
-    // const width = (endHour-startHour)*150 + (endMin-startMin)/30*75;
     const width = (endHour*60 + endMin - (startHour*60 + startMin))/60*150;
     const topPos = appointment.layer*50;
+
     return {
       left: `${leftPos}px`,
-      top:`${topPos}px`,
+      top: `${topPos}px`,
       width: `${width}px`
     };
+
   }
+
 
 }
