@@ -40,7 +40,7 @@ export class BookingComponent implements OnInit {
   timeSlots = this.generateTimeSlots();
   gridMatrix= this.generateGrid()
 
-  selectedDateControl = new FormControl(new Date());
+  selectedDateControl = new FormControl('');
   staffTasks: Observable<staffDailyTaskDto[]> | any;
   _subscriptions : Subscription = new Subscription()
   constructor(public dialog: MatDialog, private bookingService:BookingService, private datePipe: DatePipe) {}
@@ -63,6 +63,7 @@ export class BookingComponent implements OnInit {
         }
       })
     )
+    this.selectedDateControl.setValue(new Date().toISOString());
   }
 
   generateTimeSlots(): TimeSlot[] {
@@ -89,7 +90,7 @@ export class BookingComponent implements OnInit {
     return matrix;
   }
 
-  addAppointment(employeeId:string) {
+  addAppointment(staffId:string) {
 
     const appointmentEditDialog = this.dialog.open(AppointmentDialogComponent,
       {
@@ -98,7 +99,7 @@ export class BookingComponent implements OnInit {
         panelClass:"customAppointment",
         // disableClose:true,
         data:{
-          employeeId : employeeId,
+          staffId : staffId,
           appointmentId : null
         }
       })
@@ -107,7 +108,7 @@ export class BookingComponent implements OnInit {
     });
   }
 
-  editAppointment(employeeId: string, appointmentId: string){
+  editAppointment(staffId: string, appointmentId: string){
       const appointmentEditDialog = this.dialog.open(AppointmentDialogComponent,
         {
           width:"900px",
@@ -115,8 +116,8 @@ export class BookingComponent implements OnInit {
           panelClass:"customAppointment",
           // disableClose:true,
           data:{
-            employeeId : employeeId,
-            appointmentId : appointmentId,
+            staffId : staffId,
+            appointmentId : appointmentId
           }
         })
     appointmentEditDialog.afterClosed().subscribe(result => {
