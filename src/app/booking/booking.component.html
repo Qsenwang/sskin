@@ -1,10 +1,17 @@
-<mat-form-field>
-  <mat-label>Angular forms</mat-label>
-  <input matInput [matDatepicker]="picker1" [formControl]="selectedDateControl">
-  <mat-hint>MM/DD/YYYY</mat-hint>
-  <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
-  <mat-datepicker #picker1></mat-datepicker>
-</mat-form-field>
+<!--<mat-form-field>-->
+<!--  <mat-label>Angular forms</mat-label>-->
+<!--  <input matInput [matDatepicker]="picker1" [formControl]="selectedDateControl">-->
+<!--  <mat-hint>MM/DD/YYYY</mat-hint>-->
+<!--  <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>-->
+<!--  <mat-datepicker #picker1></mat-datepicker>-->
+<!--</mat-form-field>-->
+<nz-form-item>
+  <nz-form-control [nzSm]="16" [nzXs]="24" >
+  <nz-form-label [nzSm]="8" [nzXs]="24">日期</nz-form-label>
+    <nz-date-picker  [formControl]="selectedDateControl"></nz-date-picker>
+  </nz-form-control>
+</nz-form-item>
+
 
 <div class="scheduler">
   <div class="timeline">
