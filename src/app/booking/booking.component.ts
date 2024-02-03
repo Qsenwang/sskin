@@ -10,6 +10,9 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {Observable, of, Subscription} from "rxjs";
 import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatNativeDateModule} from "@angular/material/core";
+import {NzDatePickerComponent} from "ng-zorro-antd/date-picker";
+import {NzFormControlComponent, NzFormItemComponent, NzFormLabelComponent} from "ng-zorro-antd/form";
+import {NzColDirective} from "ng-zorro-antd/grid";
 
 interface TimeSlot {
   time: string;
@@ -29,7 +32,12 @@ interface gridCell {
     MatDatepickerModule,
     MatNativeDateModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NzDatePickerComponent,
+    NzFormControlComponent,
+    NzFormLabelComponent,
+    NzFormItemComponent,
+    NzColDirective
   ],
   providers:[BookingService, MatDatepickerModule, MatNativeDateModule, DatePipe ],
   templateUrl: './booking.component.html',
@@ -53,9 +61,7 @@ export class BookingComponent implements OnInit {
           if (brisbaneTime !== null) {
             this.bookingService.getAllEmployeeTasks(brisbaneTime)
               .subscribe({
-                next: (data) => {
-                  this.staffTasks = of(data);
-                  console.warn(this.staffTasks)},
+                next: (data) => {this.staffTasks = of(data);},
                 error: (error)=> {console.error("error")}
               })
           }
@@ -76,7 +82,6 @@ export class BookingComponent implements OnInit {
         timeSlots.push({ time });
       }
     }
-    console.warn("var init")
     return timeSlots;
   }
   generateGrid() : gridCell[] {
@@ -94,7 +99,7 @@ export class BookingComponent implements OnInit {
 
     const appointmentEditDialog = this.dialog.open(AppointmentDialogComponent,
       {
-        width:"900px",
+        width:"1000px",
         height:"600px",
         panelClass:"customAppointment",
         // disableClose:true,
@@ -111,7 +116,7 @@ export class BookingComponent implements OnInit {
   editAppointment(staffId: string, appointmentId: string){
       const appointmentEditDialog = this.dialog.open(AppointmentDialogComponent,
         {
-          width:"900px",
+          width:"1000px",
           height:"600px",
           panelClass:"customAppointment",
           // disableClose:true,
