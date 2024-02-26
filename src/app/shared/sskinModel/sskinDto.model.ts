@@ -1,13 +1,14 @@
 
   export interface staffDailyTaskDto {
     staffId: string;
-    staffFirstName: string;
+    staffName: string;
     appointmentBaseDtoList: AppointmentBaseDto[];
   }
 
   export interface AppointmentBaseDto {
     appointmentId: string;
-    customerFirstName: string;
+    customerId: string;
+    customerName: string;
     treatmentName: string;
     startTime: Date;
     endTime: Date;
@@ -34,24 +35,38 @@
     id: string;
     name: string;
     standardPrice: number;
+    itemNote: string;
+    active : boolean;
   }
 
   export interface StaffDto {
     id: string;
-    firstName: string;
-    middleName: string;
-    lastName: string;
+    name: string;
     onBoardDate: Date;
     offBoardDate: Date;
     active : boolean;
   }
   export interface CustomerDto {
     id: string;
-    firstName: string;
-    middleName: string;
-    lastName: string;
+    name: string;
     contactPhone: string;
     customerNote: string;
+    bundlePackages: CustomerBundleDto[];
+  }
+
+
+  export interface CustomerBundleDto {
+    id: string;
+    bundlePackageName: string;
+    purchaseDate: Date;
+    bundleValue: string;
+    bundleNote: string;
+    customer: CustomerDto;
+    customerId: string;
+    // payment: PaymentDto;
+    paymentId: string;
+    // packageDetailList: PackageDetail[];
+    active: boolean;
   }
 
 

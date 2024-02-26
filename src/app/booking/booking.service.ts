@@ -2,12 +2,12 @@
 
 import { Injectable } from '@angular/core';
 import {
-  AppointmentDetailDto,
+  AppointmentDetailDto, CustomerBundleDto,
   CustomerDto,
   staffDailyTaskDto,
   StaffDto,
   TreatmentItemDto
-} from "@shared/sskinModel/booking.model";
+} from "@shared/sskinModel/sskinDto.model";
 import {FormGroup} from "@angular/forms";
 import {ApiService} from "@shared/api/api.service";
 import {sskinWebApi} from "@shared/api/sskin-endpoints";
@@ -39,18 +39,23 @@ export class BookingService {
   }
 
   getAllTreatmentItems(): Observable<TreatmentItemDto[]> {
-    const url = sskinWebApi.bookingEndpoints.getAllTreatmentItems();
+    const url = sskinWebApi.treatmentEndpoints.getAllTreatmentItems();
     return this.apiService.get<TreatmentItemDto[]>(url, {})
   }
 
   getAllStaff(): Observable<StaffDto[]> {
-    const url = sskinWebApi.bookingEndpoints.getAllStaff();
+    const url = sskinWebApi.staffEndpoints.getAllStaff();
     return this.apiService.get<StaffDto[]>(url, {})
   }
 
   getAllCustomer(): Observable<CustomerDto[]> {
-    const url = sskinWebApi.bookingEndpoints.getAllCustomer();
+    const url = sskinWebApi.customerEndpoints.getAllCustomer();
     return this.apiService.get<CustomerDto[]>(url, {})
+  }
+
+  getCustomerBundles(customerId: string) {
+    const url = sskinWebApi.customerEndpoints.getCustomerBundles(customerId);
+    return this.apiService.get<CustomerBundleDto[]>(url, {})
   }
 
   saveAppointment(formaData:any){
