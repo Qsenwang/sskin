@@ -1,0 +1,35 @@
+
+<div>
+  <nz-descriptions class="description-board" nzTitle="客户信息" nzBordered>
+    <nz-descriptions-item nzTitle="Id">{{this.data.customer?.id || 'N/A'}}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="姓名" >{{this.data.customer?.name || 'N/A'}}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="联系电话">{{this.data.customer?.contactPhone || 'N/A'}}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="备注"  [nzSpan]="3">{{this.data.customer?.customerNote || 'N/A'}}</nz-descriptions-item>
+  </nz-descriptions>
+  <br>
+  <nz-descriptions class="description-board" nzTitle="套餐信息" nzBordered>
+  </nz-descriptions>
+  <nz-table #bundleTable [nzData]="this.data.customer.bundlePackages"  nzTableLayout="fixed">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>套餐</th>
+      <th>购买日期</th>
+      <th>价值</th>
+      <th>备注</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngFor="let bundle of bundleTable.data">
+      <tr>
+        <td>{{ bundle.id }}</td>
+        <td>{{ bundle.bundlePackageName }}</td>
+        <td>{{ bundle.purchaseDate }}</td>
+        <td>{{ bundle.bundleValue }}</td>
+        <td>{{ bundle.bundleNote }}</td>
+      </tr>
+    </ng-container>
+    </tbody>
+  </nz-table>
+</div>
+

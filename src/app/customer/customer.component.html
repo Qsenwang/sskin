@@ -1,41 +1,4 @@
-<div class="customer-list-panel">
-<!--  <nz-input-group [nzSuffix]="suffixIconSearch" class="search-bar">-->
-<!--    <input type="text" nz-input placeholder="Search customers" (input)="search($event)" />-->
-<!--  </nz-input-group>-->
-<!--  <ng-template #suffixIconSearch>-->
-<!--    <i nz-icon nzType="search"></i>-->
-<!--  </ng-template>-->
-
-<!--  <div>-->
-<!--    <nz-list nzBordered nzGutter="16">-->
-<!--      <nz-list-item class="customer-list-header">-->
-<!--        <nz-col nzSpan="6" class="customer-list-column"><div>ID</div></nz-col>-->
-<!--        <nz-col nzSpan="6" class="customer-list-column"><div>Name</div></nz-col>-->
-<!--        <nz-col nzSpan="6" class="customer-list-column"><div>Phone</div></nz-col>-->
-<!--        <nz-col nzSpan="6" class="customer-list-column"><div>Action</div></nz-col>-->
-<!--      </nz-list-item>-->
-<!--      <nz-list-item *ngFor="let customer of filteredCustomers" class="customer-list-body"  (click)="toggleExpand(customer.id)">-->
-<!--          <nz-col nzSpan="6" class="customer-list-column"><div>{{ customer.id }}</div></nz-col>-->
-<!--          <nz-col nzSpan="6" class="customer-list-column"><div>{{ customer.name }}</div></nz-col>-->
-<!--          <nz-col nzSpan="6" class="customer-list-column"><div>{{ customer.contactPhone }}</div></nz-col>-->
-<!--          <nz-col nzSpan="6" class="customer-list-column">-->
-<!--            <div>-->
-<!--              <button nz-button nzType="primary" (click)="editCustomer(customer.id); $event.stopPropagation();">Edit</button>-->
-<!--            </div>-->
-<!--          </nz-col>-->
-<!--          <nz-list-item *ngIf="expandedCustomerId === customer.id" class="bundle-list">-->
-<!--            <nz-list-item *ngFor="let bundle of customer.bundlePackages">-->
-<!--              {{ bundle.id }}-->
-<!--            </nz-list-item>-->
-<!--            <nz-list-item *ngIf="customer.bundlePackages.length === 0">-->
-<!--              No package-->
-<!--            </nz-list-item>-->
-<!--          </nz-list-item>-->
-<!--      </nz-list-item>-->
-<!--    </nz-list>-->
-<!--  </div>-->
-
-
+<div class="customer-list-panel" >
   <div>
     <nz-input-group [nzSuffix]="suffixIconSearch" class="search-bar">
       <input nz-input placeholder="Search customers" (input)="search($event)" />
@@ -45,33 +8,28 @@
     </nz-input-group>
 
 
-    <nz-table #editableTable [nzData]="filteredCustomers"  nzTableLayout="fixed">
+    <nz-table #editableTable [nzData]="filteredCustomers"  nzTableLayout="fixed" ngSkipHydration>
       <thead>
       <tr>
-        <th>ID</th>
+        <th>Id</th>
         <th>Name</th>
         <th>Phone</th>
         <th>Action</th>
       </tr>
       </thead>
       <tbody>
-      <ng-container *ngFor="let customer of editableTable.data">
-        <tr (click)="onExpandChange(customer.id, !expandSet.has(customer.id))">
+        <tr *ngFor="let customer of filteredCustomers">
           <td>{{ customer.id }}</td>
           <td>{{ customer.name }}</td>
           <td>{{ customer.contactPhone }}</td>
           <td>
-            <button nz-button nzType="primary" (click)="editCustomer(customer.id); $event.stopPropagation();">Edit</button>
+            <a nz-button nzType="primary" (click)="editCustomer(customer.id); $event.stopPropagation();">Edit</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a nz-button nzType="primary" (click)="viewCustomer(customer); $event.stopPropagation();">view</a>
           </td>
         </tr>
-        <tr *ngIf="expandSet.has(customer.id)">
-         
-        </tr>
-
-      </ng-container>
       </tbody>
     </nz-table>
-
   </div>
 
 

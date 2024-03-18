@@ -15,6 +15,8 @@ import {
   NzThMeasureDirective,
   NzTrExpandDirective
 } from "ng-zorro-antd/table";
+import {CustomerViewComponent} from "./customer-view/customer-view.component";
+import {NzDividerComponent} from "ng-zorro-antd/divider";
 
 @Component({
   selector: 'app-customer',
@@ -38,7 +40,8 @@ import {
     NzTrExpandDirective,
     NzTdAddOnComponent,
     NzThMeasureDirective,
-    NzIconModule
+    NzIconModule,
+    NzDividerComponent
   ],
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.scss'
@@ -51,7 +54,8 @@ export class CustomerComponent  implements OnInit {
 
   constructor(
     private customerService: CustomerService,
-    private router: Router) {}
+    private router: Router,
+    private modalService: NzModalService) {}
   ngOnInit(): void {
     this.getAllCustomer();
   }
@@ -59,19 +63,6 @@ export class CustomerComponent  implements OnInit {
   getAllCustomer() {
     return this.customerService.getAllCustomer().subscribe({
       next: (data) => {
-        // data.forEach((customer) => {
-        //     const customerDto =
-        //       {
-        //         id: customer.id,
-        //         name: customer.name,
-        //         contactPhone: customer.contactPhone,
-        //         customerNote: customer.customerNote,
-        //         bundlePackages: customer.bundlePackages
-        //       };
-        //     this.customerList.push(customerDto);
-        //     this.filteredCustomers.push(customerDto)
-        //   }
-        // );
         this.customerList = data;
         this.filteredCustomers = data;
       },
@@ -88,49 +79,24 @@ export class CustomerComponent  implements OnInit {
     );
   }
 
-  // toggleExpand(customerId: string): void {
-  //   this.expandedCustomerId = this.expandedCustomerId === customerId ? null : customerId;
-  // }
-
-  // editCustomer(customer: CustomerDto): void {
-  //   const modal = this.modal.create({
-  //     nzTitle: 'Edit Customer',
-  //     nzContent: CustomerEditModalComponent,
-  //     nzData: {
-  //       customer: customer,
-  //     },
-  //     nzFooter: [
-  //       {
-  //         label: 'Cancel',
-  //         onClick: () => this.modal.closeAll()
-  //       },
-  //       {
-  //         label: 'Save',
-  //         type: 'primary',
-  //         onClick: () => this.saveCustomer()
-  //       }
-  //     ]
-  //   });
-  // }
-
-  // saveCustomer(): void {
-  //   // Implement save logic here
-  //   this.modal.closeAll();
-  // }
-
-
-
+  viewCustomer(customer: CustomerDto) {
+    const modal: any = this.modalService.create({
+      nzTitle: 'Customer Info',
+      nzContent: CustomerViewComponent,
+      nzData: {
+        customer: customer
+      },
+      nzWidth: 900,
+      nzFooter: [{
+        label: '关闭',
+        type: 'primary',
+        onClick: () => modal.destroy()
+      }]
+    });
+  }
 
   editCustomer(customerId: string): void {
     this.router.navigate(['/customer', customerId, 'edit']);
-  }
-
-  onExpandChange(id: string, expanded: boolean): void {
-    if (expanded) {
-      this.expandSet.add(id);
-    } else {
-      this.expandSet.delete(id);
-    }
   }
 
 }
