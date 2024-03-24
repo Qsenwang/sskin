@@ -28,24 +28,20 @@ class IModalData {
   styleUrl: './customer-view.component.scss'
 })
 export class CustomerViewComponent implements OnInit{
-  expandedBundles = new Set<string>();
+  expandSet = new Set<string>();
 
   constructor(@Inject(NZ_MODAL_DATA) public data: any) {}
 
   ngOnInit() {
-      this.data.customer.bundlePackages.map()
   }
 
-  toggleBundleDetail(bundleId: string): void {
-    if (this.expandedBundles.has(bundleId)) {
-      this.expandedBundles.delete(bundleId);
+  onExpandChange(id: string, checked: boolean): void {
+    if (checked) {
+      this.expandSet.add(id);
     } else {
-      this.expandedBundles.add(bundleId);
+      this.expandSet.delete(id);
     }
   }
 
-  isExpanded(bundleId: string): boolean {
-    return this.expandedBundles.has(bundleId);
-  }
 
 }

@@ -25,45 +25,43 @@
 
     <!-- 动态添加的捆绑包表单 -->
     <button (click)="addBundlePackage()">添加捆绑包</button>
-<!--    <table>-->
-<!--      <thead>-->
-<!--      <tr>-->
-<!--        <th>名称</th>-->
-<!--        <th>购买日期</th>-->
-<!--        <th>价值</th>-->
-<!--        <th>备注</th>-->
-<!--        <th>操作</th>-->
-<!--      </tr>-->
-<!--      </thead>-->
-<!--      <tbody formArrayName="bundlePackages">-->
-<!--      <tr *ngFor="let bundle of bundlePackagesFormArray.controls; let i = index" [formGroupName]="i">-->
-<!--        <td>-->
-<!--          <input formControlName="bundlePackageName" />-->
-<!--          <div *ngIf="bundle.get('bundlePackageName').errors?.['required']">姓名必填</div>-->
-<!--        </td>-->
-<!--        <td>-->
-<!--          <input type="date" formControlName="purchaseDate" />-->
-<!--          <div *ngIf="bundle.get('purchaseDate').errors?.['required']">购买日期必填</div>-->
-<!--        </td>-->
-<!--        <td>-->
-<!--          <input formControlName="bundleValue" />-->
-<!--        </td>-->
-<!--        <td>-->
-<!--          <input formControlName="bundleNote" />-->
-<!--        </td>-->
-<!--        <td>-->
-<!--          <button (click)="saveBundlePackage(i)">保存</button>-->
-<!--          <button (click)="cancelEdit(i)">取消</button>-->
-<!--        </td>-->
-<!--      </tr>-->
-<!--      </tbody>-->
-<!--    </table>-->
+    <nz-table>
+      <thead>
+      <tr>
+        <th>名称</th>
+        <th>购买日期</th>
+        <th>价值</th>
+        <th>备注</th>
+        <th>操作</th>
+      </tr>
+      </thead>
+      <tbody formArrayName="bundlePackages">
+      <tr *ngFor="let bundle of bundlePackagesFormArray.controls; let i = index" [formGroupName]="i">
+        <td>
+          <input formControlName="bundlePackageName" />
+          <div *ngIf="bundle.get('bundlePackageName')?.errors?.['required']">姓名必填</div>
+        </td>
+        <td>
+          <input type="date" formControlName="purchaseDate" />
+          <div *ngIf="bundle.get('purchaseDate')?.errors?.['required']">购买日期必填</div>
+        </td>
+        <td>
+          <input formControlName="bundleValue" />
+        </td>
+        <td>
+          <input formControlName="bundleNote" />
+        </td>
+        <td>
+          <button (click)="saveBundlePackage(i)">保存</button>
+          <button (click)="cancelEdit(i)">取消</button>
+        </td>
+      </tr>
+      </tbody>
+    </nz-table>
 
 
 
-
-
-          <nz-form-item>
+    <nz-form-item>
       <nz-form-control [nzSpan]="14" [nzOffset]="6">
         <button nz-button nzType="primary" type="submit">保存</button>
       </nz-form-control>

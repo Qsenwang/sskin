@@ -12,16 +12,18 @@
   <nz-table #bundleTable [nzData]="this.data.customer.bundlePackages"  nzTableLayout="fixed">
     <thead>
     <tr>
+      <th nzWidth="60px"></th>
       <th>Id</th>
       <th>套餐</th>
       <th>购买日期</th>
       <th>价值</th>
-      <th>备注</th>
+      <th colspan="2">备注</th>
     </tr>
     </thead>
     <tbody>
     <ng-container *ngFor="let bundle of bundleTable.data">
-      <tr  (click)="toggleBundleDetail(bundle.id)">
+      <tr>
+        <td [nzExpand]="expandSet.has(bundle.id)" (nzExpandChange)="onExpandChange(bundle.id, $event)"></td>
         <td>{{ bundle.id }}</td>
         <td>{{ bundle.bundlePackageName }}</td>
         <td>{{ bundle.purchaseDate }}</td>
@@ -29,8 +31,7 @@
         <td>{{ bundle.bundleNote }}</td>
         <td>{{ bundle.bundleNote }}</td>
       </tr>
-      <tr *ngIf="isExpanded(bundle.id)">
-        <td colspan="5">
+      <tr [nzExpand]="expandSet.has(bundle.id)">
           <nz-row>
             <nz-col [nzSpan]="2"><strong></strong></nz-col>
             <nz-col [nzSpan]="5"><strong>详细信息</strong></nz-col>
@@ -43,7 +44,6 @@
             <nz-col [nzSpan]="10">{{detail.treatmentItem.name}}</nz-col>
             <nz-col [nzSpan]="5">{{detail.remainCount}}</nz-col>
           </nz-row>
-        </td>
       </tr>
     </ng-container>
     </tbody>
