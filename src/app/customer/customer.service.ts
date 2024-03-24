@@ -41,4 +41,9 @@ export class CustomerService {
     return this.apiService.put<CustomerDto>(url, customerData, {});
   }
 
+  createCustomer(customerData: CustomerDto): Observable<any> {
+    const url = sskinWebApi.customerEndpoints.newCustomer();
+    return this.apiService.post<CustomerDto>(url, customerData, {});
+  }
+
 }

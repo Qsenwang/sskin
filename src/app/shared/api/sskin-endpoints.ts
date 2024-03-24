@@ -18,5 +18,6 @@ export const sskinWebApi = {
     getCustomerBundles: (customerId: string) =>`http://localhost:8080/customer/${customerId}/bundles`,
     getCustomerById: (customerId: string) =>`http://localhost:8080/customer/${customerId}`,
     updateCustomer: (customerId: string) =>`http://localhost:8080/customer/${customerId}`,
+    newCustomer: () =>`http://localhost:8080/customer/new`,
   }
 }

@@ -17,6 +17,7 @@ import {
 } from "ng-zorro-antd/table";
 import {CustomerViewComponent} from "./customer-view/customer-view.component";
 import {NzDividerComponent} from "ng-zorro-antd/divider";
+import {CustomerCreateComponent} from "./customer-create/customer-create.component";
 
 @Component({
   selector: 'app-customer',
@@ -97,7 +98,18 @@ export class CustomerComponent  implements OnInit {
   editCustomer(customerId: string): void {
     this.router.navigate(['customer', customerId, 'edit']);
   }
-  navigateToNewCustomer(): void {
-    this.router.navigate(['customer/newCustomer']);
+  createNewCustomer(): void {
+    const modalRef  = this.modalService.create({
+      nzTitle: '创建新客戶',
+      nzContent: CustomerCreateComponent,
+      nzWidth: 600,
+      nzFooter:null
+    });
+    const instance = modalRef.getContentComponent();
+    instance.operationSuccess.subscribe((success) => {
+      if (success) {
+        this.getAllCustomer(); // 重新获取所有客户信息
+      }
+    });
   }
 }

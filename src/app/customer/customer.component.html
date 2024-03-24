@@ -7,7 +7,7 @@
       </ng-template>
     </nz-input-group>
 
-    <button nz-button nzType="primary" (click)="navigateToNewCustomer()">添加</button>
+    <button nz-button nzType="primary" class="add-new-customer" (click)="createNewCustomer()">添加新客户</button>
 
     <nz-table #editableTable [nzData]="filteredCustomers"  nzTableLayout="fixed" ngSkipHydration>
       <thead>
