@@ -14,7 +14,7 @@ import {MatInputModule} from "@angular/material/input";
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {
-  AppointmentDetailDto, CustomerBundleDto,
+  AppointmentDetailDto, PackageDetailList, CustomerBundleDto,
   CustomerDto,
   staffDailyTaskDto,
   StaffDto,
@@ -109,11 +109,9 @@ export class AppointmentDialogComponent implements OnInit {
                         purchaseDate:bundle.purchaseDate,
                         bundleValue: bundle.bundleValue,
                         bundleNote: bundle.bundleNote,
-                        customer: bundle.customer,
                         customerId: bundle.customerId,
-                        // payment: PaymentDto;
                         paymentId: bundle.paymentId,
-                        // packageDetailList: PackageDetail[];
+                        packageDetailList:bundle.packageDetailList,
                         active: bundle.active,
                       };
                     this.customerBundleList.push(customerBundleDto);
@@ -198,7 +196,8 @@ export class AppointmentDialogComponent implements OnInit {
                 name: customer.name,
                 contactPhone: customer.contactPhone,
                 customerNote: customer.customerNote,
-                bundlePackages: customer.bundlePackages
+                bundlePackages: customer.bundlePackages,
+                active:customer.active
               };
             this.customerList.push(customerDto);
           }

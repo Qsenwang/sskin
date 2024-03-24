@@ -19,4 +19,5 @@ export const routes: Routes = [
   {path:'inventory', component:InventoryComponent},
   {path:'revenue', component:RevenueComponent},
   {path:'customer/:customerId/edit', component:CustomerEditComponent},
+  {path:'customer/newCustomer', component:CustomerEditComponent},
 ];

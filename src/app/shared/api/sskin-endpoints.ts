@@ -2,7 +2,7 @@ import {dateTimestampProvider} from "rxjs/internal/scheduler/dateTimestampProvid
 
 export const sskinWebApi = {
   treatmentEndpoints: {
-    getAllTreatmentItems: () => `http://localhost:8080/treatmentItems/all`,
+    getAllTreatmentItems: () => `http://localhost:8080/treatment-item/all`,
   },
   staffEndpoints:{
     getAllStaff: () => `http://localhost:8080/staff/all`,
@@ -16,5 +16,7 @@ export const sskinWebApi = {
     getAllTreatmentItems: () => `http://localhost:8080/treatment-item/all`,
     getAllCustomer: () => `http://localhost:8080/customer/all`,
     getCustomerBundles: (customerId: string) =>`http://localhost:8080/customer/${customerId}/bundles`,
+    getCustomerById: (customerId: string) =>`http://localhost:8080/customer/${customerId}`,
+    updateCustomer: (customerId: string) =>`http://localhost:8080/customer/${customerId}`,
   }
 }

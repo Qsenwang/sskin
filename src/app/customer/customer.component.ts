@@ -50,7 +50,6 @@ export class CustomerComponent  implements OnInit {
 
   customerList: CustomerDto[] = [];
   filteredCustomers: CustomerDto[] = [];
-  expandSet = new Set<string>();
 
   constructor(
     private customerService: CustomerService,
@@ -96,7 +95,9 @@ export class CustomerComponent  implements OnInit {
   }
 
   editCustomer(customerId: string): void {
-    this.router.navigate(['/customer', customerId, 'edit']);
+    this.router.navigate(['customer', customerId, 'edit']);
   }
-
+  navigateToNewCustomer(): void {
+    this.router.navigate(['customer/newCustomer']);
+  }
 }

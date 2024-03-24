@@ -52,6 +52,7 @@
     contactPhone: string;
     customerNote: string;
     bundlePackages: CustomerBundleDto[];
+    active: boolean;
   }
 
 
@@ -61,12 +62,20 @@
     purchaseDate: Date;
     bundleValue: string;
     bundleNote: string;
-    customer: CustomerDto;
     customerId: string;
-    // payment: PaymentDto;
     paymentId: string;
-    // packageDetailList: PackageDetail[];
+    packageDetailList: PackageDetailList[];
     active: boolean;
   }
+
+  export interface PackageDetailList {
+    id: string;
+    treatmentItemId: TreatmentItemDto;
+    treatmentItem: string;
+    remainCount: number;
+    active: boolean;
+}
+
+
 
 

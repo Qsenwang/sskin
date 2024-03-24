@@ -21,12 +21,29 @@
     </thead>
     <tbody>
     <ng-container *ngFor="let bundle of bundleTable.data">
-      <tr>
+      <tr  (click)="toggleBundleDetail(bundle.id)">
         <td>{{ bundle.id }}</td>
         <td>{{ bundle.bundlePackageName }}</td>
         <td>{{ bundle.purchaseDate }}</td>
         <td>{{ bundle.bundleValue }}</td>
         <td>{{ bundle.bundleNote }}</td>
+        <td>{{ bundle.bundleNote }}</td>
+      </tr>
+      <tr *ngIf="isExpanded(bundle.id)">
+        <td colspan="5">
+          <nz-row>
+            <nz-col [nzSpan]="2"><strong></strong></nz-col>
+            <nz-col [nzSpan]="5"><strong>详细信息</strong></nz-col>
+            <nz-col [nzSpan]="2"><strong></strong></nz-col>
+            <nz-col [nzSpan]="10"><strong>项目</strong></nz-col>
+            <nz-col [nzSpan]="5"><strong>剩余次数</strong></nz-col>
+          </nz-row>
+          <nz-row *ngFor="let detail of bundle.packageDetailList">
+            <nz-col [nzSpan]="9"><strong></strong></nz-col>
+            <nz-col [nzSpan]="10">{{detail.treatmentItem.name}}</nz-col>
+            <nz-col [nzSpan]="5">{{detail.remainCount}}</nz-col>
+          </nz-row>
+        </td>
       </tr>
     </ng-container>
     </tbody>

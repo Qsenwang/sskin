@@ -1,139 +1,72 @@
-<div class="appointment-container">
-  <form nz-form [formGroup]="customerFrmGroup" (ngSubmit)="onSubmit()">
-
-    <div nz-row>
-      <div nz-col>
-        <nz-form-item>
-          <nz-form-control>
-            <nz-form-label class="white-label">姓名：</nz-form-label>
-            <input class="appointment-field-input-normal" nz-input formControlName="name"
-                   placeholder="customer name">
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-
-      <div nz-col>
-        <nz-form-item>
-          <nz-form-control>
-            <nz-form-label>电话：</nz-form-label>
-            <input class="appointment-field-input-normal" type="number" nz-input formControlName="phone"
-                   placeholder="phone number">
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col>
-        <nz-form-item>
-          <nz-form-control>
-            <nz-form-label>note：</nz-form-label>
-            <input class="appointment-field-input-normal" nz-input formControlName="note"
-                   placeholder="note">
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-    </div>
-
-    <div nz-row>
-      <div nz-col>
-        <nz-form-item>
-          <nz-form-control>
-            <nz-form-label>开始时间：</nz-form-label>
-            <nz-date-picker
-              nzShowTime
-              nzFormat="yyyy-MM-dd HH:mm:ss"
-              formControlName="startTime"
-              nzPlaceHolder="Start"
-            ></nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col>
-        <nz-form-item>
-          <nz-form-control>
-            <nz-form-label>结束时间：</nz-form-label>
-            <nz-date-picker
-              nzShowTime
-              nzFormat="yyyy-MM-dd HH:mm:ss"
-              formControlName="endTime"
-              nzPlaceHolder="End"
-            ></nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col>
-        <nz-form-item>
-          <nz-form-control>
-            <nz-form-label>类型：</nz-form-label>
-            <input class="appointment-field-input-normal" nz-input formControlName="type" placeholder="type">
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-    </div>
-
-    <div nz-row class="charge-info-row">
-      <div nz-col nzSpan="8">
-        <nz-form-item>
-          <nz-form-control>
-            <nz-form-label>费用：</nz-form-label>
-            <input class="appointment-field-input-normal" type="number" nz-input formControlName="charge" style="width:70%;" nzPlaceHolder="fee"/>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-
-      <div nz-col nzSpan="2">
-      </div>
-
-      <div nz-col  nzSpan="2">
-        <label nz-checkbox class="box-label">特价</label>
-      </div>
-      <div nz-col nzSpan="2">
-        <label nz-checkbox class="box-label">套餐</label>
-      </div>
-
-      <div nz-col nzSpan="1">
-      </div>
-
-      <div nz-col nzSpan="3">
-        <div nz-col>
-          <nz-form-item>
-            <nz-form-label class="box-label">总次数：</nz-form-label>
-            <input nz-input class="box-input" >
-          </nz-form-item>
-        </div>
-      </div>
-      <div nz-col nzSpan="3">
-        <nz-form-item>
-          <nz-form-label class="box-label">本次为第：</nz-form-label>
-          <input nz-input class="box-input" >
-          <nz-form-label class="box-label"> 次</nz-form-label>
-        </nz-form-item>
-
-      </div>
-    </div>
-
+<div class="customer-edit-form">
+  <form nz-form [formGroup]="customerEditForm" (ngSubmit)="submitForm()">
     <nz-form-item>
-      <nz-form-control>
-        <nz-form-label>付款方式：</nz-form-label>
-        <nz-select formControlName="paymentMethod" nzPlaceHolder="Select a payment method">
-          <nz-option *ngFor="let item of treatmentItems" [nzValue]="item" [nzLabel]="item.name "
-                     style="width:50%;"></nz-option>
-        </nz-select>
+      <nz-form-label [nzSpan]="6" nzFor="name">客户名称</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <input nz-input formControlName="name" id="name" />
       </nz-form-control>
     </nz-form-item>
 
-    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a person" formControlName="staff"
-               class="staff-selector">
-      <nz-option *ngFor="let staff of staffList" [nzValue]="staff" [nzLabel]="staff.name "></nz-option>
-    </nz-select>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="contactPhone">联系电话</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <input nz-input formControlName="contactPhone" id="contactPhone" />
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="customerNote">客户备注</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <textarea nz-input formControlName="customerNote" id="customerNote"></textarea>
+      </nz-form-control>
+    </nz-form-item>
 
 
-    <button type="submit">保存</button>
-    <button >完成</button>
-    <button type="delete">删除</button>
+
+    <!-- 动态添加的捆绑包表单 -->
+    <button (click)="addBundlePackage()">添加捆绑包</button>
+<!--    <table>-->
+<!--      <thead>-->
+<!--      <tr>-->
+<!--        <th>名称</th>-->
+<!--        <th>购买日期</th>-->
+<!--        <th>价值</th>-->
+<!--        <th>备注</th>-->
+<!--        <th>操作</th>-->
+<!--      </tr>-->
+<!--      </thead>-->
+<!--      <tbody formArrayName="bundlePackages">-->
+<!--      <tr *ngFor="let bundle of bundlePackagesFormArray.controls; let i = index" [formGroupName]="i">-->
+<!--        <td>-->
+<!--          <input formControlName="bundlePackageName" />-->
+<!--          <div *ngIf="bundle.get('bundlePackageName').errors?.['required']">姓名必填</div>-->
+<!--        </td>-->
+<!--        <td>-->
+<!--          <input type="date" formControlName="purchaseDate" />-->
+<!--          <div *ngIf="bundle.get('purchaseDate').errors?.['required']">购买日期必填</div>-->
+<!--        </td>-->
+<!--        <td>-->
+<!--          <input formControlName="bundleValue" />-->
+<!--        </td>-->
+<!--        <td>-->
+<!--          <input formControlName="bundleNote" />-->
+<!--        </td>-->
+<!--        <td>-->
+<!--          <button (click)="saveBundlePackage(i)">保存</button>-->
+<!--          <button (click)="cancelEdit(i)">取消</button>-->
+<!--        </td>-->
+<!--      </tr>-->
+<!--      </tbody>-->
+<!--    </table>-->
+
+
+
+
+
+          <nz-form-item>
+      <nz-form-control [nzSpan]="14" [nzOffset]="6">
+        <button nz-button nzType="primary" type="submit">保存</button>
+      </nz-form-control>
+    </nz-form-item>
   </form>
 </div>
-
-

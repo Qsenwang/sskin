@@ -31,4 +31,14 @@ export class CustomerService {
     return this.apiService.get<CustomerBundleDto[]>(url, {})
   }
 
+  getCustomerById(customerId: string) {
+    const url = sskinWebApi.customerEndpoints.getCustomerById(customerId);
+    return this.apiService.get<CustomerDto>(url, {})
+  }
+
+  updateCustomer(customerId: string, customerData: CustomerDto): Observable<any> {
+    const url = sskinWebApi.customerEndpoints.updateCustomer(customerId);
+    return this.apiService.put<CustomerDto>(url, customerData, {});
+  }
+
 }
