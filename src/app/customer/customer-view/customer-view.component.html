@@ -1,0 +1,52 @@
+
+<div>
+  <nz-descriptions class="description-board" nzTitle="客户信息" nzBordered>
+    <nz-descriptions-item nzTitle="Id">{{this.data.customer?.id || 'N/A'}}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="姓名" >{{this.data.customer?.name || 'N/A'}}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="联系电话">{{this.data.customer?.contactPhone || 'N/A'}}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="备注"  [nzSpan]="3">{{this.data.customer?.customerNote || 'N/A'}}</nz-descriptions-item>
+  </nz-descriptions>
+  <br>
+  <nz-descriptions class="description-board" nzTitle="套餐信息" nzBordered>
+  </nz-descriptions>
+  <nz-table #bundleTable [nzData]="this.data.customer.bundlePackages"  nzTableLayout="fixed">
+    <thead>
+    <tr>
+      <th nzWidth="60px"></th>
+      <th>Id</th>
+      <th>套餐</th>
+      <th>购买日期</th>
+      <th>价值</th>
+      <th colspan="2">备注</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngFor="let bundle of bundleTable.data">
+      <tr>
+        <td [nzExpand]="expandSet.has(bundle.id)" (nzExpandChange)="onExpandChange(bundle.id, $event)"></td>
+        <td>{{ bundle.id }}</td>
+        <td>{{ bundle.bundlePackageName }}</td>
+        <td>{{ bundle.purchaseDate }}</td>
+        <td>{{ bundle.bundleValue }}</td>
+        <td>{{ bundle.bundleNote }}</td>
+        <td>{{ bundle.bundleNote }}</td>
+      </tr>
+      <tr [nzExpand]="expandSet.has(bundle.id)">
+          <nz-row>
+            <nz-col [nzSpan]="2"><strong></strong></nz-col>
+            <nz-col [nzSpan]="5"><strong>详细信息</strong></nz-col>
+            <nz-col [nzSpan]="2"><strong></strong></nz-col>
+            <nz-col [nzSpan]="10"><strong>项目</strong></nz-col>
+            <nz-col [nzSpan]="5"><strong>剩余次数</strong></nz-col>
+          </nz-row>
+          <nz-row *ngFor="let detail of bundle.packageDetailList">
+            <nz-col [nzSpan]="9"><strong></strong></nz-col>
+            <nz-col [nzSpan]="10">{{detail.treatmentItem.name}}</nz-col>
+            <nz-col [nzSpan]="5">{{detail.remainCount}}</nz-col>
+          </nz-row>
+      </tr>
+    </ng-container>
+    </tbody>
+  </nz-table>
+</div>
+

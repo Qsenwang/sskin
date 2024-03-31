@@ -1,0 +1,60 @@
+<div class="customer-edit-form">
+
+  <!-- 编辑按钮 -->
+  <div class="edit-container">
+    <button nz-button nzType="default" (click)="toggleEdit()" *ngIf="!enableEdit">编辑</button>
+
+    <!-- 表单 -->
+    <form nz-form [formGroup]="customerEditForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="name">客户名称</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input formControlName="name" id="name" [disabled]="!enableEdit"/>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="contactPhone">联系电话</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input formControlName="contactPhone" id="contactPhone" [disabled]="!enableEdit"/>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="customerNote">客户备注</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <textarea nz-input formControlName="customerNote" id="customerNote" [disabled]="!enableEdit"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- 保存按钮仅在编辑模式下显示 -->
+      <nz-form-item *ngIf="enableEdit">
+        <nz-form-control [nzSpan]="14" [nzOffset]="6">
+          <button nz-button nzType="primary" type="button" (click)="updateCustomer()">保存</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+
+
+
+
+
+  <ng-container *ngFor="let bundle of bundlePackageList">
+    <nz-descriptions nzTitle="套餐信息" nzBordered>
+      <nz-descriptions-item nzTitle="套餐名">{{ bundle.bundlePackageName }} test</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="购买日期">{{ bundle.purchaseDate }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="价值">{{ bundle.bundleValue }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="备注">{{ bundle.bundleNote }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Config Info">
+        <div *ngFor="let detail of bundle.packageDetailList">
+          <span> name: {{ detail.treatmentItem.name }}</span><span>remain: {{ detail.remainCount }}</span>
+          <br/>
+        </div>
+      </nz-descriptions-item>
+    </nz-descriptions>
+  </ng-container>
+
+<!--  <pre>{{ bundlePackageList | json }}</pre>-->
+
+</div>

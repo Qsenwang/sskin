@@ -23,14 +23,14 @@
 
     <div *ngFor="let staffTask of staffTasks | async" class="board-test">
       <div class="employee-task-board">
-        <div class="employee-name">{{ staffTask.staffFirstName}}</div>
+        <div class="employee-name">{{ staffTask.staffName}}</div>
         <div class="board-cell-grid">
           <div *ngFor="let cell of gridMatrix" class="cell no-cursor" [ngStyle]="calculateHeight(staffTask.appointmentBaseDtoList)" (click)="addAppointment(staffTask.staffId)"></div>
         </div>
       </div>
       <div *ngFor="let appointment of staffTask.appointmentBaseDtoList" class="appointment no-cursor"
-           (click)="editAppointment(staffTask.staffId, appointment.appointmentId)"
-           [ngStyle]="calculateAppointmentStyle(appointment)"> {{appointment.customerFirstName}}
+           (click)="editAppointment(staffTask.staffId, appointment.appointmentId, appointment.customerId)"
+           [ngStyle]="calculateAppointmentStyle(appointment)"> {{appointment.customerName}}
       </div>
 
     </div>

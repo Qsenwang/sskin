@@ -9,7 +9,7 @@
                         <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a person" formControlName="customer"
                                    class="customer-selector">
                             <nz-option *ngFor="let customer of customerList" [nzValue]="customer"
-                                       [nzLabel]="customer.firstName + ' '+ customer.middleName + ' ' + customer.lastName "></nz-option>
+                                       [nzLabel]="customer.name"></nz-option>
                         </nz-select>
                     </nz-form-control>
                 </nz-form-item>
@@ -95,17 +95,31 @@
             <div nz-col nzSpan="2">
             </div>
 
-            <div nz-col >
-                <label nz-checkbox>特价</label>
+            <div nz-col  nzSpan="2">
+                <label nz-checkbox class="box-label">特价</label>
             </div>
-            <div nz-col >
-                <label nz-checkbox>套餐</label>
+            <div nz-col nzSpan="2">
+                <label nz-checkbox class="box-label">套餐</label>
             </div>
-            <div nz-col >
-                共<label nz-checkbox>几次</label>
+
+            <div nz-col nzSpan="1">
             </div>
-            <div nz-col >
-                这次为第共<label nz-checkbox></label>次
+
+            <div nz-col nzSpan="3">
+                <div nz-col>
+                    <nz-form-item>
+                            <nz-form-label class="box-label">总次数：</nz-form-label>
+                            <input nz-input class="box-input" >
+                    </nz-form-item>
+                </div>
+            </div>
+            <div nz-col nzSpan="3">
+                <nz-form-item>
+                    <nz-form-label class="box-label">本次为第：</nz-form-label>
+                    <input nz-input class="box-input" >
+                    <nz-form-label class="box-label"> 次</nz-form-label>
+                </nz-form-item>
+
             </div>
         </div>
 
@@ -118,26 +132,16 @@
                 </nz-select>
             </nz-form-control>
         </nz-form-item>
-        <!--    <mat-form-field>-->
-        <!--    <mat-label>费用：</mat-label>-->
-        <!--    <input matInput formControlName="charge">-->
-        <!--  </mat-form-field>-->
-
-        <!--    <mat-form-field>-->
-        <!--      <mat-label>付款方式：</mat-label>-->
-        <!--      <input matInput formControlName="paymentMethod">-->
-        <!--    </mat-form-field>-->
 
         <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a person" formControlName="staff"
                    class="staff-selector">
-            <nz-option *ngFor="let staff of staffList" [nzValue]="staff" [nzLabel]="staff.firstName "></nz-option>
+            <nz-option *ngFor="let staff of staffList" [nzValue]="staff" [nzLabel]="staff.name "></nz-option>
         </nz-select>
 
-        <mat-form-field>
-            <mat-label>staffBonus：</mat-label>
-            <input matInput formControlName="staffBonus">
-        </mat-form-field>
+
         <button type="submit">保存</button>
+        <button >完成</button>
+        <button type="delete">删除</button>
     </form>
 </div>
 

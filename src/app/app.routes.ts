@@ -6,6 +6,7 @@ import {StaffComponent} from "./staff/staff.component";
 import {SummaryComponent} from "./summary/summary.component";
 import {TreatmentComponent} from "./treatment/treatment.component";
 import {BookingComponent} from "./booking/booking.component";
+import {CustomerEditComponent} from "./customer/customer-edit/customer-edit.component";
 
 
 export const routes: Routes = [
@@ -17,4 +18,6 @@ export const routes: Routes = [
   {path:'treatment', component:TreatmentComponent},
   {path:'inventory', component:InventoryComponent},
   {path:'revenue', component:RevenueComponent},
+  {path:'customer/:customerId/edit', component:CustomerEditComponent},
+  {path:'customer/newCustomer', component:CustomerEditComponent},
 ];

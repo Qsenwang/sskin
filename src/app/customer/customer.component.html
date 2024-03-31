@@ -1,2 +1,42 @@
-<p>customer works!</p>
+<div class="customer-list-panel" >
+  <div>
+    <nz-input-group [nzSuffix]="suffixIconSearch" class="search-bar">
+      <input nz-input placeholder="Search customers" (input)="search($event)" />
+      <ng-template #suffixIconSearch>
+        <i nz-icon nzType="search"></i>
+      </ng-template>
+    </nz-input-group>
 
+    <button nz-button nzType="primary" class="add-new-customer" (click)="createNewCustomer()">添加新客户</button>
+
+    <nz-table #editableTable
+              [nzData]="filteredCustomers"
+              [nzFrontPagination]="true"
+              [nzPageSize]="10"
+              [nzShowPagination]="true"
+              nzTableLayout="fixed"
+              ngSkipHydration>
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let customer of editableTable.data">
+          <td>{{ customer.id }}</td>
+          <td>{{ customer.name }}</td>
+          <td>{{ customer.contactPhone }}</td>
+          <td>
+            <a nz-button nzType="primary" (click)="editCustomer(customer.id); $event.stopPropagation();">Edit</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a nz-button nzType="primary" (click)="viewCustomer(customer); $event.stopPropagation();">view</a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+</div>

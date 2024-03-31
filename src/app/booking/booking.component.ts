@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CommonModule, DatePipe} from "@angular/common";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {AppointmentDialogComponent} from "./appointment-dialog/appointment-dialog.component";
-import {AppointmentBaseDto, AppointmentDetailDto, staffDailyTaskDto} from "@shared/sskinModel/booking.model"
+import {AppointmentBaseDto, AppointmentDetailDto, staffDailyTaskDto} from "@shared/sskinModel/sskinDto.model"
 import {BookingService} from "./booking.service";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
@@ -105,7 +105,8 @@ export class BookingComponent implements OnInit {
         // disableClose:true,
         data:{
           staffId : staffId,
-          appointmentId : null
+          appointmentId : null,
+          customerId: null
         }
       })
     appointmentEditDialog.afterClosed().subscribe(result => {
@@ -113,7 +114,7 @@ export class BookingComponent implements OnInit {
     });
   }
 
-  editAppointment(staffId: string, appointmentId: string){
+  editAppointment(staffId: string, appointmentId: string, customerId: string){
       const appointmentEditDialog = this.dialog.open(AppointmentDialogComponent,
         {
           width:"1000px",
@@ -122,7 +123,8 @@ export class BookingComponent implements OnInit {
           // disableClose:true,
           data:{
             staffId : staffId,
-            appointmentId : appointmentId
+            appointmentId : appointmentId,
+            customer: customerId,
           }
         })
     appointmentEditDialog.afterClosed().subscribe(result => {
