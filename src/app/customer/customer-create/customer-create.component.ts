@@ -4,11 +4,12 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {CustomerService} from "../customer.service";
 import {NzInputDirective} from "ng-zorro-antd/input";
 import {NzModalRef} from "ng-zorro-antd/modal";
-import {CustomerDto} from "@shared/sskinModel/sskinDto.model";
+import {CustomerBasicInfoDto, CustomerDetailDto} from "@shared/sskinModel/sskinDto.model";
 import {NgIf} from "@angular/common";
 import {NzSpinComponent} from "ng-zorro-antd/spin";
 import {NzIconDirective} from "ng-zorro-antd/icon";
 import {NzButtonComponent} from "ng-zorro-antd/button";
+import {NzMessageModule, NzMessageService} from "ng-zorro-antd/message";
 
 @Component({
   selector: 'app-customer-create',
@@ -34,7 +35,10 @@ export class CustomerCreateComponent {
   resultSuccess = false;
   resultError = false;
 
-  constructor(private fb: FormBuilder, private customerService: CustomerService, private modalRef: NzModalRef) {
+  constructor(private fb: FormBuilder,
+              private customerService: CustomerService,
+              private modalRef: NzModalRef,
+              private message: NzMessageService) {
     this.customerCreateFrm = this.fb.group({
       name: [null, Validators.required],
       contactPhone: [null, [Validators.required, Validators.pattern('^\\+?\\d{10,}$')]],
@@ -49,23 +53,24 @@ export class CustomerCreateComponent {
   onCreate(): void {
     if (this.customerCreateFrm.valid) {
       this.isLoading = true;
-      const customerData: CustomerDto = {
+      const customerData: CustomerBasicInfoDto = {
         id:'',
         name: this.customerCreateFrm.value.name,
         contactPhone: this.customerCreateFrm.value.contactPhone,
         customerNote: this.customerCreateFrm.value.customerNote,
-        bundlePackages: [],
         active: this.customerCreateFrm.value.active,
       };
 
-      this.customerService.createCustomer(customerData).subscribe({
+      this.customerService.createNewCustomer(customerData).subscribe({
         next: (res) => {
           this.isLoading = false;
           this.resultSuccess = true;
+          this.message.success('保存成功'); // 显示成功消息
         },
         error: (error) => {
           this.isLoading = false;
           this.resultError = true;
+          this.message.error('Error updating customer', error);
         },
       });
     }

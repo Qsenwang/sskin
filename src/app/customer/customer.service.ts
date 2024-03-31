@@ -2,8 +2,9 @@ import {Injectable} from "@angular/core";
 import {ApiService} from "@shared/api/api.service";
 import {Observable} from "rxjs";
 import {
+  CustomerBasicInfoDto,
   CustomerBundleDto,
-  CustomerDto, TreatmentItemDto,
+  CustomerDetailDto, TreatmentItemDto,
 } from "@shared/sskinModel/sskinDto.model";
 import {sskinWebApi} from "@shared/api/sskin-endpoints";
 import {HttpParams} from "@angular/common/http";
@@ -21,9 +22,9 @@ export class CustomerService {
     return this.apiService.get<TreatmentItemDto[]>(url, {})
   }
 
-  getAllCustomer(): Observable<CustomerDto[]> {
+  getAllCustomer(): Observable<CustomerDetailDto[]> {
     const url = sskinWebApi.customerEndpoints.getAllCustomer();
-    return this.apiService.get<CustomerDto[]>(url, {})
+    return this.apiService.get<CustomerDetailDto[]>(url, {})
   }
 
   getCustomerBundles(customerId: string) {
@@ -33,17 +34,17 @@ export class CustomerService {
 
   getCustomerById(customerId: string) {
     const url = sskinWebApi.customerEndpoints.getCustomerById(customerId);
-    return this.apiService.get<CustomerDto>(url, {})
+    return this.apiService.get<CustomerDetailDto>(url, {})
   }
 
-  updateCustomer(customerId: string, customerData: CustomerDto): Observable<any> {
+  updateCustomer(customerId: string, customerData: CustomerDetailDto): Observable<any> {
     const url = sskinWebApi.customerEndpoints.updateCustomer(customerId);
-    return this.apiService.put<CustomerDto>(url, customerData, {});
+    return this.apiService.put<CustomerDetailDto>(url, customerData, {});
   }
 
-  createCustomer(customerData: CustomerDto): Observable<any> {
+  createNewCustomer(customerData: CustomerBasicInfoDto): Observable<any> {
     const url = sskinWebApi.customerEndpoints.newCustomer();
-    return this.apiService.post<CustomerDto>(url, customerData, {});
+    return this.apiService.post<CustomerDetailDto>(url, customerData, {});
   }
 
 }

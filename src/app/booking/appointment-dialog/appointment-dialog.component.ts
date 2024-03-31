@@ -14,8 +14,8 @@ import {MatInputModule} from "@angular/material/input";
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {
-  AppointmentDetailDto, PackageDetailList, CustomerBundleDto,
-  CustomerDto,
+  AppointmentDetailDto, PackageDetailListDto, CustomerBundleDto,
+  CustomerDetailDto,
   staffDailyTaskDto,
   StaffDto,
   TreatmentItemDto
@@ -73,7 +73,7 @@ export class AppointmentDialogComponent implements OnInit {
   _subscriptions: Subscription = new Subscription()
   treatmentItems: TreatmentItemDto[] = [];
   staffList: StaffDto[] = [];
-  customerList: CustomerDto[] = [];
+  customerList: CustomerDetailDto[] = [];
   customerBundleList: CustomerBundleDto[] = [];
 
   constructor(
@@ -96,7 +96,7 @@ export class AppointmentDialogComponent implements OnInit {
       this.fetchAppointmentDetail(this.data.appointmentId)
     }
     this.appointmentFrmGroup.get('customer').valueChanges?.subscribe(
-      (newCustomer: CustomerDto) => {
+      (newCustomer: CustomerDetailDto) => {
         if (newCustomer) {
           this.bookingService.getCustomerBundles(newCustomer.id).subscribe(
             {

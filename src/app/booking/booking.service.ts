@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import {
   AppointmentDetailDto, CustomerBundleDto,
-  CustomerDto,
+  CustomerDetailDto,
   staffDailyTaskDto,
   StaffDto,
   TreatmentItemDto
@@ -48,9 +48,9 @@ export class BookingService {
     return this.apiService.get<StaffDto[]>(url, {})
   }
 
-  getAllCustomer(): Observable<CustomerDto[]> {
+  getAllCustomer(): Observable<CustomerDetailDto[]> {
     const url = sskinWebApi.customerEndpoints.getAllCustomer();
-    return this.apiService.get<CustomerDto[]>(url, {})
+    return this.apiService.get<CustomerDetailDto[]>(url, {})
   }
 
   getCustomerBundles(customerId: string) {

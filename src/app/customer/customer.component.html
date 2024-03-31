@@ -9,7 +9,13 @@
 
     <button nz-button nzType="primary" class="add-new-customer" (click)="createNewCustomer()">添加新客户</button>
 
-    <nz-table #editableTable [nzData]="filteredCustomers"  nzTableLayout="fixed" ngSkipHydration>
+    <nz-table #editableTable
+              [nzData]="filteredCustomers"
+              [nzFrontPagination]="true"
+              [nzPageSize]="10"
+              [nzShowPagination]="true"
+              nzTableLayout="fixed"
+              ngSkipHydration>
       <thead>
       <tr>
         <th>Id</th>
@@ -19,7 +25,7 @@
       </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let customer of filteredCustomers">
+        <tr *ngFor="let customer of editableTable.data">
           <td>{{ customer.id }}</td>
           <td>{{ customer.name }}</td>
           <td>{{ customer.contactPhone }}</td>
@@ -32,9 +38,5 @@
       </tbody>
     </nz-table>
   </div>
-
-
-
-
 
 </div>

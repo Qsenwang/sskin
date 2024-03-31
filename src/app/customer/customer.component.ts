@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router, RouterLink, RouterLinkActive} from "@angular/router";
-import {CustomerDto} from "@shared/sskinModel/sskinDto.model";
+import {CustomerDetailDto} from "@shared/sskinModel/sskinDto.model";
 import {NzInputDirective, NzInputGroupComponent} from "ng-zorro-antd/input";
 import {NzListComponent, NzListItemComponent, NzListItemMetaComponent} from "ng-zorro-antd/list";
 import {NgForOf, NgIf} from "@angular/common";
@@ -49,13 +49,14 @@ import {CustomerCreateComponent} from "./customer-create/customer-create.compone
 })
 export class CustomerComponent  implements OnInit {
 
-  customerList: CustomerDto[] = [];
-  filteredCustomers: CustomerDto[] = [];
+  customerList: CustomerDetailDto[] = [];
+  filteredCustomers: CustomerDetailDto[] = [];
 
   constructor(
     private customerService: CustomerService,
     private router: Router,
-    private modalService: NzModalService) {}
+    private modalService: NzModalService) {
+  }
   ngOnInit(): void {
     this.getAllCustomer();
   }
@@ -79,7 +80,7 @@ export class CustomerComponent  implements OnInit {
     );
   }
 
-  viewCustomer(customer: CustomerDto) {
+  viewCustomer(customer: CustomerDetailDto) {
     const modal: any = this.modalService.create({
       nzTitle: 'Customer Info',
       nzContent: CustomerViewComponent,

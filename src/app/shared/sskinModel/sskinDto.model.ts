@@ -46,15 +46,23 @@
     offBoardDate: Date;
     active : boolean;
   }
-  export interface CustomerDto {
+
+  export interface CustomerBasicInfoDto {
     id: string;
     name: string;
     contactPhone: string;
     customerNote: string;
-    bundlePackages: CustomerBundleDto[];
     active: boolean;
   }
 
+  export interface CustomerDetailDto {
+    id: string;
+    name: string;
+    contactPhone: string;
+    customerNote: string;
+    bundlePackages: CustomerBundleDto[] | null;
+    active: boolean;
+  }
 
   export interface CustomerBundleDto {
     id: string;
@@ -64,15 +72,16 @@
     bundleNote: string;
     customerId: string;
     paymentId: string;
-    packageDetailList: PackageDetailList[];
+    packageDetailList: PackageDetailListDto[] | null;
     active: boolean;
   }
 
-  export interface PackageDetailList {
+  export interface PackageDetailListDto {
     id: string;
-    treatmentItemId: TreatmentItemDto;
-    treatmentItem: string;
+    treatmentItem: TreatmentItemDto;
+    treatmentItemId: string;
     remainCount: number;
+    bundlePackageId: string;
     active: boolean;
 }
 

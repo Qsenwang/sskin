@@ -1,72 +1,60 @@
 <div class="customer-edit-form">
-  <form nz-form [formGroup]="customerEditForm" (ngSubmit)="submitForm()">
-    <nz-form-item>
-      <nz-form-label [nzSpan]="6" nzFor="name">客户名称</nz-form-label>
-      <nz-form-control [nzSpan]="14">
-        <input nz-input formControlName="name" id="name" />
-      </nz-form-control>
-    </nz-form-item>
 
-    <nz-form-item>
-      <nz-form-label [nzSpan]="6" nzFor="contactPhone">联系电话</nz-form-label>
-      <nz-form-control [nzSpan]="14">
-        <input nz-input formControlName="contactPhone" id="contactPhone" />
-      </nz-form-control>
-    </nz-form-item>
+  <!-- 编辑按钮 -->
+  <div class="edit-container">
+    <button nz-button nzType="default" (click)="toggleEdit()" *ngIf="!enableEdit">编辑</button>
 
-    <nz-form-item>
-      <nz-form-label [nzSpan]="6" nzFor="customerNote">客户备注</nz-form-label>
-      <nz-form-control [nzSpan]="14">
-        <textarea nz-input formControlName="customerNote" id="customerNote"></textarea>
-      </nz-form-control>
-    </nz-form-item>
+    <!-- 表单 -->
+    <form nz-form [formGroup]="customerEditForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="name">客户名称</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input formControlName="name" id="name" [disabled]="!enableEdit"/>
+        </nz-form-control>
+      </nz-form-item>
 
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="contactPhone">联系电话</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input formControlName="contactPhone" id="contactPhone" [disabled]="!enableEdit"/>
+        </nz-form-control>
+      </nz-form-item>
 
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="customerNote">客户备注</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <textarea nz-input formControlName="customerNote" id="customerNote" [disabled]="!enableEdit"></textarea>
+        </nz-form-control>
+      </nz-form-item>
 
-    <!-- 动态添加的捆绑包表单 -->
-    <button (click)="addBundlePackage()">添加捆绑包</button>
-    <nz-table>
-      <thead>
-      <tr>
-      <tr>
-        <th nzWidth="60px"></th>
-        <th>名称</th>
-        <th>购买日期</th>
-        <th>价值</th>
-        <th>备注</th>
-        <th>操作</th>
-      </tr>
-      </thead>
-      <tbody formArrayName="bundlePackages">
-      <tr *ngFor="let bundle of bundlePackagesFormArray.controls; let i = index" [formGroupName]="i">
-        <td>
-          <input formControlName="bundlePackageName" />
-          <div *ngIf="bundle.get('bundlePackageName')?.errors?.['required']">姓名必填</div>
-        </td>
-        <td>
-          <input type="date" formControlName="purchaseDate" />
-          <div *ngIf="bundle.get('purchaseDate')?.errors?.['required']">购买日期必填</div>
-        </td>
-        <td>
-          <input formControlName="bundleValue" />
-        </td>
-        <td>
-          <input formControlName="bundleNote" />
-        </td>
-        <td>
-          <button (click)="saveBundlePackage(i)">保存</button>
-          <button (click)="cancelEdit(i)">取消</button>
-        </td>
-      </tr>
-      </tbody>
-    </nz-table>
+      <!-- 保存按钮仅在编辑模式下显示 -->
+      <nz-form-item *ngIf="enableEdit">
+        <nz-form-control [nzSpan]="14" [nzOffset]="6">
+          <button nz-button nzType="primary" type="button" (click)="updateCustomer()">保存</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
 
 
 
-    <nz-form-item>
-      <nz-form-control [nzSpan]="14" [nzOffset]="6">
-        <button nz-button nzType="primary" type="submit">保存</button>
-      </nz-form-control>
-    </nz-form-item>
-  </form>
+
+
+  <ng-container *ngFor="let bundle of bundlePackageList">
+    <nz-descriptions nzTitle="套餐信息" nzBordered>
+      <nz-descriptions-item nzTitle="套餐名">{{ bundle.bundlePackageName }} test</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="购买日期">{{ bundle.purchaseDate }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="价值">{{ bundle.bundleValue }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="备注">{{ bundle.bundleNote }}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Config Info">
+        <div *ngFor="let detail of bundle.packageDetailList">
+          <span> name: {{ detail.treatmentItem.name }}</span><span>remain: {{ detail.remainCount }}</span>
+          <br/>
+        </div>
+      </nz-descriptions-item>
+    </nz-descriptions>
+  </ng-container>
+
+<!--  <pre>{{ bundlePackageList | json }}</pre>-->
+
 </div>
