@@ -18,7 +18,7 @@ export class CustomerService {
   }
 
   getAllTreatmentItems(): Observable<TreatmentItemDto[]> {
-    const url = sskinWebApi.treatmentEndpoints.getAllTreatmentItems();
+    const url = sskinWebApi.treatmentEndpoints.getAllItems();
     return this.apiService.get<TreatmentItemDto[]>(url, {})
   }
 

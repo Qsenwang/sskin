@@ -65,7 +65,7 @@ export class CustomerComponent  implements OnInit {
     return this.customerService.getAllCustomer().subscribe({
       next: (data) => {
         this.customerList = data;
-        this.filteredCustomers = data;
+        this.filteredCustomers =  [...data];
       },
       error: (error) => {
         console.log(error)

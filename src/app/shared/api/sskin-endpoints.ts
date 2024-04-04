@@ -2,10 +2,18 @@ import {dateTimestampProvider} from "rxjs/internal/scheduler/dateTimestampProvid
 
 export const sskinWebApi = {
   treatmentEndpoints: {
-    getAllTreatmentItems: () => `http://localhost:8080/treatment-item/all`,
+    getAllItems: () => `http://localhost:8080/treatment-item/all`,
+    getItemById: (itemId: string) =>`http://localhost:8080/treatment-item/${itemId}`,
+    updateItem: (itemId: string) =>`http://localhost:8080/treatment-item/${itemId}`,
+    newItem: () =>`http://localhost:8080/treatment-item/new`,
+    removeItem: (itemId: string) =>`http://localhost:8080/treatment-item/${itemId}`,
   },
   staffEndpoints:{
     getAllStaff: () => `http://localhost:8080/staff/all`,
+    getStaffById: (staffId: string) =>`http://localhost:8080/staff/${staffId}`,
+    updateStaff: (staffId: string) =>`http://localhost:8080/staff/${staffId}`,
+    newStaff: () =>`http://localhost:8080/staff/new`,
+    removeStaff: (staffId: string) =>`http://localhost:8080/staff/${staffId}`,
   },
   bookingEndpoints:{
     getDayTasks: ()=>`http://localhost:8080/booking/summary`,
