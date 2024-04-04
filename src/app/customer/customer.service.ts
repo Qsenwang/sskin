@@ -4,7 +4,7 @@ import {Observable} from "rxjs";
 import {
   CustomerBasicInfoDto,
   CustomerBundleDto,
-  CustomerDetailDto, TreatmentItemDto,
+  CustomerDetailDto, PackageAndPaymentDetailDto, TreatmentItemDto,
 } from "@shared/sskinModel/sskinDto.model";
 import {sskinWebApi} from "@shared/api/sskin-endpoints";
 import {HttpParams} from "@angular/common/http";
@@ -32,7 +32,7 @@ export class CustomerService {
     return this.apiService.get<CustomerBundleDto[]>(url, {})
   }
 
-  getCustomerById(customerId: string) {
+  getCustomer(customerId: string) {
     const url = sskinWebApi.customerEndpoints.getCustomerById(customerId);
     return this.apiService.get<CustomerDetailDto>(url, {})
   }
@@ -45,6 +45,20 @@ export class CustomerService {
   createNewCustomer(customerData: CustomerBasicInfoDto): Observable<any> {
     const url = sskinWebApi.customerEndpoints.newCustomer();
     return this.apiService.post<CustomerDetailDto>(url, customerData, {});
+  }
+
+  getBundleDetail(bundleId: string) {
+    const url = sskinWebApi.customerEndpoints.getBundlePackageById(bundleId);
+    return this.apiService.get<PackageAndPaymentDetailDto>(url, {})
+  }
+
+  updateBundlePackage(bundlePackageData: PackageAndPaymentDetailDto): Observable<any> {
+    const url = sskinWebApi.customerEndpoints.updateBundlePackage(bundlePackageData.customerId, bundlePackageData.id);
+    return this.apiService.put(url, bundlePackageData, {});
+  }
+  addNewBundlePackage(bundlePackageData: PackageAndPaymentDetailDto): Observable<any> {
+    const url = sskinWebApi.customerEndpoints.addNewBundlePackage(bundlePackageData.customerId, bundlePackageData.id);
+    return this.apiService.post(url, bundlePackageData, {});
   }
 
 }

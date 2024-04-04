@@ -1,23 +1,28 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {NzCheckboxComponent} from "ng-zorro-antd/checkbox";
 import {NzColDirective, NzRowDirective} from "ng-zorro-antd/grid";
 import {NzDatePickerComponent} from "ng-zorro-antd/date-picker";
 import {NzFormDirective, NzFormItemComponent, NzFormLabelComponent} from "ng-zorro-antd/form";
-import {NzInputDirective, NzInputGroupComponent, NzInputModule} from "ng-zorro-antd/input";
+import {NzInputDirective, NzInputModule} from "ng-zorro-antd/input";
 import {NzOptionComponent, NzSelectComponent} from "ng-zorro-antd/select";
 import {ActivatedRoute} from "@angular/router";
 import {CustomerService} from "../customer.service";
-import {CustomerBundleDto, CustomerDetailDto} from "@shared/sskinModel/sskinDto.model";
+import {CustomerBundleDto, PackageDetailListDto, PaymentDto} from "@shared/sskinModel/sskinDto.model";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {NzButtonComponent} from "ng-zorro-antd/button";
 import {NzModalModule, NzModalService} from "ng-zorro-antd/modal";
-import {NzTableComponent, NzTableModule} from "ng-zorro-antd/table";
-import {NzDescriptionsComponent, NzDescriptionsModule} from "ng-zorro-antd/descriptions";
+import {NzTableModule} from "ng-zorro-antd/table";
+import {NzDescriptionsModule} from "ng-zorro-antd/descriptions";
 import {NzBadgeComponent} from "ng-zorro-antd/badge";
-import {NzAutocompleteModule, NzAutocompleteTriggerDirective} from "ng-zorro-antd/auto-complete";
+import {NzAutocompleteModule} from "ng-zorro-antd/auto-complete";
 import {NzIconDirective} from "ng-zorro-antd/icon";
+import {NzDividerComponent} from "ng-zorro-antd/divider";
+import {NzDrawerModule} from "ng-zorro-antd/drawer";
+import {CustomerCreateComponent} from "../customer-create/customer-create.component";
+import {BundlePackageEditComponent} from "./bundle-package-edit-component/bundle-package-edit-component";
+import {FormFieldErrorsComponent} from "@shared/form-field-errors/form-field-errors.component";
 
 @Component({
   selector: 'app-customer-edit',
@@ -41,77 +46,85 @@ import {NzIconDirective} from "ng-zorro-antd/icon";
     NzModalModule,
     NgIf,
     NzDescriptionsModule,
-    NzBadgeComponent,
     NzInputModule,
-    NzAutocompleteModule,
-    NzIconDirective,
-    JsonPipe
+    JsonPipe,
+    NzDividerComponent,
+    NzDrawerModule,
+    FormFieldErrorsComponent
   ],
+
   templateUrl: './customer-edit.component.html',
   styleUrl: './customer-edit.component.scss'
 })
 export class CustomerEditComponent implements OnInit {
-  customerEditForm: FormGroup |any;
-  enableEdit = false; // 控制是否可以编辑
+  customerBasicEditForm: FormGroup | any;
+  enableEdit = false;
   customerId: string | any;
-  selectedBundle : CustomerBundleDto | any;
   bundlePackageList: CustomerBundleDto[] | any;
+
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private customerService: CustomerService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private modalService: NzModalService
   ) {
-    this.customerEditForm = this.fb.group({
+    this.customerBasicEditForm = this.fb.group({
       id: [null, Validators.required],
       name: [null, Validators.required],
       contactPhone: [null, [Validators.required, Validators.pattern('^\\+?\\d{10,}$')]],
       customerNote: [null],
-      active:[null]
+      active: [null]
     });
   }
 
   ngOnInit(): void {
-
     this.customerId = this.route.snapshot.paramMap.get('customerId');
-    if(!!this.customerId){
+    if (!!this.customerId) {
       this.loadCustomerInfo(this.customerId);
     }
-
   }
 
   loadCustomerInfo(customerId: string): void {
-    this.customerService.getCustomerById(customerId).subscribe({
+    this.customerService.getCustomer(customerId).subscribe({
       next: (customer) => {
-
-        this.customerEditForm.patchValue({
+        this.customerBasicEditForm.patchValue({
           id: customer.id,
           name: customer.name,
           contactPhone: customer.contactPhone,
           customerNote: customer.customerNote,
-          active:customer.active});
-        if(!!customer.bundlePackages){
+          active: customer.active
+        });
+        if (!!customer.bundlePackages) {
           this.bundlePackageList = customer.bundlePackages;
         }
-        this.customerEditForm.disable();
+        this.customerBasicEditForm.readonly = true;
+        this.enableEdit = false;
       },
       error: () => this.message.error('加载客户信息失败')
     });
   }
+
   toggleEdit() {
     this.enableEdit = !this.enableEdit;
-    this.enableEdit ? this.customerEditForm.enable() : this.customerEditForm.disable();
+    this.enableEdit ? this.customerBasicEditForm.enable() : this.customerBasicEditForm.readonly();
+  }
+
+  handleFocus(event: any) {
+    if (!this.enableEdit) {
+      event.target.blur();
+    }
   }
 
   updateCustomer() {
     // 这里是你的API端点
-    if (this.customerEditForm.valid) {
-      this.customerService.updateCustomer(this.customerId,this.customerEditForm.value).subscribe({
+    if (this.customerBasicEditForm.valid) {
+      this.customerService.updateCustomer(this.customerId, this.customerBasicEditForm.value).subscribe({
         next: (response) => {
           // 处理成功的响应
+          this.enableEdit = false;
           this.message.success('保存成功'); // 显示成功消息
-          this.enableEdit = false; // 保存成功后禁用表单编辑
-          this.customerEditForm.disable();
+          this.loadCustomerInfo(this.customerId);
         },
         error: (error) => {
           // 处理错误
@@ -119,5 +132,51 @@ export class CustomerEditComponent implements OnInit {
         }
       });
     }
+  }
+
+  cancelUpdate() {
+    this.enableEdit = false;
+    this.loadCustomerInfo(this.customerId);
+  }
+
+  openBundleEditForm(bundleId: string | null) {
+
+    const modalRef  = this.modalService.create({
+      nzTitle: '套餐内容修改',
+      nzContent: BundlePackageEditComponent,
+      nzWidth: 1000,
+      nzFooter:null,
+      nzData: {
+        customerId: this.customerId,
+        bundleId: bundleId
+      },
+    });
+    const instance = modalRef.getContentComponent();
+    instance.saveSuccess.subscribe((success) => {
+      if (success) {
+        this.enableEdit = false;
+        this.message.success('保存成功'); // 显示成功消息
+        this.loadCustomerInfo(this.customerId);
+      }
+    });
+  }
+
+  deleteBundle(bundleId: string) {
+  }
+
+  formHasErrors(): boolean {
+    return this.customerBasicEditForm && this.customerBasicEditForm.invalid;
+  }
+
+  getErrorMessage(controlName: string): string {
+    const control = this.customerBasicEditForm.get(controlName);
+    if (control?.errors) {
+      if (control.errors['required']) {
+        return 'This field is required';
+      } else if (control.errors['pattern']) {
+        return 'The format is not correct';
+      }
+    }
+    return '';
   }
 }

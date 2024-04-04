@@ -1,0 +1,20 @@
+@import "\styles.scss";
+.package-form {
+  padding: 30px;
+  h3 {
+    //color: $color-grey2;
+  }
+  .form-section {
+    margin-bottom: 24px;
+  }
+  .add-detail-btn {
+    margin-bottom: 16px;
+  }
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    button {
+      margin-left: 8px;
+    }
+  }
+}

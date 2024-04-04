@@ -27,7 +27,7 @@ import {NzMessageModule, NzMessageService} from "ng-zorro-antd/message";
   styleUrl: './customer-create.component.scss'
 })
 export class CustomerCreateComponent {
-  @Output() operationSuccess = new EventEmitter<boolean>(); // 可以发送任何类型的事件对象
+  @Output() operationSuccess = new EventEmitter<boolean>(); //
 
 
   customerCreateFrm: FormGroup;
