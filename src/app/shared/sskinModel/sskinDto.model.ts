@@ -85,6 +85,27 @@
     active: boolean;
 }
 
+export interface PackageAndPaymentDetailDto {
+  id: string;
+  bundlePackageName: string;
+  purchaseDate: Date;
+  bundleValue: string;
+  bundleNote: string;
+  customerId: string;
+  paymentId: string;
+  packageDetailList: PackageDetailListDto[] | null;
+  active: boolean;
+  paymentDetail: PaymentDto;
 
+}
 
+export interface PaymentDto {
+  id: string;
+  cash: string;
+  card: string;
+  transfer: string;
+  membershipCard: string;
+  insurance: string;
+  rmb: string;
+}
 

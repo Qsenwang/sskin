@@ -1,0 +1,16 @@
+@import 'styles.scss';
+
+.custom-form-input:read-only{
+  cursor: not-allowed;
+}
+
+::ng-deep .ant-form-item-label > label {
+  font-size: 20px;
+}
+
+.bundle-list-item {
+  margin-top: 20px;
+}
+.customer-edit-panel {
+  padding: 50px;
+}

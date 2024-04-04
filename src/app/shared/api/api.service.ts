@@ -45,7 +45,7 @@ export class ApiService {
             responseType?: 'json',
             withCredentials?: boolean }) : Observable<T>{
     options = options || {}
-    return this.http.put<T>(url, JSON.stringify(data), options)
+    return this.http.put<T>(url, data, options)
   }
 
   delete(url: string): Observable<any>{

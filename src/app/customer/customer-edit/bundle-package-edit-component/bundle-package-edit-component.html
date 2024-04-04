@@ -1,0 +1,148 @@
+<form nz-form [formGroup]="bundlePackageEditForm" class="package-form">
+  <div class="form-section basic-info">
+    <h3>基本信息</h3>
+    <br>
+    <nz-form-item>
+      <nz-form-label nzRequired>套餐名</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="bundlePackageName" id="bundlePackageName"
+               placeholder="please enter bundlePackageName"/>
+        <form-field-errors
+          [control]="bundlePackageEditForm.get('bundlePackageName')"
+          [customMessages]="{'required': 'name is required'}">
+        </form-field-errors>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired>购买日期</nz-form-label>
+      <nz-form-control>
+        <nz-date-picker formControlName="purchaseDate" id="purchaseDate"/>
+        <form-field-errors
+          [control]="bundlePackageEditForm.get('purchaseDate')"
+          [customMessages]="{'required': 'purchaseDate is required'}">
+        </form-field-errors>
+      </nz-form-control>
+      <nz-form-label nzRequired>套餐价值</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="bundleValue" id="bundleValue" placeholder="please enter bundleValue"/>
+        <form-field-errors
+          [control]="bundlePackageEditForm.get('bundleValue')"
+          [customMessages]="{'pattern': 'Invalid format, numbers only', 'required': 'bundleValue is required'}">
+        </form-field-errors>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>备注</nz-form-label>
+      <nz-form-control>
+        <textarea  nz-input formControlName="bundleNote" id="bundleNote" placeholder="please enter bundleNote"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+
+  <nz-divider></nz-divider>
+
+
+  <div class="form-section package-list" formArrayName="packageDetailList">
+    <div nz-row [nzGutter]="24">
+      <div nz-col nzSpan="20">
+        <h3>套餐内容</h3>
+        <br>
+      </div>
+      <div nz-col nzSpan="4">
+        <button  nz-button (click)="addPackageDetail()" nzType="primary" class="add-detail-btn">添加</button>
+      </div>
+    </div>
+    <div nz-row *ngFor="let packageDetail of packageDetailList.controls; let i = index" [formGroupName]="i" class="margin-bottom-small">
+      <nz-form-item>
+        <nz-form-label nzRequired>类型</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="treatmentItem" nzShowSearch nzPlaceHolder="Please choose the type">
+            <nz-option *ngFor="let item of allItems" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+          </nz-select>
+          <form-field-errors
+            [control]="packageDetailList.controls[i].get('treatmentItem')"
+            [customMessages]="{'required': 'treatmentItemName is required'}">
+          </form-field-errors>
+        </nz-form-control>
+
+        <nz-form-label nzRequired class="margin-left-small">剩余次数</nz-form-label>
+        <nz-form-control >
+          <input nz-input formControlName="remainCount" placeholder="Please enter remain count"/>
+          <form-field-errors
+            [control]="packageDetailList.controls[i].get('remainCount')"
+            [customMessages]="{'pattern': 'Invalid remainCount, please enter only numbers', 'required': 'remainCount is required'}">
+          </form-field-errors>
+        </nz-form-control>
+      </nz-form-item>
+      <button  class="margin-left-small" nz-button (click)="removePackageDetail(i)" nzType="dashed">删除</button>
+    </div>
+  </div>
+
+  <nz-divider></nz-divider>
+
+  <div class="form-section payment-detail" formGroupName="paymentDetail">
+    <h3>支付详情</h3>
+    <br>
+      <nz-row [nzGutter]="24">
+        <div nz-col nzSpan="8">
+          <nz-form-item>
+            <nz-form-label>现金</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="cash" placeholder="Enter cash amount"/>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="8">
+          <nz-form-item>
+            <nz-form-label>刷卡</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="card" placeholder="Enter card amount"/>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="8">
+          <nz-form-item>
+            <nz-form-label>转账</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="transfer" placeholder="Enter transfer amount"/>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <!-- Continue for other payment fields like membershipCard, insurance, rmb -->
+      </nz-row>
+      <nz-row [nzGutter]="24">
+        <div nz-col nzSpan="8">
+          <nz-form-item>
+            <nz-form-label>会员卡</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="membershipCard" placeholder="Enter membershipCard amount"/>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="8">
+          <nz-form-item>
+            <nz-form-label>保险</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="insurance" placeholder="Enter insurance amount"/>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="8">
+          <nz-form-item>
+            <nz-form-label>人民币</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="rmb" placeholder="Enter rmb amount"/>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </nz-row>
+  </div>
+
+  <div class="form-actions">
+    <button nz-button (click)="close()" nzType="default">取消</button>
+    <button nz-button (click)="test()" nzType="default">test</button>
+    <button nz-button [disabled]="!bundlePackageEditForm.valid" (click)="submitForm()" nzType="primary">提交</button>
+  </div>
+</form>
+
+
