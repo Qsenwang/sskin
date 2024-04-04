@@ -1,9 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import 'ng-zorro-antd/ng-zorro-antd.min.css';
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
-@import '@angular/material/prebuilt-themes/indigo-pink.css';
-@import 'ng-zorro-antd/ng-zorro-antd.min.css';
+//@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
 
 
 //color var
@@ -20,7 +20,7 @@ $color-button-pink:#DA8AFF;
 
 
 $color-grey1:#828282;
-$color-grey3:#B5B5B5;
+$color-grey2:#B5B5B5;
 $color-grey3:#E0E0E0;
 
 //.row {
@@ -38,3 +38,19 @@ $color-grey3:#E0E0E0;
 //  padding: 1rem;
 //}
 
+.margin-right-small {
+  margin-right: 24px;
+}
+
+.margin-left-small {
+  margin-left: 24px;
+}
+.margin-top-small {
+  margin-top: 24px;
+}
+.margin-bottom-small {
+  margin-bottom: 24px;
+}
+.button-width-large {
+  min-width: 200px;
+}

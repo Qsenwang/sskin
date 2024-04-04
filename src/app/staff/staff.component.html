@@ -1,0 +1,104 @@
+<div class="staff-panel" >
+  <div>
+    <nz-input-group [nzSuffix]="suffixIconSearch" class="search-bar">
+      <input nz-input placeholder="请输入要查询的姓名" (input)="search($event)" />
+      <ng-template #suffixIconSearch>
+        <i nz-icon nzType="search"></i>
+      </ng-template>
+    </nz-input-group>
+
+    <button class="add-new-staff margin-left-small" nz-button nzType="primary" (click)="createNewStaff()">添加新客户</button>
+
+    <nz-table #staffTable
+              [nzData]="filteredStaffList"
+              [nzFrontPagination]="true"
+              [nzPageSize]="10"
+              [nzShowPagination]="true"
+              nzTableLayout="fixed"
+              ngSkipHydration>
+      <thead>
+      <tr>
+<!--        <th>Id</th>-->
+        <th>姓名</th>
+        <th>入职日期</th>
+        <th>离职日期</th>
+        <th>操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let staff of staffTable.data">
+<!--        <td>{{ staff.id }}</td>-->
+        <td>{{ staff.name }}</td>
+        <td>{{ staff.onBoardDate }}</td>
+        <td>{{ staff.offBoardDate }}</td>
+        <td>
+          <a nz-button nzType="primary" (click)="editStaff(staff); $event.stopPropagation();">编辑</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a nz-button nzType="primary" (click)="removeStaff(staff.id); $event.stopPropagation();">删除</a>
+        </td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
+
+<nz-drawer
+  *ngIf="editEnable"
+  [nzBodyStyle]="{ overflow: 'auto' }"
+  [nzMaskClosable]="false"
+  [nzWidth]="720"
+  [nzVisible]="editEnable"
+  nzTitle="Create"
+  [nzFooter]="footerTpl"
+  (nzOnClose)="close()"
+>
+  <form nz-form *nzDrawerContent [formGroup]="staffForm" >
+    <div nz-row [nzGutter]="8">
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label nzRequired >姓名</nz-form-label>
+          <nz-form-control>
+            <input nz-input  formControlName="name" id="name" placeholder="please enter staff name" />
+            <form-field-errors
+              [control]="staffForm.get('name')"
+              [customMessages]="{'required': 'name is required'}">
+            </form-field-errors>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row [nzGutter]="8">
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label nzRequired>入职日期</nz-form-label>
+          <nz-form-control>
+            <nz-date-picker formControlName="onBoardDate" id="onBoardDate"/>
+            <form-field-errors
+              [control]="staffForm.get('onBoardDate')"
+              [customMessages]="{'required': 'onBoardDate is required'}">
+            </form-field-errors>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label>离职日期</nz-form-label>
+          <nz-form-control>
+            <nz-date-picker formControlName="offBoardDate" id="offBoardDate"/>
+            <form-field-errors
+              [control]="staffForm.get('offBoardDate')"
+              [customMessages]="{'required': 'offBoardDate is required'}">
+            </form-field-errors>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+
+  <ng-template #footerTpl>
+    <div style="float: right">
+      <button nz-button style="margin-right: 8px;" (click)="close()">取消</button>
+      <button nz-button nzType="primary" [disabled]="!staffForm.valid" (click)="save()">保存</button>
+    </div>
+  </ng-template>
+</nz-drawer>

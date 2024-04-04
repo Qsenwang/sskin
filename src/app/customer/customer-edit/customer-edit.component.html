@@ -1,0 +1,84 @@
+<div class="customer-edit-panel">
+  <div nz-row>
+    <div nz-col nzSpan="1">
+      <div>
+        <img src="assets/icon/user-128.svg" width="80px" height="80px" alt="user icon"/>
+      </div>
+    </div>
+    <div nz-col nzSpan="16" class="form-container">
+      <form nz-form [formGroup]="customerBasicEditForm">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="4" nzRequired nzFor="name">姓名</nz-form-label>
+          <nz-form-control [nzSpan]="8">
+            <input nz-input formControlName="name" id="name" [readonly]="!enableEdit" (focus)="handleFocus($event)"
+                   class="custom-form-input"/>
+            <form-field-errors
+              [control]="customerBasicEditForm.get('name')"
+              [customMessages]="{'required': 'name is required'}">
+            </form-field-errors>
+          </nz-form-control>
+
+
+          <nz-form-label [nzSpan]="4" nzRequired nzFor="contactPhone">电话</nz-form-label>
+          <nz-form-control [nzSpan]="8">
+            <input nz-input formControlName="contactPhone" id="contactPhone" [readonly]="!enableEdit"
+                   (focus)="handleFocus($event)" class="custom-form-input"/>
+            <form-field-errors
+              [control]="customerBasicEditForm.get('contactPhone')"
+              [customMessages]="{'pattern': 'Invalid phone number', 'required': 'Phone number is required'}">
+            </form-field-errors>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="4" nzFor="customerNote">备注</nz-form-label>
+          <nz-form-control [nzSpan]="20">
+            <textarea nz-input formControlName="customerNote" id="customerNote" [readonly]="!enableEdit"
+                      (focus)="handleFocus($event)" class="custom-form-input"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item *ngIf="!enableEdit">
+          <nz-form-control [nzSpan]="14" [nzOffset]="10">
+            <button nz-button class="button-width-large" nzType="primary" type="button" (click)="toggleEdit()">编辑
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item *ngIf="enableEdit">
+          <nz-form-control [nzSpan]="14" [nzOffset]="10">
+            <button nz-button class="margin-right-small" nzType="default" type="button" (click)="cancelUpdate()">取消
+            </button>
+            <button nz-button nzType="primary" [disabled]="!customerBasicEditForm.valid" type="button" (click)="updateCustomer()">保存</button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </div>
+  <nz-divider></nz-divider>
+  <div class="available-bundles-panel margin-top-small">
+    <h3>可用套餐</h3>
+    <button nz-button nzType="primary" class="add-new-customer" (click)="openBundleEditForm(null)">添加新套餐</button>
+    <div class="bundle-list-item" *ngFor="let bundle of bundlePackageList; index as i">
+      <nz-descriptions nzTitle="套餐{{i+1}}" nzBordered ngSkipHydration>
+        <nz-descriptions-item nzTitle="套餐名">{{ bundle.bundlePackageName }} test</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="购买日期">{{ bundle.purchaseDate }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="价值">{{ bundle.bundleValue }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="备注">{{ bundle.bundleNote }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Config Info">
+          <div *ngFor="let detail of bundle.packageDetailList">
+            <span> name: {{ detail.treatmentItem.name }}</span><span>remain: {{ detail.remainCount }}</span>
+            <br/>
+          </div>
+        </nz-descriptions-item>
+
+        <nz-descriptions-item nzTitle="action">
+          <button nz-button class="margin-right-small" nzType="primary" type="button"
+                  (click)="openBundleEditForm(bundle.id)">编辑
+          </button>
+          <button nz-button nzType="dashed" type="button" (click)="deleteBundle(bundle.id)">删除</button>
+        </nz-descriptions-item>
+      </nz-descriptions>
+    </div>
+  </div>
+</div>
