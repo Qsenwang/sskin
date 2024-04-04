@@ -57,8 +57,13 @@ export class CustomerService {
     return this.apiService.put(url, bundlePackageData, {});
   }
   addNewBundlePackage(bundlePackageData: PackageAndPaymentDetailDto): Observable<any> {
-    const url = sskinWebApi.customerEndpoints.addNewBundlePackage(bundlePackageData.customerId, bundlePackageData.id);
+    const url = sskinWebApi.customerEndpoints.addNewBundlePackage(bundlePackageData.customerId);
     return this.apiService.post(url, bundlePackageData, {});
+  }
+
+  removeBundlePackage(bundleId: string){
+    const url = sskinWebApi.customerEndpoints.removeBundlePackage(bundleId);
+    return this.apiService.delete(url);
   }
 
 }

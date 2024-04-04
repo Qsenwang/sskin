@@ -161,22 +161,24 @@ export class CustomerEditComponent implements OnInit {
     });
   }
 
-  deleteBundle(bundleId: string) {
+  removeBundle(bundleId: string) {
+
+    this.modalService.confirm({
+      nzTitle: '<i> 注意 </i>',
+      nzContent: '<b>确定要删除此员工吗？</b>',
+      nzOnOk: () => this.doRemoveBundlePackage(bundleId)
+    });
   }
 
-  formHasErrors(): boolean {
-    return this.customerBasicEditForm && this.customerBasicEditForm.invalid;
-  }
-
-  getErrorMessage(controlName: string): string {
-    const control = this.customerBasicEditForm.get(controlName);
-    if (control?.errors) {
-      if (control.errors['required']) {
-        return 'This field is required';
-      } else if (control.errors['pattern']) {
-        return 'The format is not correct';
+  doRemoveBundlePackage(bundleId: string){
+    this.customerService.removeBundlePackage(bundleId).subscribe({
+      next: ()=>{
+        this.message.success('删除成功');
+        this.loadCustomerInfo(this.customerId);
+      },
+      error:(error)=>{
+        this.message.error('删除失败', error);
       }
-    }
-    return '';
+    })
   }
 }

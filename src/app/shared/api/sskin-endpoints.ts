@@ -29,6 +29,7 @@ export const sskinWebApi = {
     newCustomer: () =>`http://localhost:8080/customer/new`,
     getBundlePackageById: (bundleId: string) =>`http://localhost:8080/customer/detail/bundlePackage/${bundleId}`,
     updateBundlePackage: (customerId: string, bundlePackageId: string) =>`http://localhost:8080/customer/${customerId}/detail/bundlePackage/${bundlePackageId}`,
-    addNewBundlePackage: (customerId: string, bundlePackageId: string) =>`http://localhost:8080/customer/${customerId}/detail/bundlePackage/new`
+    addNewBundlePackage: (customerId: string) =>`http://localhost:8080/customer/${customerId}/detail/bundlePackage/new`,
+    removeBundlePackage: (bundleId: string) =>`http://localhost:8080/customer/detail/bundlePackage/${bundleId}`,
   }
 }

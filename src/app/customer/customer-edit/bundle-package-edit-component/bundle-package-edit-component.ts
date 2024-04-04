@@ -167,8 +167,4 @@ export class BundlePackageEditComponent implements OnInit {
     }
   }
 
-  test() {
-    console.warn(this.bundlePackageEditForm)
-    console.warn(this.bundlePackageEditForm.value)
-  }
 }
