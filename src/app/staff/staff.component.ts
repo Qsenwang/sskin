@@ -14,6 +14,7 @@ import {NzDividerComponent} from "ng-zorro-antd/divider";
 import {NzIconDirective} from "ng-zorro-antd/icon";
 import {NzInputDirective, NzInputGroupComponent} from "ng-zorro-antd/input";
 import {NzTableModule} from "ng-zorro-antd/table";
+import {NzModalModule, NzModalService} from "ng-zorro-antd/modal";
 
 @Component({
   selector: 'app-staff',
@@ -31,6 +32,7 @@ import {NzTableModule} from "ng-zorro-antd/table";
     CommonModule,
     NzIconDirective,
     NzInputDirective,
+    NzModalModule
   ],
   templateUrl: './staff.component.html',
   styleUrl: './staff.component.scss'
@@ -42,7 +44,7 @@ export class StaffComponent implements OnInit {
   editEnable: boolean = false;
   constructor(private fb: FormBuilder,
               private message: NzMessageService,
-              private route: ActivatedRoute,
+              private modal: NzModalService,
               private staffService: StaffService) {}
 
   ngOnInit() {
@@ -86,6 +88,15 @@ export class StaffComponent implements OnInit {
   }
 
   removeStaff(staffId:string) {
+
+    this.modal.confirm({
+      nzTitle: '<i> 注意 </i>',
+      nzContent: '<b>确定要删除此员工吗？</b>',
+      nzOnOk: () => this.doRemoveStaff(staffId)
+    });
+  }
+
+  doRemoveStaff(staffId: string) {
     this.staffService.removeStaff(staffId).subscribe({
       next: ()=>{
         this.message.success('删除成功');
@@ -96,7 +107,6 @@ export class StaffComponent implements OnInit {
       }
     })
   }
-
 
   createEmptyForm(){
     this.staffForm = this.fb.group({

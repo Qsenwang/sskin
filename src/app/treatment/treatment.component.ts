@@ -13,6 +13,7 @@ import {NzIconDirective} from "ng-zorro-antd/icon";
 import {NzTableModule} from "ng-zorro-antd/table";
 import {TreatmentItemDto} from "@shared/sskinModel/sskinDto.model";
 import {TreatmentItemService} from "./treatmentItem.service";
+import {NzModalModule, NzModalService} from "ng-zorro-antd/modal";
 
 @Component({
   selector: 'app-treatment',
@@ -30,6 +31,7 @@ import {TreatmentItemService} from "./treatmentItem.service";
     CommonModule,
     NzIconDirective,
     NzInputDirective,
+    NzModalModule
   ],
   templateUrl: './treatment.component.html',
   styleUrl: './treatment.component.scss'
@@ -42,6 +44,7 @@ export class TreatmentComponent implements OnInit{
 
   constructor(private fb: FormBuilder,
               private message: NzMessageService,
+              private modal: NzModalService,
               private itemService: TreatmentItemService) {
   }
 
@@ -87,6 +90,14 @@ export class TreatmentComponent implements OnInit{
   }
 
   removeItem(itemId: string) {
+    this.modal.confirm({
+      nzTitle: '<i> 注意 </i>',
+      nzContent: '<b>确定要删除此项目吗？</b>',
+      nzOnOk: () => this.doRemoveItem(itemId)
+    });
+
+  }
+  doRemoveItem(itemId:string){
     this.itemService.removeItem(itemId).subscribe({
       next: () => {
         this.message.success('删除成功');
@@ -97,7 +108,6 @@ export class TreatmentComponent implements OnInit{
       }
     })
   }
-
 
   createEmptyForm() {
     this.itemForm = this.fb.group({
