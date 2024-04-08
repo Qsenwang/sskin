@@ -107,5 +107,6 @@ export interface PaymentDto {
   membershipCard: string;
   insurance: string;
   rmb: string;
+  paymentFor:string;
 }
 

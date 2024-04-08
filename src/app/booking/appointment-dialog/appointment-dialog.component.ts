@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {
-  CustomerBundleDto, CustomerDetailDto,
+  CustomerBundleDto, CustomerDetailDto, PaymentDto,
   StaffDto,
   TreatmentItemDto
 } from "@shared/sskinModel/sskinDto.model"
@@ -57,7 +57,7 @@ import moment from "moment";
     NzFormControlComponent,
     NzWaveDirective,
     NzDescriptionsComponent,
-    NzDescriptionsItemComponent
+    NzDescriptionsItemComponent,
   ],
   providers: [BookingService, DatePipe],
   templateUrl: './appointment-dialog.component.html',
@@ -89,6 +89,16 @@ export class AppointmentDialogComponent implements OnInit {
     private modalService: NzModalService,
     private datePipe: DatePipe
   ) {
+    this.paymentDetailFrmGroup = this.fb.group({
+      id: [null],
+      cash: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+      card: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+      transfer: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+      membershipCard: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+      insurance: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+      rmb: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+      paymentFor: 'Appointment'
+    })
   }
 
   ngOnInit() {
@@ -132,7 +142,6 @@ export class AppointmentDialogComponent implements OnInit {
           )
         }
         this.updatePhoneField(customerId);
-
       })
   }
 
@@ -156,18 +165,18 @@ export class AppointmentDialogComponent implements OnInit {
         staffId: [null, Validators.required],
         type: [null],
         charge: [null],
-        staffBonus: [null],
+        // staffBonus: [null],
         appointmentNote: [null],
         paymentId: [null],
         complete: [false, Validators.required],
-        active:[true],
+        active: [true],
       })
   }
 
   fetchAppointmentDetail(appointmentId: string) {
     if (!!appointmentId) {
       return this.bookingService.getAppointmentDetailById(appointmentId).subscribe({
-        next: (data: any) => {
+        next: (data) => {
           this.updateAppointmentFrmGroup(data)
         },
         error: (error) => {
@@ -282,13 +291,22 @@ export class AppointmentDialogComponent implements OnInit {
     this.appointmentFrmGroup.get('staffId').setValue(staff.id);
     this.appointmentFrmGroup.get('type').setValue(data.type)
     this.appointmentFrmGroup.get('charge').setValue(data.charge)
-    this.appointmentFrmGroup.get('staffBonus').setValue(data.staffBonus)
+    // this.appointmentFrmGroup.get('staffBonus').setValue(data.staffBonus)
     this.appointmentFrmGroup.get('appointmentNote').setValue(data.appointmentNote)
-    this.appointmentFrmGroup.get('paymentId').setValue(data.paymentMethod)
+    this.appointmentFrmGroup.get('paymentId').setValue(data.paymentId)
     this.appointmentFrmGroup.get('complete').setValue(data.complete)
     if (data.complete) {
       this.appointmentFrmGroup.disable()
       this.readOnlyMode = true;
+      this.enableEdit = false;
+      this.bookingService.getPaymentById(data.appointmentId, data.paymentId).subscribe({
+        next:(payment)=>{
+          this.updatePaymentOnReadOnlyMode(payment);
+        },
+         error: (error) =>{
+          this.message.error(error);
+         }
+      })
     }
   }
 
@@ -302,29 +320,25 @@ export class AppointmentDialogComponent implements OnInit {
       event.target.blur();
     }
   }
+
   saveAppointment() {
     if (this.appointmentFrmGroup.valid) {
 
       const values = this.appointmentFrmGroup.value;
-      if(values.startTime) {
+      if (values.startTime) {
         // 将 Date 对象转换为您需要的格式，这里不使用时区转换
         values.startTime = moment(values.startTime).format('YYYY-MM-DDTHH:mm:ss');
       }
-      if(values.endTime) {
+      if (values.endTime) {
         // 同样处理 endTime
         values.endTime = moment(values.endTime).format('YYYY-MM-DDTHH:mm:ss');
       }
 
-      console.warn( this.appointmentFrmGroup.value)
-
-
-      if(this.data.appointmentId){
+      if (this.data.appointmentId) {
         this.bookingService.updateAppointment(this.data.appointmentId, values).subscribe({
           next: (data) => {
             // 处理成功的响应
             this.enableEdit = false;
-            this.message.success('保存成功'); // 显示成功消息
-            this.fetchAppointmentDetail(data);
             this.handleSaveSuccess();
           },
           error: (error) => {
@@ -334,15 +348,13 @@ export class AppointmentDialogComponent implements OnInit {
         });
       } else {
         this.bookingService.newAppointment(values).subscribe({
-          next: (data) => {
+          next: (id) => {
             // 处理成功的响应
             this.enableEdit = false;
             this.message.success('保存成功'); // 显示成功消息
-            this.fetchAppointmentDetail(data);
             this.handleSaveSuccess();
           },
           error: (error) => {
-            // 处理错误
             this.message.error('Error updating customer', error);
           }
         });
@@ -351,19 +363,15 @@ export class AppointmentDialogComponent implements OnInit {
     }
   }
 
-  private toISOStringWithoutMillis(date: Date): string {
-    const isoString = date.toISOString();
-    const isoStringWithoutMillisAndZ = isoString.replace(/\.\d{3}Z$/, '');
-    return isoStringWithoutMillisAndZ;
-  }
   cancelUpdate() {
     this.enableEdit = false;
     this.fetchAppointmentDetail(this.data.appointmentId);
   }
 
-  close(){
+  close() {
     this.modalRef.destroy()
   }
+
   appointmentExist() {
     return !!this.data.customerId && this.data.customerId !== null;
   }
@@ -371,13 +379,20 @@ export class AppointmentDialogComponent implements OnInit {
   cancelAppointment() {
     this.modalService.confirm({
       nzTitle: '<i> 注意 </i>',
-      nzContent: '<b>确定要删除此员工吗？</b>',
+      nzContent: '<b>确定要删除此预约吗？</b>',
       nzOnOk: () => this.removeAppointment(this.data.appointmentId)
     });
   }
 
   removeAppointment(appointmentId: string) {
-    this.bookingService.removeAppointment(this.data.appointmentId)
+    this.bookingService.removeAppointment(appointmentId).subscribe({
+      next:()=>{
+        this.handleRemoveSuccess();
+      },
+      error:(error)=>{
+        this.message.error('Error updating customer', error);
+      }
+    })
   }
 
   openPaymentBoard() {
@@ -385,12 +400,51 @@ export class AppointmentDialogComponent implements OnInit {
   }
 
   normalPay() {
+    this.paymentDetailFrmGroup = this.fb.group({
+      id: [null],
+      cash: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+      card: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+      transfer: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+      membershipCard: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+      insurance: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+      rmb: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+      paymentFor: 'BundlePackage'
+    })
     this.selectedPaymentMethod = "normal"
+    this.paymentDetailFrmGroup.markAllAsTouched();
+  }
 
+  doNormalPay(){
+    this.modalService.confirm({
+      nzTitle: '<i> 注意 </i>',
+      nzContent: '<b>付款后，该预约将完成， 并且将无法再进行编辑修改。确定要保存吗？</b>',
+      nzOnOk: () => this.realPay()
+    });
+  }
+
+  realPay() {
+    this.bookingService.completeAppointAndPayNormally(this.data.appointmentId, this.paymentDetailFrmGroup.value).subscribe({
+        next: () => {
+          this.enableEdit = false;
+          this.message.success('保存成功');
+          this.modalRef.destroy();
+        },
+        error: (error) => {
+          this.message.error('预约保存失败', error);
+        }
+      }
+    )
+    this.paymentDetailFrmGroup.value
+  }
+
+  cancelNormalPay(){
+    this.paymentDetailFrmGroup = null;
+    this.selectedPaymentMethod = null;
   }
 
   bundlePay() {
     this.selectedPaymentMethod = "bundle"
+    this.paymentDetailFrmGroup = null;
   }
 
   selectePaymentBundle(bundle: CustomerBundleDto) {
@@ -401,18 +455,31 @@ export class AppointmentDialogComponent implements OnInit {
     return !!this.selectedBundle && this.selectedBundle !== null;
   }
 
-
-  //readonly mode
-  hasNormalPayment(){
-    return this.appointmentFrmGroup.get('paymentId')?.value !== null;
+  handleSaveSuccess(): void {
+    this.message.success("保存成功")
+    this.saveSuccess.emit(true);
+    this.modalRef.destroy();
   }
 
-test(){
-    console.warn(this.appointmentFrmGroup.get('endTime').value)
-}
-
-  handleSaveSuccess(): void {
+  handleRemoveSuccess(): void {
+    this.message.success("删除成功")
     this.saveSuccess.emit(true);
+    this.modalRef.destroy();
+  }
+
+//read only mode thing
+  updatePaymentOnReadOnlyMode(payment: PaymentDto) {
+    this.paymentDetailFrmGroup = this.fb.group({
+      id: payment.id,
+      cash: payment.cash,
+      card: payment.card,
+      transfer: payment.transfer,
+      membershipCard: payment.membershipCard,
+      insurance: payment.insurance,
+      rmb: payment.rmb,
+      paymentFor: payment.paymentFor
+    })
+    console.warn(this.paymentDetailFrmGroup)
   }
 
 }

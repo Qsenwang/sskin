@@ -3,7 +3,7 @@
 import {Injectable} from '@angular/core';
 import {
   AppointmentDetailDto, CustomerBundleDto,
-  CustomerDetailDto,
+  CustomerDetailDto, PaymentDto,
   staffDailyTaskDto,
   StaffDto,
   TreatmentItemDto
@@ -32,10 +32,7 @@ export class BookingService {
 
   getAppointmentDetailById(appointmentId: string): Observable<AppointmentDetailDto> {
     const url = sskinWebApi.bookingEndpoints.getAppointmentDetail(appointmentId);
-    const httpParams = new HttpParams({
-      fromObject: {appointmentId: appointmentId}
-    })
-    return this.apiService.get<AppointmentDetailDto>(url, {params: httpParams})
+    return this.apiService.get<AppointmentDetailDto>(url, {})
   }
 
   getAllTreatmentItems(): Observable<TreatmentItemDto[]> {
@@ -71,6 +68,15 @@ export class BookingService {
   removeAppointment(appointmentId: string){
     const url = sskinWebApi.bookingEndpoints.removeAppointment(appointmentId);
     return this.apiService.delete(url)
+  }
+  completeAppointAndPayNormally(appointmentId: string, paymentDetail: PaymentDto){
+    const url = sskinWebApi.bookingEndpoints.completeAndNormalPay(appointmentId);
+    return this.apiService.post<PaymentDto>(url, paymentDetail, {})
+  }
+
+  getPaymentById(appointmentId:string, paymentId: string) {
+    const url = sskinWebApi.bookingEndpoints.getPaymentById(appointmentId, paymentId);
+    return this.apiService.get<PaymentDto>(url, {})
   }
 
 }

@@ -104,14 +104,16 @@ export class BookingComponent implements OnInit {
     return matrix;
   }
 
-  addAppointment(staffId: string) {
+  addAppointment() {
     const modal = this.modalService.create({
-      nzTitle: 'Customer Info',
+      nzTitle: 'Appointment Info',
       nzContent: AppointmentDialogComponent,
-      nzWidth: 1000,
       nzData: {
-        staffId: staffId
+        staffId: null,
+        appointmentId: null,
+        customerId: null,
       },
+      nzWidth: 1000,
       nzFooter: null
     });
 
@@ -125,7 +127,7 @@ export class BookingComponent implements OnInit {
 
   editAppointment(staffId: string, appointmentId: string, customerId: string) {
     const modal = this.modalService.create({
-      nzTitle: 'Customer Info',
+      nzTitle: 'Appointment Info',
       nzContent: AppointmentDialogComponent,
       nzStyle: {
         'min-width': '1000px',

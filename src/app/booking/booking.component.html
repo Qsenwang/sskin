@@ -6,7 +6,7 @@
 </nz-form-item>
 
 <div class="scheduler">
-  <button nz-button class="button-width-large" nzType="primary" type="button" (click)="addAppointment">添加</button>
+  <button nz-button class="button-width-large" nzType="primary" type="button" (click)="addAppointment()">添加</button>
   <div class="timeline">
     <div *ngFor="let timeSlot of timeSlots; let i = index" class="time-slot"  [ngClass]="'slot-' + i">
       {{ timeSlot.time }}
@@ -18,7 +18,7 @@
       <div class="employee-task-board">
         <div class="employee-name">{{ staffTask.staffName}}</div>
         <div class="board-cell-grid">
-          <div *ngFor="let cell of gridMatrix ; let i = index" class="cell no-cursor" [ngClass]="'cell-' + i" [ngStyle]="calculateHeight(staffTask.appointmentBaseDtoList)" (click)="addAppointment(staffTask.staffId)"></div>
+          <div *ngFor="let cell of gridMatrix ; let i = index" class="cell no-cursor" [ngClass]="'cell-' + i" [ngStyle]="calculateHeight(staffTask.appointmentBaseDtoList)" (click)="addAppointment()"></div>
         </div>
       </div>
       <div *ngFor="let appointment of staffTask.appointmentBaseDtoList" class="appointment no-cursor"
