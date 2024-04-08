@@ -1,22 +1,24 @@
 import {Component, OnInit} from '@angular/core';
 import {CommonModule, DatePipe} from "@angular/common";
-import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+
 import {AppointmentDialogComponent} from "./appointment-dialog/appointment-dialog.component";
-import {AppointmentBaseDto, AppointmentDetailDto, staffDailyTaskDto} from "@shared/sskinModel/sskinDto.model"
+import {AppointmentBaseDto, staffDailyTaskDto} from "@shared/sskinModel/sskinDto.model"
 import {BookingService} from "./booking.service";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
-import {MatDatepickerModule} from "@angular/material/datepicker";
+
 import {Observable, of, Subscription} from "rxjs";
 import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatNativeDateModule} from "@angular/material/core";
+
 import {NzDatePickerComponent} from "ng-zorro-antd/date-picker";
 import {NzFormControlComponent, NzFormItemComponent, NzFormLabelComponent} from "ng-zorro-antd/form";
 import {NzColDirective} from "ng-zorro-antd/grid";
 
+import {NzModalModule, NzModalService} from "ng-zorro-antd/modal";
+import {NzButtonComponent} from "ng-zorro-antd/button";
+
 interface TimeSlot {
   time: string;
 }
+
 interface gridCell {
   emptyContent: string;
 }
@@ -26,50 +28,56 @@ interface gridCell {
   standalone: true,
   imports: [
     CommonModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
     ReactiveFormsModule,
     FormsModule,
     NzDatePickerComponent,
     NzFormControlComponent,
     NzFormLabelComponent,
     NzFormItemComponent,
-    NzColDirective
+    NzColDirective,
+    NzModalModule,
+    NzButtonComponent,
   ],
-  providers:[BookingService, MatDatepickerModule, MatNativeDateModule, DatePipe ],
+  providers: [DatePipe],
   templateUrl: './booking.component.html',
   styleUrl: './booking.component.scss'
 })
 export class BookingComponent implements OnInit {
 
   timeSlots = this.generateTimeSlots();
-  gridMatrix= this.generateGrid()
+  gridMatrix = this.generateGrid()
 
   selectedDateControl = new FormControl('');
   staffTasks: Observable<staffDailyTaskDto[]> | any;
-  _subscriptions : Subscription = new Subscription()
-  constructor(public dialog: MatDialog, private bookingService:BookingService, private datePipe: DatePipe) {}
-  ngOnInit(){
+  _subscriptions: Subscription = new Subscription()
+
+  constructor(private modalService: NzModalService, private bookingService: BookingService, private datePipe: DatePipe) {
+  }
+
+  ngOnInit() {
     this._subscriptions.add(
       this.selectedDateControl.valueChanges.subscribe((newDate) => {
-
-        if(newDate !== null){
-          let brisbaneTime = this.datePipe.transform(newDate, 'yyyy-MM-ddTHH:mm:ss.SSS', 'Australia/Brisbane');
-          if (brisbaneTime !== null) {
-            this.bookingService.getAllEmployeeTasks(brisbaneTime)
-              .subscribe({
-                next: (data) => {this.staffTasks = of(data);},
-                error: (error)=> {console.error("error")}
-              })
-          }
-
+        if (newDate !== null) {
+          this.fetchAppointmentInfoByDate(newDate)
         }
       })
     )
     this.selectedDateControl.setValue(new Date().toISOString());
+  }
+
+  fetchAppointmentInfoByDate(newDate: string | any) {
+    let brisbaneTime = this.datePipe.transform(newDate, 'yyyy-MM-ddTHH:mm:ss.SSS', 'Australia/Brisbane');
+    if (brisbaneTime !== null) {
+      this.bookingService.getAllEmployeeTasks(brisbaneTime)
+        .subscribe({
+          next: (data) => {
+            this.staffTasks = of(data);
+          },
+          error: (error) => {
+            console.error("error")
+          }
+        })
+    }
   }
 
   generateTimeSlots(): TimeSlot[] {
@@ -79,13 +87,14 @@ export class BookingComponent implements OnInit {
         const hours = i.toString().padStart(2, '0');
         const minutes = j.toString().padStart(2, '0');
         const time = `${hours}:${minutes}`;
-        timeSlots.push({ time });
+        timeSlots.push({time});
       }
     }
     return timeSlots;
   }
-  generateGrid() : gridCell[] {
-    const matrix : gridCell[] = [];
+
+  generateGrid(): gridCell[] {
+    const matrix: gridCell[] = [];
     for (let i = 10; i < 19; i++) {
       for (let j = 0; j < 60; j += 30) {
         const blank: string = "";
@@ -95,55 +104,63 @@ export class BookingComponent implements OnInit {
     return matrix;
   }
 
-  addAppointment(staffId:string) {
+  addAppointment(staffId: string) {
+    const modal = this.modalService.create({
+      nzTitle: 'Customer Info',
+      nzContent: AppointmentDialogComponent,
+      nzWidth: 1000,
+      nzData: {
+        staffId: staffId
+      },
+      nzFooter: null
+    });
 
-    const appointmentEditDialog = this.dialog.open(AppointmentDialogComponent,
-      {
-        width:"1000px",
-        height:"600px",
-        panelClass:"customAppointment",
-        // disableClose:true,
-        data:{
-          staffId : staffId,
-          appointmentId : null,
-          customerId: null
-        }
-      })
-    appointmentEditDialog.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+    const instance = modal.getContentComponent();
+    instance.saveSuccess.subscribe((success) => {
+      if (success) {
+        this.fetchAppointmentInfoByDate(this.selectedDateControl.value)
+      }
     });
   }
 
-  editAppointment(staffId: string, appointmentId: string, customerId: string){
-      const appointmentEditDialog = this.dialog.open(AppointmentDialogComponent,
-        {
-          width:"1000px",
-          height:"600px",
-          panelClass:"customAppointment",
-          // disableClose:true,
-          data:{
-            staffId : staffId,
-            appointmentId : appointmentId,
-            customer: customerId,
-          }
-        })
-    appointmentEditDialog.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+  editAppointment(staffId: string, appointmentId: string, customerId: string) {
+    const modal = this.modalService.create({
+      nzTitle: 'Customer Info',
+      nzContent: AppointmentDialogComponent,
+      nzStyle: {
+        'min-width': '1000px',
+        'background-color': '$color-base'
+      },
+      nzData: {
+        staffId: staffId,
+        appointmentId: appointmentId,
+        customerId: customerId,
+      },
+      nzFooter: null
     });
+
+    const instance = modal.getContentComponent();
+    instance.saveSuccess.subscribe((success) => {
+      if (success) {
+        this.fetchAppointmentInfoByDate(this.selectedDateControl.value)
+      }
+    });
+
   }
 
-  calculateHeight(appointments: AppointmentBaseDto[]):any {
-    let maxLayer:number   = 0;
-    appointments.forEach((a) =>{
-        if(a.layer > maxLayer){
-          maxLayer = a.layer;
-        }
+  calculateHeight(appointments: AppointmentBaseDto[]): any {
+    let maxLayer: number = 0;
+    appointments.forEach((a) => {
+      if (a.layer > maxLayer) {
+        maxLayer = a.layer;
+      }
     })
-    const finalHeight = (maxLayer+1)*50;
+    const finalHeight = (maxLayer + 1) * 50;
     return {
-      height:`${finalHeight}px`,
+      height: `${finalHeight}px`,
     }
   }
+
   calculateAppointmentStyle(appointment: AppointmentBaseDto): any {
 
     //employee name 120px, timeSlot 30min->75px
@@ -156,9 +173,9 @@ export class BookingComponent implements OnInit {
     const endHour = endTime.getHours();
     const endMin = endTime.getMinutes();
 
-    const leftPos = 120 + (startHour-10)*150 + (startMin/30)*75;
-    const width = (endHour*60 + endMin - (startHour*60 + startMin))/60*150;
-    const topPos = appointment.layer*50;
+    const leftPos = 120 + (startHour - 10) * 150 + (startMin / 30) * 75;
+    const width = (endHour * 60 + endMin - (startHour * 60 + startMin)) / 60 * 150;
+    const topPos = appointment.layer * 50;
 
     return {
       left: `${leftPos}px`,

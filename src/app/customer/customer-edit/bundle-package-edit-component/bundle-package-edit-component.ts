@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CustomerService} from "../../customer.service";
-import {NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
+import {NZ_MODAL_DATA, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {NzFormDirective, NzFormModule} from "ng-zorro-antd/form";
 import {NzInputDirective} from "ng-zorro-antd/input";
@@ -39,6 +39,7 @@ export class BundlePackageEditComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private customerService: CustomerService,
               private modalRef: NzModalRef,
+              private modalService: NzModalService,
               private message: NzMessageService,
               @Inject(NZ_MODAL_DATA) public data: any) {
     this.bundlePackageEditForm = this.fb.group({
@@ -53,14 +54,16 @@ export class BundlePackageEditComponent implements OnInit {
       active: [true],
       paymentDetail: this.fb.group({
         id: [null],
-        cash: [null],
-        card: [null],
-        transfer: [null],
-        membershipCard: [null],
-        insurance: [null],
-        rmb: [null]
+        cash: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+        card: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+        transfer: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+        membershipCard: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+        insurance: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+        rmb: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
+        paymentFor: 'BundlePackage'
       })
     });
+    this.bundlePackageEditForm.markAllAsTouched()
   }
 
   ngOnInit() {
@@ -70,35 +73,37 @@ export class BundlePackageEditComponent implements OnInit {
       },
       error: () => this.message.error('加载信息失败')
     });
-    if (!!this.data.bundleId){
+    if (!!this.data.bundleId) {
       this.loadCustomerBundlePackage(this.data.bundleId);
     }
   }
-  loadCustomerBundlePackage(bundleId : string){
-      this.customerService.getBundleDetail(bundleId).subscribe(
-        {
-          next: (data) => {
-            this.bundlePackageEditForm.patchValue({
-              id: data.id,
-              bundlePackageName: data.bundlePackageName,
-              purchaseDate: data.purchaseDate,
-              bundleValue: data.bundleValue,
-              bundleNote: data.bundleNote,
-              customerId: data.customerId,
-              paymentId: data.paymentId,
-              active: data.active,
-              paymentDetail: data.paymentDetail,
-            });
-            if (!!data.packageDetailList) {
-              data.packageDetailList.forEach(detail => {
-                this.addPackageDetail(detail);
-              });
-            }
 
-          },
-          error: () => this.message.error('加载信息失败')
-        });
+  loadCustomerBundlePackage(bundleId: string) {
+    this.customerService.getBundleDetail(bundleId).subscribe(
+      {
+        next: (data) => {
+          this.bundlePackageEditForm.patchValue({
+            id: data.id,
+            bundlePackageName: data.bundlePackageName,
+            purchaseDate: data.purchaseDate,
+            bundleValue: data.bundleValue,
+            bundleNote: data.bundleNote,
+            customerId: data.customerId,
+            paymentId: data.paymentId,
+            active: data.active,
+            paymentDetail: data.paymentDetail,
+          });
+          if (!!data.packageDetailList) {
+            data.packageDetailList.forEach(detail => {
+              this.addPackageDetail(detail);
+            });
+          }
+
+        },
+        error: () => this.message.error('加载信息失败')
+      });
   }
+
   close(): void {
     this.modalRef.destroy();
   }
@@ -122,7 +127,7 @@ export class BundlePackageEditComponent implements OnInit {
 
   private createPackageDetailGroup(detail?: any): FormGroup {
     return this.fb.group({
-      id:[detail?.id || null],
+      id: [detail?.id || null],
       treatmentItem: [detail?.treatmentItem?.id || '', Validators.required],
       remainCount: [detail?.remainCount || '', [Validators.required, Validators.pattern('^[0-9]+$')]]
     });
@@ -134,37 +139,55 @@ export class BundlePackageEditComponent implements OnInit {
 
   submitForm() {
     if (this.bundlePackageEditForm.valid) {
-      const formValue = { ...this.bundlePackageEditForm.value };
-      formValue.packageDetailList = formValue.packageDetailList.map((detail: any) => {
-        const fullItem = this.allItems.find(item => item.id === detail.treatmentItem);
-        return {
-          ...detail,
-          treatmentItem: fullItem,
-        };
-      });
-
-      if (formValue.id !== null) {
-        this.customerService.updateBundlePackage(formValue).subscribe(
-          {
-            next: () => {
-              this.message.success('套餐包更新成功');
-              this.handleSaveSuccess();
-            },
-            error: () => this.message.error('更新失败，请重试')
-          })
+      if (this.bundlePackageEditForm.get('packageDetailList').value?.length === 0) {
+        this.modalService.confirm({
+          nzTitle: '<i> 注意 </i>',
+          nzContent: '<h4>套餐内容为空!!</h4><b>确定提交吗？ </b> ',
+          nzOnOk: () => this.doSubmit()
+        });
       } else {
-          this.customerService.addNewBundlePackage(formValue).subscribe({
-            next: (bundleId) => {
-              this.message.success('新套餐包添加成功');
-              this.handleSaveSuccess();
-              this.loadCustomerBundlePackage(bundleId);
-            },
-            error: () => this.message.error('添加失败，请重试')
-          });
+        this.modalService.confirm({
+          nzTitle: '<i> 注意 </i>',
+          nzContent: '<b>确定提交吗？ </b> ',
+          nzOnOk: () => this.doSubmit()
+        });
       }
     } else {
       this.message.error('表单无效，请重试')
     }
   }
+
+  doSubmit() {
+
+    const formValue = {...this.bundlePackageEditForm.value};
+    formValue.packageDetailList = formValue.packageDetailList.map((detail: any) => {
+      const fullItem = this.allItems.find(item => item.id === detail.treatmentItem);
+      return {
+        ...detail,
+        treatmentItem: fullItem,
+      };
+    });
+
+    if (formValue.id !== null) {
+      this.customerService.updateBundlePackage(formValue).subscribe(
+        {
+          next: () => {
+            this.message.success('套餐包更新成功');
+            this.handleSaveSuccess();
+          },
+          error: () => this.message.error('更新失败，请重试')
+        })
+    } else {
+      this.customerService.addNewBundlePackage(formValue).subscribe({
+        next: (bundleId) => {
+          this.message.success('新套餐包添加成功');
+          this.handleSaveSuccess();
+          this.loadCustomerBundlePackage(bundleId);
+        },
+        error: () => this.message.error('添加失败，请重试')
+      });
+    }
+  }
+
 
 }

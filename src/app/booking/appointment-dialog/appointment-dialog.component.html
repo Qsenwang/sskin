@@ -1,148 +1,349 @@
 <div class="appointment-container">
-    <form nz-form [formGroup]="appointmentFrmGroup" (ngSubmit)="onSubmit()">
-
-        <div nz-row>
-            <div nz-col>
-                <nz-form-item>
-                    <nz-form-control>
-                        <nz-form-label class="white-label">姓名：</nz-form-label>
-                        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a person" formControlName="customer"
-                                   class="customer-selector">
-                            <nz-option *ngFor="let customer of customerList" [nzValue]="customer"
-                                       [nzLabel]="customer.name"></nz-option>
-                        </nz-select>
-                    </nz-form-control>
-                </nz-form-item>
-            </div>
-
-
-            <div nz-col>
-                <nz-form-item>
-                    <nz-form-control>
-                        <nz-form-label>电话：</nz-form-label>
-                        <input class="appointment-field-input-normal" type="number" nz-input formControlName="phone"
-                               placeholder="phone number">
-                    </nz-form-control>
-                </nz-form-item>
-            </div>
-
-            <div nz-col>
-                <nz-form-item>
-                    <nz-form-control>
-                        <nz-form-label>项目：</nz-form-label>
-                        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a person"
-                                   formControlName="treatmentItem"
-                                   class="treatmentItem-selector">
-                            <nz-option *ngFor="let item of treatmentItems" [nzValue]="item"
-                                       [nzLabel]="item.name "></nz-option>
-                        </nz-select>
-                    </nz-form-control>
-
-                </nz-form-item>
-            </div>
-
-        </div>
-
-        <div nz-row>
-            <div nz-col>
-                <nz-form-item>
-                    <nz-form-control>
-                        <nz-form-label>开始时间：</nz-form-label>
-                        <nz-date-picker
-                                nzShowTime
-                                nzFormat="yyyy-MM-dd HH:mm:ss"
-                                formControlName="startTime"
-                                nzPlaceHolder="Start"
-                        ></nz-date-picker>
-                    </nz-form-control>
-                </nz-form-item>
-            </div>
-
-            <div nz-col>
-                <nz-form-item>
-                    <nz-form-control>
-                        <nz-form-label>结束时间：</nz-form-label>
-                        <nz-date-picker
-                                nzShowTime
-                                nzFormat="yyyy-MM-dd HH:mm:ss"
-                                formControlName="endTime"
-                                nzPlaceHolder="End"
-                        ></nz-date-picker>
-                    </nz-form-control>
-                </nz-form-item>
-            </div>
-
-            <div nz-col>
-                <nz-form-item>
-                    <nz-form-control>
-                        <nz-form-label>类型：</nz-form-label>
-                        <input class="appointment-field-input-normal" nz-input formControlName="type" placeholder="type">
-                    </nz-form-control>
-                </nz-form-item>
-            </div>
-        </div>
-
-        <div nz-row class="charge-info-row">
-            <div nz-col nzSpan="8">
-                <nz-form-item>
-                    <nz-form-control>
-                        <nz-form-label>费用：</nz-form-label>
-                        <input class="appointment-field-input-normal" type="number" nz-input formControlName="charge" style="width:70%;" nzPlaceHolder="fee"/>
-                    </nz-form-control>
-                </nz-form-item>
-            </div>
-
-            <div nz-col nzSpan="2">
-            </div>
-
-            <div nz-col  nzSpan="2">
-                <label nz-checkbox class="box-label">特价</label>
-            </div>
-            <div nz-col nzSpan="2">
-                <label nz-checkbox class="box-label">套餐</label>
-            </div>
-
-            <div nz-col nzSpan="1">
-            </div>
-
-            <div nz-col nzSpan="3">
-                <div nz-col>
-                    <nz-form-item>
-                            <nz-form-label class="box-label">总次数：</nz-form-label>
-                            <input nz-input class="box-input" >
-                    </nz-form-item>
-                </div>
-            </div>
-            <div nz-col nzSpan="3">
-                <nz-form-item>
-                    <nz-form-label class="box-label">本次为第：</nz-form-label>
-                    <input nz-input class="box-input" >
-                    <nz-form-label class="box-label"> 次</nz-form-label>
-                </nz-form-item>
-
-            </div>
-        </div>
-
-        <nz-form-item>
-            <nz-form-control>
-                <nz-form-label>付款方式：</nz-form-label>
-                <nz-select formControlName="paymentMethod" nzPlaceHolder="Select a payment method">
-                    <nz-option *ngFor="let item of treatmentItems" [nzValue]="item" [nzLabel]="item.name "
-                               style="width:50%;"></nz-option>
-                </nz-select>
-            </nz-form-control>
-        </nz-form-item>
-
-        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a person" formControlName="staff"
-                   class="staff-selector">
-            <nz-option *ngFor="let staff of staffList" [nzValue]="staff" [nzLabel]="staff.name "></nz-option>
+  <form nz-form [formGroup]="appointmentFrmGroup">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="1" class="white-label">姓名</nz-form-label>
+      <nz-form-control [nzSpan]="5">
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a person" formControlName="customerId"
+                   class="customer-selector form-selector" [nzDisabled]="!enableEdit" (focus)="handleFocus($event)">
+          <nz-option *ngFor="let customer of customerList" [nzValue]="customer.id"
+                     [nzLabel]="customer.name"></nz-option>
         </nz-select>
+        <form-field-errors
+          [control]="appointmentFrmGroup.get('customerId')"
+          [customMessages]="{'required': 'name is required'}">
+        </form-field-errors>
+      </nz-form-control>
+
+      <nz-form-label [nzSpan]="1">电话</nz-form-label>
+      <nz-form-control [nzSpan]="6">
+        <input class="appointment-field-input-normal customer-phone" type="text" nz-input formControlName="phone"
+               placeholder="phone number" (focus)="handleFocus($event)" [readOnly]="true">
+        <form-field-errors
+          [control]="appointmentFrmGroup.get('phone')"
+          [customMessages]="{'pattern': 'Invalid phone number', 'required': 'Phone number is required'}">
+        </form-field-errors>
+      </nz-form-control>
+      <nz-form-control [nzSpan]="2"></nz-form-control>
+      <nz-form-label [nzSpan]="1">项目</nz-form-label>
+      <nz-form-control [nzSpan]="6">
+        <nz-select nzShowSearch nzAllowClear
+                   nzPlaceHolder="Select a person"
+                   class="form-selector"
+                   formControlName="treatmentItemId"
+                   (focus)="handleFocus($event)"
+                   [nzDisabled]="!enableEdit">
+          <nz-option *ngFor="let item of treatmentItems" [nzValue]="item.id"
+                     [nzLabel]="item.name "></nz-option>
+        </nz-select>
+        <form-field-errors
+          [control]="appointmentFrmGroup.get('treatmentItemId')"
+          [customMessages]="{'required': 'treatment item is required'}">
+        </form-field-errors>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="2">治疗师</nz-form-label>
+      <nz-form-control [nzSpan]="4">
+        <nz-select nzShowSearch
+                   nzAllowClear
+                   nzPlaceHolder="Select a person"
+                   formControlName="staffId"
+                   class="form-selector staff-selector"
+                   (focus)="handleFocus($event)" [nzDisabled]="!enableEdit">
+          <nz-option *ngFor="let staff of staffList" [nzValue]="staff.id" [nzLabel]="staff.name "></nz-option>
+        </nz-select>
+        <form-field-errors
+          [control]="appointmentFrmGroup.get('staffId')"
+          [customMessages]="{'required': 'staff is required'}">
+        </form-field-errors>
+      </nz-form-control>
+
+      <nz-form-label [nzSpan]="2">开始时间</nz-form-label>
+      <nz-form-control [nzSpan]="5">
+        <nz-date-picker
+          nzShowTime
+          nzFormat="yyyy-MM-dd HH:mm:ss"
+          formControlName="startTime"
+          nzPlaceHolder="Start"
+          (focus)="handleFocus($event)"
+          [nzDisabled]="!enableEdit"
+        ></nz-date-picker>
+        <form-field-errors
+          [control]="appointmentFrmGroup.get('startTime')"
+          [customMessages]="{'required': 'startTime is required'}"
+        >
+        </form-field-errors>
+      </nz-form-control>
+
+      <nz-form-control [nzSpan]="2"></nz-form-control>
+
+      <nz-form-label [nzSpan]="2">结束时间</nz-form-label>
+      <nz-form-control [nzSpan]="7">
+        <nz-date-picker
+          nzShowTime
+          nzFormat="yyyy-MM-dd HH:mm:ss"
+          formControlName="endTime"
+          nzPlaceHolder="End"
+          (focus)="handleFocus($event)"
+          [nzDisabled]="!enableEdit"
+        ></nz-date-picker>
+        <form-field-errors
+          [control]="appointmentFrmGroup.get('endTime')"
+          [customMessages]="{'required': 'endTime is required'}">
+        </form-field-errors>
+      </nz-form-control>
+    </nz-form-item>
 
 
-        <button type="submit">保存</button>
-        <button >完成</button>
-        <button type="delete">删除</button>
-    </form>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="1">类型</nz-form-label>
+      <nz-form-control [nzSpan]="3">
+
+        <input class="appointment-field-input-normal" nz-input formControlName="type" placeholder="type"
+               (focus)="handleFocus($event)" [readOnly]="!enableEdit">
+      </nz-form-control>
+
+      <nz-form-control [nzSpan]="2"></nz-form-control>
+
+      <nz-form-label [nzSpan]="2">Bonus</nz-form-label>
+      <nz-form-control [nzSpan]="6">
+        <input class="appointment-field-input-normal" nz-input formControlName="staffBonus" placeholder="staffBonus"
+               (focus)="handleFocus($event)" [readOnly]="!enableEdit">
+      </nz-form-control>
+    </nz-form-item>
+
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="4" nzFor="appointmentNote">备注</nz-form-label>
+      <nz-form-control [nzSpan]="24">
+            <textarea nz-input formControlName="appointmentNote" id="appointmentNote" [readonly]="!enableEdit"
+                      (focus)="handleFocus($event)" class="appointment-field-input-normal"> </textarea>
+      </nz-form-control>
+    </nz-form-item>
+
+
+    <nz-form-item *ngIf="!enableEdit" class="form-edit">
+      <nz-form-control [nzSpan]="9">
+      </nz-form-control>
+      <button nz-button class="button-width-large" nzType="primary" type="button" (click)="toggleEdit()" *ngIf="!readOnlyMode">编辑</button>
+    </nz-form-item>
+    <nz-form-item *ngIf="enableEdit">
+      <nz-form-control [nzSpan]="14" [nzOffset]="10">
+        <button *ngIf="appointmentFrmGroup.get('appointmentId').value" nz-button class="margin-right-small" nzType="default" type="button" (click)="cancelUpdate()">取消</button>
+        <button *ngIf="!appointmentFrmGroup.get('appointmentId').value" nz-button class="margin-right-small" nzType="default" type="button" (click)="close()">close</button>
+        <button nz-button nzType="primary" [disabled]="!appointmentFrmGroup.valid" type="button"
+                (click)="saveAppointment()">保存
+        </button>
+        <button (click)="test()">test</button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div *ngIf="appointmentExist()">
+    <div *ngIf="!readOnlyMode">
+      <nz-divider></nz-divider>
+
+      <nz-form-item *ngIf="!enableEdit" class="form-edit">
+        <nz-form-control [nzSpan]="9">
+          <button nz-button class="button-width-large" nzType="primary" type="button" (click)="openPaymentBoard()">预约完成
+          </button>
+        </nz-form-control>
+        <nz-form-control [nzSpan]="6"></nz-form-control>
+        <nz-form-control [nzSpan]="9">
+          <button nz-button class="button-width-large" nzType="dashed" type="button" nzDanger
+                  (click)="cancelAppointment()">取消预约
+          </button>
+        </nz-form-control>
+      </nz-form-item>
+
+
+      <div *ngIf="showPaymentBoard">
+        <h3>请选择付款方式：</h3>
+        <nz-radio-group>
+          <label nz-radio-button nzValue="normalPay" (click)="normalPay()">付款</label>
+          <label nz-radio-button nzValue="payByBundlePackage" (click)="bundlePay()">套餐</label>
+        </nz-radio-group>
+      </div>
+
+      <div class="normal-payment" *ngIf="selectedPaymentMethod==='normal'"  [formGroup]="paymentDetailFrmGroup">
+        <div class="form-section payment-detail">
+          <div formGroupName="paymentDetail">
+            <h3>支付详情</h3>
+            <br>
+            <nz-row [nzGutter]="24">
+              <div nz-col nzSpan="8">
+                <nz-form-item>
+                  <nz-form-label>现金</nz-form-label>
+                  <nz-form-control>
+                    <input nz-input formControlName="cash" placeholder="Enter cash amount"/>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="8">
+                <nz-form-item>
+                  <nz-form-label>刷卡</nz-form-label>
+                  <nz-form-control>
+                    <input nz-input formControlName="card" placeholder="Enter card amount"/>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="8">
+                <nz-form-item>
+                  <nz-form-label>转账</nz-form-label>
+                  <nz-form-control>
+                    <input nz-input formControlName="transfer" placeholder="Enter transfer amount"/>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </nz-row>
+            <nz-row [nzGutter]="24">
+              <div nz-col nzSpan="8">
+                <nz-form-item>
+                  <nz-form-label>会员卡</nz-form-label>
+                  <nz-form-control>
+                    <input nz-input formControlName="membershipCard" placeholder="Enter membershipCard amount"/>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="8">
+                <nz-form-item>
+                  <nz-form-label>保险</nz-form-label>
+                  <nz-form-control>
+                    <input nz-input formControlName="insurance" placeholder="Enter insurance amount"/>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col nzSpan="8">
+                <nz-form-item>
+                  <nz-form-label>人民币</nz-form-label>
+                  <nz-form-control>
+                    <input nz-input formControlName="rmb" placeholder="Enter rmb amount"/>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </nz-row>
+          </div>
+        </div>
+
+        <!--      <div class="form-actions">-->
+        <!--        <button nz-button (click)="closePayment()" nzType="default">取消</button>-->
+        <!--        <button nz-button [disabled]="!bundlePackageEditForm.valid" (click)="submitForm()" nzType="primary">提交</button>-->
+        <!--      </div>-->
+      </div>
+      <div class="BundlePackage-payment" *ngIf="selectedPaymentMethod==='bundle'">
+        <div class="show-all-bundles" *ngIf="!hasSelectedPaymentBunle">
+          <h4>所有套餐</h4>
+          <nz-divider></nz-divider>
+          <div class="bundle-list-item" *ngFor="let bundle of customerBundleList; index as i">
+            <nz-descriptions nzTitle="套餐{{i+1}}" nzBordered ngSkipHydration>
+              <nz-descriptions-item nzTitle="套餐名">{{ bundle.bundlePackageName }} test</nz-descriptions-item>
+              <nz-descriptions-item nzTitle="购买日期">{{ bundle.purchaseDate }}</nz-descriptions-item>
+              <nz-descriptions-item nzTitle="价值">{{ bundle.bundleValue }}</nz-descriptions-item>
+              <nz-descriptions-item nzTitle="备注">{{ bundle.bundleNote }}</nz-descriptions-item>
+              <nz-descriptions-item nzTitle="Config Info">
+                <div *ngFor="let detail of bundle.packageDetailList">
+                  <span> name: {{ detail.treatmentItem.name }}</span><span>remain: {{ detail.remainCount }}</span>
+                  <br/>
+                </div>
+              </nz-descriptions-item>
+              <button nz-button class="button-width-large" nzType="primary" type="button"
+                      (click)="selectePaymentBundle(bundle)">选择此套餐
+              </button>
+            </nz-descriptions>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div *ngIf="readOnlyMode" [formGroup]="appointmentFrmGroup">
+      <nz-divider></nz-divider>
+      <div formGroupName="paymentDetail"  *ngIf=" !!appointmentFrmGroup.get('paymentId')?.value">
+        <h3>支付详情</h3>
+        <br>
+        <nz-row [nzGutter]="24">
+          <div nz-col nzSpan="8">
+            <nz-form-item>
+              <nz-form-label>现金</nz-form-label>
+              <nz-form-control>
+                <input nz-input formControlName="cash" placeholder="Enter cash amount"/>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="8">
+            <nz-form-item>
+              <nz-form-label>刷卡</nz-form-label>
+              <nz-form-control>
+                <input nz-input formControlName="card" placeholder="Enter card amount"/>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="8">
+            <nz-form-item>
+              <nz-form-label>转账</nz-form-label>
+              <nz-form-control>
+                <input nz-input formControlName="transfer" placeholder="Enter transfer amount"/>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </nz-row>
+        <nz-row [nzGutter]="24">
+          <div nz-col nzSpan="8">
+            <nz-form-item>
+              <nz-form-label>会员卡</nz-form-label>
+              <nz-form-control>
+                <input nz-input formControlName="membershipCard" placeholder="Enter membershipCard amount"/>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="8">
+            <nz-form-item>
+              <nz-form-label>保险</nz-form-label>
+              <nz-form-control>
+                <input nz-input formControlName="insurance" placeholder="Enter insurance amount"/>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <div nz-col nzSpan="8">
+            <nz-form-item>
+              <nz-form-label>人民币</nz-form-label>
+              <nz-form-control>
+                <input nz-input formControlName="rmb" placeholder="Enter rmb amount"/>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </nz-row>
+      </div>
+      <div *ngIf=" !!!appointmentFrmGroup.get('paymentId')?.value">bundlePackage used
+
+      </div>
+    </div>
+  </div>
+
 </div>
-
-

@@ -72,10 +72,11 @@ export class CustomerEditComponent implements OnInit {
     this.customerBasicEditForm = this.fb.group({
       id: [null, Validators.required],
       name: [null, Validators.required],
-      contactPhone: [null, [Validators.required, Validators.pattern('^\\+?\\d{10,}$')]],
+      contactPhone: [null, [Validators.required, Validators.pattern('^\\+?\\s*(\\d\\s*){10,}$')]],
       customerNote: [null],
       active: [null]
     });
+    this.customerBasicEditForm.markAllAsTouched()
   }
 
   ngOnInit(): void {

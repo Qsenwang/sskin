@@ -1,4 +1,4 @@
-@import '../../styles.scss';
+@import "styles.scss";
 
 .scheduler {
   overflow: auto;
@@ -8,8 +8,9 @@
   padding: 50px;
   margin: 10px;
 }
+
 //80px left + 160px wid
-.timeline{
+.timeline {
   margin-left: 100px;
   display: flex;
   flex-direction: row;
@@ -24,12 +25,17 @@
   flex-grow: 1;
   padding: 5px;
   border-bottom: 1px solid #ccc;
-  box-sizing:border-box;;
+  box-sizing: border-box;
   min-width: 150px;
   max-width: 150px;
 }
+
+.slot-9 {
+  border-bottom: none;
+}
+
 .task-board-container {
-  margin-top: 20px;
+  margin-top: 0px;
   display: flex;
   flex-direction: column;
 }
@@ -43,8 +49,10 @@
   display: flex;
   flex-direction: row;
 }
+
 .employee-name {
   border: 1px solid #ccc;
+  border-left: none;
   border-top: 0;
   min-width: 120px;
   display: grid;
@@ -64,19 +72,24 @@
   height: 50px;
 }
 
-spaceOccupy {
-
+.cell-17 {
+  border-right: none;
 }
+
+spaceOccupy {
+}
+
 appointment:hover {
-  cursor : pointer;
+  cursor: pointer;
 }
 
 .appointment {
   position: absolute;
-  top:0;
+  top: 0;
   border: 1px solid #ccc;
   height: 50px;
-  background-color:$color-selected ;
+  background-color: $color-selected;
   z-index: 2;
   min-width: 30px;
 }
+

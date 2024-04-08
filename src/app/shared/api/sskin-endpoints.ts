@@ -18,7 +18,9 @@ export const sskinWebApi = {
   bookingEndpoints:{
     getDayTasks: ()=>`http://localhost:8080/booking/summary`,
     getAppointmentDetail: (appointmentId: string)=>`http://localhost:8080/booking/appointment/${appointmentId}`,
-    // saveAppointment: () => `http://localhost:8080/booking/staff/{staffId}/appointment/{appointmentId}`,
+    updateAppointment: (appointmentId: string) => `http://localhost:8080/booking/appointment/${appointmentId}`,
+    newAppointment: () => `http://localhost:8080/booking/appointment/new`,
+    removeAppointment: (appointmentId: string) => `http://localhost:8080/booking/appointment/${appointmentId}`,
   },
   customerEndpoints:{
     getAllTreatmentItems: () => `http://localhost:8080/treatment-item/all`,

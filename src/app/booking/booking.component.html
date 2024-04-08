@@ -1,31 +1,24 @@
-<!--<mat-form-field>-->
-<!--  <mat-label>Angular forms</mat-label>-->
-<!--  <input matInput [matDatepicker]="picker1" [formControl]="selectedDateControl">-->
-<!--  <mat-hint>MM/DD/YYYY</mat-hint>-->
-<!--  <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>-->
-<!--  <mat-datepicker #picker1></mat-datepicker>-->
-<!--</mat-form-field>-->
 <nz-form-item>
-  <nz-form-control [nzSm]="16" [nzXs]="24" >
+  <nz-form-control [nzSm]="16" [nzXs]="24">
   <nz-form-label [nzSm]="8" [nzXs]="24">日期</nz-form-label>
     <nz-date-picker  [formControl]="selectedDateControl"></nz-date-picker>
   </nz-form-control>
 </nz-form-item>
 
-
 <div class="scheduler">
+  <button nz-button class="button-width-large" nzType="primary" type="button" (click)="addAppointment">添加</button>
   <div class="timeline">
-    <div *ngFor="let timeSlot of timeSlots" class="time-slot">
+    <div *ngFor="let timeSlot of timeSlots; let i = index" class="time-slot"  [ngClass]="'slot-' + i">
       {{ timeSlot.time }}
     </div>
   </div>
   <div class="task-board-container">
 
-    <div *ngFor="let staffTask of staffTasks | async" class="board-test">
+    <div *ngFor="let staffTask of staffTasks | async " class="board-test">
       <div class="employee-task-board">
         <div class="employee-name">{{ staffTask.staffName}}</div>
         <div class="board-cell-grid">
-          <div *ngFor="let cell of gridMatrix" class="cell no-cursor" [ngStyle]="calculateHeight(staffTask.appointmentBaseDtoList)" (click)="addAppointment(staffTask.staffId)"></div>
+          <div *ngFor="let cell of gridMatrix ; let i = index" class="cell no-cursor" [ngClass]="'cell-' + i" [ngStyle]="calculateHeight(staffTask.appointmentBaseDtoList)" (click)="addAppointment(staffTask.staffId)"></div>
         </div>
       </div>
       <div *ngFor="let appointment of staffTask.appointmentBaseDtoList" class="appointment no-cursor"

@@ -65,9 +65,9 @@
         <nz-descriptions-item nzTitle="购买日期">{{ bundle.purchaseDate }}</nz-descriptions-item>
         <nz-descriptions-item nzTitle="价值">{{ bundle.bundleValue }}</nz-descriptions-item>
         <nz-descriptions-item nzTitle="备注">{{ bundle.bundleNote }}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Config Info">
+        <nz-descriptions-item nzTitle="套餐内容">
           <div *ngFor="let detail of bundle.packageDetailList">
-            <span> name: {{ detail.treatmentItem.name }}</span><span>remain: {{ detail.remainCount }}</span>
+            <span> 项目名称: {{ detail.treatmentItem.name }}</span> <span> -- </span><span>剩余次数: {{ detail.remainCount }}</span>
             <br/>
           </div>
         </nz-descriptions-item>

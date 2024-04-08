@@ -41,10 +41,11 @@ export class CustomerCreateComponent {
               private message: NzMessageService) {
     this.customerCreateFrm = this.fb.group({
       name: [null, Validators.required],
-      contactPhone: [null, [Validators.required, Validators.pattern('^\\+?\\d{10,}$')]],
+      contactPhone: [null, [Validators.required, Validators.pattern('^\\+?\\s*(\\d\\s*){10,}$')]],
       customerNote: [null],
       active: [true]
     });
+    this.customerCreateFrm.markAllAsTouched()
   }
 
   onClose(): void {

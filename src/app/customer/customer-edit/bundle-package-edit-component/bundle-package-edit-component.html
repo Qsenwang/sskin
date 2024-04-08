@@ -86,25 +86,37 @@
       <nz-row [nzGutter]="24">
         <div nz-col nzSpan="8">
           <nz-form-item>
-            <nz-form-label>现金</nz-form-label>
+            <nz-form-label nzRequired>现金</nz-form-label>
             <nz-form-control>
               <input nz-input formControlName="cash" placeholder="Enter cash amount"/>
+              <form-field-errors
+                [control]="bundlePackageEditForm.get('paymentDetail').get('cash')"
+                [customMessages]="{'required': '必填，没有请填0','pattern': '只能输入数字，支持小数点'}">
+              </form-field-errors>
             </nz-form-control>
           </nz-form-item>
         </div>
         <div nz-col nzSpan="8">
           <nz-form-item>
-            <nz-form-label>刷卡</nz-form-label>
+            <nz-form-label nzRequired>刷卡</nz-form-label>
             <nz-form-control>
               <input nz-input formControlName="card" placeholder="Enter card amount"/>
+              <form-field-errors
+                [control]="bundlePackageEditForm.get('paymentDetail').get('card')"
+                [customMessages]="{'required': '必填，没有请填0','pattern': '只能输入数字，支持小数点'}">
+              </form-field-errors>
             </nz-form-control>
           </nz-form-item>
         </div>
         <div nz-col nzSpan="8">
           <nz-form-item>
-            <nz-form-label>转账</nz-form-label>
+            <nz-form-label nzRequired>转账</nz-form-label>
             <nz-form-control>
               <input nz-input formControlName="transfer" placeholder="Enter transfer amount"/>
+              <form-field-errors
+                [control]="bundlePackageEditForm.get('paymentDetail').get('transfer')"
+                [customMessages]="{'required': '必填，没有请填0','pattern': '只能输入数字，支持小数点'}">
+              </form-field-errors>
             </nz-form-control>
           </nz-form-item>
         </div>
@@ -113,25 +125,37 @@
       <nz-row [nzGutter]="24">
         <div nz-col nzSpan="8">
           <nz-form-item>
-            <nz-form-label>会员卡</nz-form-label>
+            <nz-form-label nzRequired>会员卡</nz-form-label>
             <nz-form-control>
               <input nz-input formControlName="membershipCard" placeholder="Enter membershipCard amount"/>
+              <form-field-errors
+                [control]="bundlePackageEditForm.get('paymentDetail').get('membershipCard')"
+                [customMessages]="{'required': '必填，没有请填0','pattern': '只能输入数字，支持小数点'}">
+              </form-field-errors>
             </nz-form-control>
           </nz-form-item>
         </div>
         <div nz-col nzSpan="8">
           <nz-form-item>
-            <nz-form-label>保险</nz-form-label>
+            <nz-form-label nzRequired>保险</nz-form-label>
             <nz-form-control>
               <input nz-input formControlName="insurance" placeholder="Enter insurance amount"/>
+              <form-field-errors
+                [control]="bundlePackageEditForm.get('paymentDetail').get('insurance')"
+                [customMessages]="{'required': '必填，没有请填0','pattern': '只能输入数字，支持小数点'}">
+              </form-field-errors>
             </nz-form-control>
           </nz-form-item>
         </div>
         <div nz-col nzSpan="8">
           <nz-form-item>
-            <nz-form-label>人民币</nz-form-label>
+            <nz-form-label nzRequired>人民币</nz-form-label>
             <nz-form-control>
               <input nz-input formControlName="rmb" placeholder="Enter rmb amount"/>
+              <form-field-errors
+                [control]="bundlePackageEditForm.get('paymentDetail').get('rmb')"
+                [customMessages]="{'required': '必填，没有请填0','pattern': '只能输入数字，支持小数点'}">
+              </form-field-errors>
             </nz-form-control>
           </nz-form-item>
         </div>

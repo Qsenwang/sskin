@@ -1,6 +1,6 @@
 // src/app/schedule/booking.service.ts
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
   AppointmentDetailDto, CustomerBundleDto,
   CustomerDetailDto,
@@ -20,10 +20,10 @@ import {dateTimestampProvider} from "rxjs/internal/scheduler/dateTimestampProvid
 })
 export class BookingService {
 
-  constructor(private apiService : ApiService) {
+  constructor(private apiService: ApiService) {
   }
 
-  getAllEmployeeTasks(date: string ): Observable<staffDailyTaskDto[]>{
+  getAllEmployeeTasks(date: string): Observable<staffDailyTaskDto[]> {
 
     const url = sskinWebApi.bookingEndpoints.getDayTasks();
     const httpParams = new HttpParams().set('selectedDate', date)
@@ -32,8 +32,8 @@ export class BookingService {
 
   getAppointmentDetailById(appointmentId: string): Observable<AppointmentDetailDto> {
     const url = sskinWebApi.bookingEndpoints.getAppointmentDetail(appointmentId);
-    const httpParams = new HttpParams( {
-      fromObject: {appointmentId:appointmentId}
+    const httpParams = new HttpParams({
+      fromObject: {appointmentId: appointmentId}
     })
     return this.apiService.get<AppointmentDetailDto>(url, {params: httpParams})
   }
@@ -58,9 +58,19 @@ export class BookingService {
     return this.apiService.get<CustomerBundleDto[]>(url, {})
   }
 
-  saveAppointment(formaData:any){
-    //
+  updateAppointment(appointmentId: string, appointmentData: AppointmentDetailDto) {
+    const url = sskinWebApi.bookingEndpoints.updateAppointment(appointmentId);
+    return this.apiService.put<string>(url, appointmentData, {})
+  }
 
+  newAppointment(appointmentData: AppointmentDetailDto) {
+    const url = sskinWebApi.bookingEndpoints.newAppointment();
+    return this.apiService.post<string>(url, appointmentData, {})
+  }
+
+  removeAppointment(appointmentId: string){
+    const url = sskinWebApi.bookingEndpoints.removeAppointment(appointmentId);
+    return this.apiService.delete(url)
   }
 
 }

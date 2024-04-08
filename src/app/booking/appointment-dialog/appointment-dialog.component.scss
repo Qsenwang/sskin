@@ -1,44 +1,30 @@
 @import "styles.scss";
 
-:host ::ng-deep .ant-select:not(.ant-select-customize-input) .ant-select-selector {
-  border: none !important; /* Remove border */
-  box-shadow: none !important; /* Optional: Remove box-shadow if desired */
-  min-width: 220px;
+//:host ::ng-deep .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+//  border: none !important; /* Remove border */
+//  box-shadow: none !important; /* Optional: Remove box-shadow if desired */
+//  min-width: 220px;
+//}
+
+
+.ant-form-item-label{
+  text-align: left; /* 文本靠左对齐 */
+}
+.appointment-field-input-normal:read-only{
+  cursor: not-allowed;
+  background: #f5f5f5;
+  border-color: #d9d9d9;
+  color: rgba(0, 0, 0, .25);
+}
+.staff-selector {
+  margin-left: -24px;
+}
+.form-selector {
+  min-width: 160px; /* 或其他适合你设计的宽度 */
 }
 
 .appointment-container {
-  width: 1000px;
-  height: 600px;
-  background-color: $color-base;
-  padding: 30px;
 
-  nz-form-control {
-    background: white;
-    box-sizing: border-box;
-    border: 1px solid #d9d9d9;
-    margin-left: 10px;
-    padding: 5px 5px 5px 15px;
-    min-width: 300px;
-    .appointment-field-input-normal {
-      width: 200px;
-      border: none;
-    }
-  }
-
-  .charge-info-row {
-    nz-form-control {
-      width: 100px;
-    }
-    .charge-field {
-      width: 88px !important;
-    }
-  }
-  .box-input {
-    width:30px;
-    height:30px}
-  .box-label {
-    line-height: 30px;
-  }
 }
 
 
