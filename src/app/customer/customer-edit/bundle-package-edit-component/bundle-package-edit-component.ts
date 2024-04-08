@@ -3,14 +3,14 @@ import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from
 import {CustomerService} from "../../customer.service";
 import {NZ_MODAL_DATA, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {NzMessageService} from "ng-zorro-antd/message";
-import {NzFormDirective, NzFormModule} from "ng-zorro-antd/form";
+import {NzFormModule} from "ng-zorro-antd/form";
 import {NzInputDirective} from "ng-zorro-antd/input";
 import {NzDatePickerComponent} from "ng-zorro-antd/date-picker";
-import {NzSelectComponent, NzSelectModule} from "ng-zorro-antd/select";
+import { NzSelectModule} from "ng-zorro-antd/select";
 import {NzDividerComponent} from "ng-zorro-antd/divider";
-import {CommonModule, NgForOf} from "@angular/common";
+import {CommonModule} from "@angular/common";
 import {TreatmentItemDto} from "@shared/sskinModel/sskinDto.model";
-import {NzButtonComponent, NzButtonModule} from "ng-zorro-antd/button";
+import {NzButtonModule} from "ng-zorro-antd/button";
 import {FormFieldErrorsComponent} from "@shared/form-field-errors/form-field-errors.component";
 
 @Component({
@@ -25,7 +25,7 @@ import {FormFieldErrorsComponent} from "@shared/form-field-errors/form-field-err
     NzDividerComponent,
     CommonModule,
     NzButtonModule,
-    FormFieldErrorsComponent
+    FormFieldErrorsComponent,
   ],
   templateUrl: './bundle-package-edit-component.html',
   styleUrl: './bundle-package-edit-component.scss'
@@ -129,7 +129,7 @@ export class BundlePackageEditComponent implements OnInit {
     return this.fb.group({
       id: [detail?.id || null],
       treatmentItem: [detail?.treatmentItem?.id || '', Validators.required],
-      remainCount: [detail?.remainCount || '', [Validators.required, Validators.pattern('^[0-9]+$')]]
+      remainCount: [detail?.remainCount !== undefined ? detail.remainCount : null, [Validators.required, Validators.pattern('^[0-9]+$')]]
     });
   }
 
