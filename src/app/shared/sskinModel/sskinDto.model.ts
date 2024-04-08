@@ -24,11 +24,13 @@
     endTime: Date;
     type: string;
     charge: string;
-    paymentMethod:string;
     staffId:string;
-    staffBonus: string;
     overLap: boolean;
     layer :number;
+    appointmentNote: string;
+    paymentId: string;
+    complete: boolean;
+    paymentBundle: string; //paid bundle id
   }
 
   export interface TreatmentItemDto {
@@ -72,11 +74,11 @@
     bundleNote: string;
     customerId: string;
     paymentId: string;
-    packageDetailList: PackageDetailListDto[] | null;
+    packageDetailList: PackageDetailDto[] | null;
     active: boolean;
   }
 
-  export interface PackageDetailListDto {
+  export interface PackageDetailDto {
     id: string;
     treatmentItem: TreatmentItemDto;
     treatmentItemId: string;
@@ -93,7 +95,7 @@ export interface PackageAndPaymentDetailDto {
   bundleNote: string;
   customerId: string;
   paymentId: string;
-  packageDetailList: PackageDetailListDto[] | null;
+  packageDetailList: PackageDetailDto[] | null;
   active: boolean;
   paymentDetail: PaymentDto;
 

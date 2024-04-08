@@ -50,8 +50,13 @@ export class BookingService {
     return this.apiService.get<CustomerDetailDto[]>(url, {})
   }
 
-  getCustomerBundles(customerId: string) {
-    const url = sskinWebApi.customerEndpoints.getCustomerBundles(customerId);
+  getBundleById(bundleId: string) {
+    const url = sskinWebApi.bookingEndpoints.getBundleById(bundleId);
+    return this.apiService.get<CustomerBundleDto>(url, {})
+  }
+
+  getActiveCustomerBundles(customerId: string) {
+    const url = sskinWebApi.customerEndpoints.getActiveCustomerBundles(customerId);
     return this.apiService.get<CustomerBundleDto[]>(url, {})
   }
 
@@ -72,6 +77,11 @@ export class BookingService {
   completeAppointAndPayNormally(appointmentId: string, paymentDetail: PaymentDto){
     const url = sskinWebApi.bookingEndpoints.completeAndNormalPay(appointmentId);
     return this.apiService.post<PaymentDto>(url, paymentDetail, {})
+  }
+
+  completeAppointAndPayByBundle(appointmentId: string, bundle: CustomerBundleDto){
+    const url = sskinWebApi.bookingEndpoints.completeAndPayByBundle(appointmentId);
+    return this.apiService.post<CustomerBundleDto>(url, bundle, {})
   }
 
   getPaymentById(appointmentId:string, paymentId: string) {

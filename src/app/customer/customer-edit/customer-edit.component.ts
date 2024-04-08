@@ -9,7 +9,7 @@ import {NzInputDirective, NzInputModule} from "ng-zorro-antd/input";
 import {NzOptionComponent, NzSelectComponent} from "ng-zorro-antd/select";
 import {ActivatedRoute} from "@angular/router";
 import {CustomerService} from "../customer.service";
-import {CustomerBundleDto, PackageDetailListDto, PaymentDto} from "@shared/sskinModel/sskinDto.model";
+import {CustomerBundleDto, PackageDetailDto, PaymentDto} from "@shared/sskinModel/sskinDto.model";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {NzButtonComponent} from "ng-zorro-antd/button";
 import {NzModalModule, NzModalService} from "ng-zorro-antd/modal";

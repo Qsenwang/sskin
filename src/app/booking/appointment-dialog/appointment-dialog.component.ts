@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {
-  CustomerBundleDto, CustomerDetailDto, PaymentDto,
+  CustomerBundleDto, CustomerDetailDto, PackageDetailDto, PaymentDto,
   StaffDto,
   TreatmentItemDto
 } from "@shared/sskinModel/sskinDto.model"
@@ -27,6 +27,8 @@ import {NzRadioGroupComponent, NzRadioModule} from "ng-zorro-antd/radio";
 import {NzWaveDirective} from "ng-zorro-antd/core/wave";
 import {NzDescriptionsComponent, NzDescriptionsItemComponent} from "ng-zorro-antd/descriptions";
 import moment from "moment";
+import {NzCardComponent, NzCardModule} from "ng-zorro-antd/card";
+import {CustomerService} from "../../customer/customer.service";
 
 @Component({
   selector: 'app-appointment-dialog',
@@ -58,6 +60,7 @@ import moment from "moment";
     NzWaveDirective,
     NzDescriptionsComponent,
     NzDescriptionsItemComponent,
+    NzCardModule,
   ],
   providers: [BookingService, DatePipe],
   templateUrl: './appointment-dialog.component.html',
@@ -78,8 +81,10 @@ export class AppointmentDialogComponent implements OnInit {
   selectedBundle: CustomerBundleDto | any;
   appointmentFrmGroup: FormGroup | any;
   paymentDetailFrmGroup: FormGroup | any;
+  paymentBundleFrmGroup: FormGroup | any;
   readOnlyMode = false;
-
+  noActivePaymentBundle = false;
+  selectePaymentBundle = false;
   constructor(
     @Inject(NZ_MODAL_DATA) public data: any,
     private modalRef: NzModalRef,
@@ -87,7 +92,7 @@ export class AppointmentDialogComponent implements OnInit {
     private bookingService: BookingService,
     private message: NzMessageService,
     private modalService: NzModalService,
-    private datePipe: DatePipe
+    private customerService: CustomerService,
   ) {
     this.paymentDetailFrmGroup = this.fb.group({
       id: [null],
@@ -112,46 +117,8 @@ export class AppointmentDialogComponent implements OnInit {
     } else {
       this.enableEdit = true;
     }
-    this.appointmentFrmGroup.get('customerId').valueChanges?.subscribe(
-      (customerId: string) => {
-        if (customerId) {
-          this.bookingService.getCustomerBundles(customerId).subscribe(
-            {
-              next: (data) => {
-                data.forEach((bundle) => {
-                    const customerBundleDto: CustomerBundleDto =
-                      {
-                        id: bundle.id,
-                        bundlePackageName: bundle.bundlePackageName,
-                        purchaseDate: bundle.purchaseDate,
-                        bundleValue: bundle.bundleValue,
-                        bundleNote: bundle.bundleNote,
-                        customerId: bundle.customerId,
-                        paymentId: bundle.paymentId,
-                        packageDetailList: bundle.packageDetailList,
-                        active: bundle.active,
-                      };
-                    this.customerBundleList.push(customerBundleDto);
-                  }
-                )
-              },
-              error: (error) => {
-                console.error(error)
-              }
-            }
-          )
-        }
-        this.updatePhoneField(customerId);
-      })
   }
 
-
-  private updatePhoneField(customerId: string) {
-    const selectedCustomer = this.customerList.find(customer => customer.id === customerId);
-    if (selectedCustomer) {
-      this.appointmentFrmGroup.get('phone').setValue(selectedCustomer.contactPhone);
-    }
-  }
 
   private buildEmptyAppointForm(): FormGroup {
     return this.fb.group(
@@ -169,6 +136,7 @@ export class AppointmentDialogComponent implements OnInit {
         appointmentNote: [null],
         paymentId: [null],
         complete: [false, Validators.required],
+        paymentBundle:[null],
         active: [true],
       })
   }
@@ -295,18 +263,33 @@ export class AppointmentDialogComponent implements OnInit {
     this.appointmentFrmGroup.get('appointmentNote').setValue(data.appointmentNote)
     this.appointmentFrmGroup.get('paymentId').setValue(data.paymentId)
     this.appointmentFrmGroup.get('complete').setValue(data.complete)
+    this.appointmentFrmGroup.get('paymentBundle').setValue(data.paymentBundle)
     if (data.complete) {
       this.appointmentFrmGroup.disable()
       this.readOnlyMode = true;
       this.enableEdit = false;
-      this.bookingService.getPaymentById(data.appointmentId, data.paymentId).subscribe({
-        next:(payment)=>{
-          this.updatePaymentOnReadOnlyMode(payment);
-        },
-         error: (error) =>{
-          this.message.error(error);
-         }
-      })
+      if(data.paymentId){
+        this.bookingService.getPaymentById(data.appointmentId, data.paymentId).subscribe({
+          next:(payment)=>{
+            this.updatePaymentOnReadOnlyMode(payment);
+          },
+          error: (error) =>{
+            this.message.error(error);
+          }
+        });
+      }
+
+      if(data.paymentBundle){
+        this.bookingService.getBundleById(data.paymentBundle).subscribe({
+          next:(bundle)=>{
+            this.updatePaymentBundleOnReadOnlyMode(bundle);
+          },
+          error: (error) =>{
+            this.message.error(error);
+          }
+        })
+      }
+
     }
   }
 
@@ -445,14 +428,118 @@ export class AppointmentDialogComponent implements OnInit {
   bundlePay() {
     this.selectedPaymentMethod = "bundle"
     this.paymentDetailFrmGroup = null;
+    this.selectePaymentBundle = false;
+    this.selectedBundle = null;
+
+    this.paymentBundleFrmGroup = this.fb.group({
+      id: null,
+      bundlePackageName: null,
+      purchaseDate: null,
+      bundleValue: null,
+      bundleNote: null,
+      customerId: null,
+      paymentId: null,
+      packageDetailList: this.fb.array([]),
+      active: true,
+      paymentDetail: []
+    });
+
+
+    this.bookingService.getActiveCustomerBundles(this.data.customerId).subscribe(
+      {
+        next: (data) => {
+          this.customerBundleList = [];
+          data.forEach((bundle) => {
+              const customerBundleDto: CustomerBundleDto =
+                {
+                  id: bundle.id,
+                  bundlePackageName: bundle.bundlePackageName,
+                  purchaseDate: bundle.purchaseDate,
+                  bundleValue: bundle.bundleValue,
+                  bundleNote: bundle.bundleNote,
+                  customerId: bundle.customerId,
+                  paymentId: bundle.paymentId,
+                  packageDetailList: bundle.packageDetailList,
+                  active: bundle.active,
+                };
+              this.customerBundleList.push(customerBundleDto);
+            }
+          )
+        },
+        error: (error) => {
+          console.error(error)
+        }
+      }
+    )
+    if(this.customerBundleList.length === 0) {
+      this.noActivePaymentBundle = true;
+    }
   }
 
-  selectePaymentBundle(bundle: CustomerBundleDto) {
-    this.selectedBundle = bundle;
+  get packageDetailList(): FormArray {
+    return this.paymentBundleFrmGroup.get('packageDetailList') as FormArray;
   }
 
-  hasSelectedPaymentBunle() {
-    return !!this.selectedBundle && this.selectedBundle !== null;
+  useBundle(bundleId: string){
+    this.selectePaymentBundle = true;
+    this.selectedBundle = this.customerBundleList.find(bundle => bundle.id === bundleId);
+    this.paymentBundleFrmGroup.patchValue({id:bundleId});
+    const packageDetailListArray = this.paymentBundleFrmGroup.get('packageDetailList') as FormArray;
+
+    packageDetailListArray.clear();
+
+    if (this.selectedBundle && this.selectedBundle.packageDetailList) {
+      this.selectedBundle.packageDetailList.forEach((detail: PackageDetailDto) => {
+        packageDetailListArray.push(this.createDetailFormGroup(detail));
+      });
+    }
+
+  }
+
+  private createDetailFormGroup(detail: PackageDetailDto): FormGroup {
+    return this.fb.group({
+      id:detail.id,
+      treatmentItem: detail.treatmentItem,
+      remainCount: detail.remainCount
+    });
+  }
+
+
+
+  decreaseRemaining(index: number): void {
+    const packageDetailList = this.paymentBundleFrmGroup.get('packageDetailList') as FormArray;
+    const currentCount = packageDetailList.at(index).get('remainCount')?.value;
+    if (currentCount > 0) {
+      packageDetailList.at(index).get('remainCount')?.setValue(currentCount - 1);
+    }
+  }
+
+  completeAndPayByBundle () {
+    this.modalService.confirm({
+      nzTitle: '<i> 注意 </i>',
+      nzContent: '<b>结算后，该预约将完成， 并且将无法再进行编辑修改。确定要保存吗？</b>',
+      nzOnOk: () => this.doCompleteAndBundlePay()
+    });
+  }
+
+  doCompleteAndBundlePay() {
+    if (this.paymentBundleFrmGroup.get('id')){
+      // 表单数据有效，可以提交
+      const formData = this.paymentBundleFrmGroup.value;
+
+      // 调用服务层方法，传递表单数据给后端
+      this.bookingService.completeAppointAndPayByBundle(this.data.appointmentId, formData).subscribe({
+        next: (response) => {
+          this.message.success('提交成功！');
+          this.modalRef.close();
+        },
+        error: (error) => {
+          this.message.error(error);
+        }
+      });
+    } else {
+      this.message.error('表单数据无效，请检查后再次提交！');
+    }
   }
 
   handleSaveSuccess(): void {
@@ -480,6 +567,20 @@ export class AppointmentDialogComponent implements OnInit {
       paymentFor: payment.paymentFor
     })
     console.warn(this.paymentDetailFrmGroup)
+  }
+  updatePaymentBundleOnReadOnlyMode(bundle: CustomerBundleDto) {
+    this.paymentBundleFrmGroup = this.fb.group({
+      id: bundle.id,
+      bundlePackageName: bundle.bundlePackageName,
+      purchaseDate: bundle.purchaseDate,
+      bundleValue: bundle.bundleValue,
+      bundleNote: bundle.bundleNote,
+      customerId: bundle.customerId,
+      packageDetailList:bundle.packageDetailList,
+      active: bundle.active,
+    });
+    console.warn(this.paymentDetailFrmGroup)
+
   }
 
 }
