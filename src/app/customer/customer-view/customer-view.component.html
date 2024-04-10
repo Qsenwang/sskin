@@ -4,6 +4,7 @@
     <nz-descriptions-item nzTitle="Id">{{this.data.customer?.id || 'N/A'}}</nz-descriptions-item>
     <nz-descriptions-item nzTitle="姓名" >{{this.data.customer?.name || 'N/A'}}</nz-descriptions-item>
     <nz-descriptions-item nzTitle="联系电话">{{this.data.customer?.contactPhone || 'N/A'}}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="首次到店">{{this.firstTime || 'N/A'}}</nz-descriptions-item>
     <nz-descriptions-item nzTitle="备注"  [nzSpan]="3">{{this.data.customer?.customerNote || 'N/A'}}</nz-descriptions-item>
   </nz-descriptions>
   <br>

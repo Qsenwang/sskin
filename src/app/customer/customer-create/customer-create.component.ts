@@ -10,6 +10,8 @@ import {NzSpinComponent} from "ng-zorro-antd/spin";
 import {NzIconDirective} from "ng-zorro-antd/icon";
 import {NzButtonComponent} from "ng-zorro-antd/button";
 import {NzMessageModule, NzMessageService} from "ng-zorro-antd/message";
+import {NzCheckboxComponent} from "ng-zorro-antd/checkbox";
+import {NzResultComponent, NzResultModule} from "ng-zorro-antd/result";
 
 @Component({
   selector: 'app-customer-create',
@@ -21,7 +23,9 @@ import {NzMessageModule, NzMessageService} from "ng-zorro-antd/message";
     NgIf,
     NzSpinComponent,
     NzIconDirective,
-    NzButtonComponent
+    NzButtonComponent,
+    NzCheckboxComponent,
+    NzResultModule
   ],
   templateUrl: './customer-create.component.html',
   styleUrl: './customer-create.component.scss'
@@ -42,6 +46,7 @@ export class CustomerCreateComponent {
     this.customerCreateFrm = this.fb.group({
       name: [null, Validators.required],
       contactPhone: [null, [Validators.required, Validators.pattern('^\\+?\\s*(\\d\\s*){10,}$')]],
+      firstTime: [true, Validators.required],
       customerNote: [null],
       active: [true]
     });

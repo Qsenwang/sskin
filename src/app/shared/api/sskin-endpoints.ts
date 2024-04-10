@@ -38,5 +38,9 @@ export const sskinWebApi = {
     updateBundlePackage: (customerId: string, bundlePackageId: string) => `http://localhost:8080/customer/${customerId}/detail/bundlePackage/${bundlePackageId}`,
     addNewBundlePackage: (customerId: string) => `http://localhost:8080/customer/${customerId}/detail/bundlePackage/new`,
     removeBundlePackage: (bundleId: string) => `http://localhost:8080/customer/detail/bundlePackage/${bundleId}`,
+  },
+  revenueEndpoints: {
+    getRevenueByDateRange: () => `http://localhost:8080/revenue`,
+
   }
 }

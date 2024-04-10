@@ -50,7 +50,6 @@ export class BookingComponent implements OnInit {
   selectedDateControl = new FormControl('');
   staffTasks: Observable<staffDailyTaskDto[]> | any;
   _subscriptions: Subscription = new Subscription()
-
   constructor(private modalService: NzModalService, private bookingService: BookingService, private datePipe: DatePipe) {
   }
 
@@ -187,5 +186,8 @@ export class BookingComponent implements OnInit {
 
   }
 
+  isInjection(appointment:AppointmentBaseDto){
+    return appointment.type == "注射";
+  }
 
 }

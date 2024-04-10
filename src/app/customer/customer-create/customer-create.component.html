@@ -15,6 +15,13 @@
     </nz-form-item>
 
     <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="firstTime" nzRequired>首次到店</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <label nz-checkbox formControlName="firstTime"></label>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
       <nz-form-label [nzSpan]="6" nzFor="customerNote">客户备注</nz-form-label>
       <nz-form-control [nzSpan]="14">
         <textarea nz-input formControlName="customerNote" id="customerNote"></textarea>
@@ -28,8 +35,16 @@
 </div>
 <nz-spin *ngIf="isLoading"></nz-spin>
 <div *ngIf="resultSuccess">
-  <div><i nz-icon nzType="check-circle" nzTheme="outline"></i> 创建成功</div>
-  <button nz-button nzType="primary" (click)="handleCreateSuccess()">确定</button>
+
+  <nz-result
+    nzStatus="success"
+    nzTitle="创建成功"
+  >
+    <div nz-result-extra>
+        <button nz-button nzType="primary" (click)="handleCreateSuccess()">确定</button>
+    </div>
+  </nz-result>
+
 </div>
 <div *ngIf="resultError">
   <div><i nz-icon nzType="close-circle" nzTheme="outline"></i> 创建失败</div>

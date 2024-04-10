@@ -29,10 +29,14 @@ class IModalData {
 })
 export class CustomerViewComponent implements OnInit{
   expandSet = new Set<string>();
-
+  firstTime = "NO";
   constructor(@Inject(NZ_MODAL_DATA) public data: any) {}
 
   ngOnInit() {
+    if(this.data.customer?.firstTime){
+      this.firstTime="YES";
+    }
+
   }
 
   onExpandChange(id: string, checked: boolean): void {

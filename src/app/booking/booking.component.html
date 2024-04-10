@@ -23,7 +23,9 @@
       </div>
       <div *ngFor="let appointment of staffTask.appointmentBaseDtoList" class="appointment no-cursor"
            (click)="editAppointment(staffTask.staffId, appointment.appointmentId, appointment.customerId)"
-           [ngStyle]="calculateAppointmentStyle(appointment)"> {{appointment.customerName}}
+           [ngStyle]="calculateAppointmentStyle(appointment)"
+           [ngClass]="{'first-time': appointment.firstTimeAppointment, 'injection-type': isInjection(appointment)}">
+        {{appointment.customerName}}
       </div>
 
     </div>

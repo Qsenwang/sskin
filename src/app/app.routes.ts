@@ -10,14 +10,15 @@ import {CustomerEditComponent} from "./customer/customer-edit/customer-edit.comp
 
 
 export const routes: Routes = [
-  {path:'',  redirectTo: '/summary', pathMatch: 'full'},
+  {path:'',  redirectTo: '/booking', pathMatch: 'full'},
   {path:'booking', component:BookingComponent},
   {path:'summary', component:SummaryComponent},
   {path:'customer', component:CustomerComponent},
   {path:'staff', component:StaffComponent},
   {path:'treatment', component:TreatmentComponent},
-  {path:'inventory', component:InventoryComponent},
+  // {path:'inventory', component:InventoryComponent},
   {path:'revenue', component:RevenueComponent},
   {path:'customer/:customerId/edit', component:CustomerEditComponent},
   {path:'customer/newCustomer', component:CustomerEditComponent},
+  {path: 'customer/**', redirectTo: '/customer'},
 ];

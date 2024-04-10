@@ -29,6 +29,12 @@
             </form-field-errors>
           </nz-form-control>
         </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="4" nzFor="firstTime">首次</nz-form-label>
+          <nz-form-control [nzSpan]="20">
+            <label nz-checkbox formControlName="firstTime" nzDisabled ></label>
+          </nz-form-control>
+        </nz-form-item>
 
         <nz-form-item>
           <nz-form-label [nzSpan]="4" nzFor="customerNote">备注</nz-form-label>

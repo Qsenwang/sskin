@@ -9,7 +9,7 @@ import {NzInputDirective, NzInputModule} from "ng-zorro-antd/input";
 import {NzOptionComponent, NzSelectComponent} from "ng-zorro-antd/select";
 import {ActivatedRoute} from "@angular/router";
 import {CustomerService} from "../customer.service";
-import {CustomerBundleDto, PackageDetailDto, PaymentDto} from "@shared/sskinModel/sskinDto.model";
+import {CustomerBundleDto} from "@shared/sskinModel/sskinDto.model";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {NzButtonComponent} from "ng-zorro-antd/button";
 import {NzModalModule, NzModalService} from "ng-zorro-antd/modal";
@@ -72,6 +72,7 @@ export class CustomerEditComponent implements OnInit {
     this.customerBasicEditForm = this.fb.group({
       id: [null, Validators.required],
       name: [null, Validators.required],
+      firstTime: [false],
       contactPhone: [null, [Validators.required, Validators.pattern('^\\+?\\s*(\\d\\s*){10,}$')]],
       customerNote: [null],
       active: [null]
@@ -109,6 +110,15 @@ export class CustomerEditComponent implements OnInit {
   toggleEdit() {
     this.enableEdit = !this.enableEdit;
     this.enableEdit ? this.customerBasicEditForm.enable() : this.customerBasicEditForm.readonly();
+    this.updateFirstTimeDisabledState();
+  }
+
+  updateFirstTimeDisabledState() {
+    if (this.enableEdit) {
+      this.customerBasicEditForm.get('firstTime').enable();
+    } else {
+      this.customerBasicEditForm.get('firstTime').disable();
+    }
   }
 
   handleFocus(event: any) {
@@ -138,6 +148,7 @@ export class CustomerEditComponent implements OnInit {
   cancelUpdate() {
     this.enableEdit = false;
     this.loadCustomerInfo(this.customerId);
+    this.updateFirstTimeDisabledState();
   }
 
   openBundleEditForm(bundleId: string | null) {
@@ -166,7 +177,7 @@ export class CustomerEditComponent implements OnInit {
 
     this.modalService.confirm({
       nzTitle: '<i> 注意 </i>',
-      nzContent: '<b>确定要删除此员工吗？</b>',
+      nzContent: '<b>确定要删除此套餐吗？</b>',
       nzOnOk: () => this.doRemoveBundlePackage(bundleId)
     });
   }

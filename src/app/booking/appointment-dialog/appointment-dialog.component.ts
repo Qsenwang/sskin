@@ -85,6 +85,9 @@ export class AppointmentDialogComponent implements OnInit {
   readOnlyMode = false;
   noActivePaymentBundle = false;
   selectePaymentBundle = false;
+  appointmentTypeList = ["美容","注射"]
+  selectedDate: Date | null = null;
+  bundleReadOnly:CustomerBundleDto | any;
   constructor(
     @Inject(NZ_MODAL_DATA) public data: any,
     private modalRef: NzModalRef,
@@ -103,7 +106,11 @@ export class AppointmentDialogComponent implements OnInit {
       insurance: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
       rmb: [null,  [Validators.required, Validators.pattern(/^\d*\.?\d+$/)]],
       paymentFor: 'Appointment'
-    })
+    });
+  }
+
+  disabledHours(): number[] {
+    return [0,1, 2, 3,4,5,6,7,8];
   }
 
   ngOnInit() {
@@ -112,12 +119,45 @@ export class AppointmentDialogComponent implements OnInit {
     this.getAllTreatmentItems();
     this.getAllStaff();
     this.getAllCustomer();
+
+    this.appointmentFrmGroup.get('customerId').valueChanges.subscribe((customerId:any) => {
+      const selectedCustomer = this.customerList.find(customer => customer.id === customerId);
+      if (selectedCustomer) {
+        this.appointmentFrmGroup.get('phone').setValue(selectedCustomer.contactPhone);
+      }
+    });
+
     if (!!this.data.appointmentId) {
       this.fetchAppointmentDetail(this.data.appointmentId)
     } else {
       this.enableEdit = true;
     }
   }
+
+  onDateChange(event: Date): void {
+    if (this.selectedDate) {
+      const newDateTime = new Date(this.selectedDate);
+      this.updateStartTime(newDateTime);
+      this.updateEndTime(newDateTime);
+    }
+  }
+  updateStartTime(newDateTime:Date){
+    const timeValue = this.appointmentFrmGroup.get('startTime').value || new Date();
+    const hours = timeValue.getHours();
+    const minutes = timeValue.getMinutes();
+    newDateTime.setHours(hours, minutes);
+    // 更新 startTime 控件的值
+    this.appointmentFrmGroup.get('startTime').setValue(newDateTime);
+  };
+
+  updateEndTime(newDateTime:Date){
+    const timeValue = this.appointmentFrmGroup.get('endTime').value || new Date();
+    const hours = timeValue.getHours();
+    const minutes = timeValue.getMinutes();
+    newDateTime.setHours(hours, minutes);
+    // 更新 startTime 控件的值
+    this.appointmentFrmGroup.get('endTime').setValue(newDateTime);
+  };
 
 
   private buildEmptyAppointForm(): FormGroup {
@@ -127,11 +167,13 @@ export class AppointmentDialogComponent implements OnInit {
         customerId: [null, Validators.required],
         phone: [null, [Validators.required, Validators.pattern('^\\+?\\s*(\\d\\s*){10,}$')]],
         treatmentItemId: [null, Validators.required],
+        date:[null,Validators.required],
         startTime: [null, Validators.required],
         endTime: [null, Validators.required],
         staffId: [null, Validators.required],
-        type: [null],
+        type: [null, Validators.required],
         charge: [null],
+        firstTimeAppointment:[false],
         // staffBonus: [null],
         appointmentNote: [null],
         paymentId: [null],
@@ -254,11 +296,13 @@ export class AppointmentDialogComponent implements OnInit {
     this.appointmentFrmGroup.get('customerId').setValue(customer.id)
     this.appointmentFrmGroup.get('phone').setValue(customer.contactPhone)
     this.appointmentFrmGroup.get('treatmentItemId').setValue(treatmentItem.id)
+    this.appointmentFrmGroup.get('date').setValue(new Date(data.startTime.replace('Z', '')))
     this.appointmentFrmGroup.get('startTime').setValue(new Date(data.startTime.replace('Z', '')))
     this.appointmentFrmGroup.get('endTime').setValue(new Date(data.endTime.replace('Z', '')))
     this.appointmentFrmGroup.get('staffId').setValue(staff.id);
     this.appointmentFrmGroup.get('type').setValue(data.type)
     this.appointmentFrmGroup.get('charge').setValue(data.charge)
+    this.appointmentFrmGroup.get('firstTimeAppointment').setValue(data.firstTimeAppointment)
     // this.appointmentFrmGroup.get('staffBonus').setValue(data.staffBonus)
     this.appointmentFrmGroup.get('appointmentNote').setValue(data.appointmentNote)
     this.appointmentFrmGroup.get('paymentId').setValue(data.paymentId)
@@ -282,7 +326,7 @@ export class AppointmentDialogComponent implements OnInit {
       if(data.paymentBundle){
         this.bookingService.getBundleById(data.paymentBundle).subscribe({
           next:(bundle)=>{
-            this.updatePaymentBundleOnReadOnlyMode(bundle);
+           this.updatePaymentBundleOnReadOnlyMode(bundle);
           },
           error: (error) =>{
             this.message.error(error);
@@ -308,8 +352,9 @@ export class AppointmentDialogComponent implements OnInit {
     if (this.appointmentFrmGroup.valid) {
 
       const values = this.appointmentFrmGroup.value;
+      delete values.date;
+
       if (values.startTime) {
-        // 将 Date 对象转换为您需要的格式，这里不使用时区转换
         values.startTime = moment(values.startTime).format('YYYY-MM-DDTHH:mm:ss');
       }
       if (values.endTime) {
@@ -463,6 +508,9 @@ export class AppointmentDialogComponent implements OnInit {
                   active: bundle.active,
                 };
               this.customerBundleList.push(customerBundleDto);
+              if(this.customerBundleList.length === 0) {
+                this.noActivePaymentBundle = true;
+              }
             }
           )
         },
@@ -471,9 +519,6 @@ export class AppointmentDialogComponent implements OnInit {
         }
       }
     )
-    if(this.customerBundleList.length === 0) {
-      this.noActivePaymentBundle = true;
-    }
   }
 
   get packageDetailList(): FormArray {
@@ -566,21 +611,20 @@ export class AppointmentDialogComponent implements OnInit {
       rmb: payment.rmb,
       paymentFor: payment.paymentFor
     })
-    console.warn(this.paymentDetailFrmGroup)
   }
   updatePaymentBundleOnReadOnlyMode(bundle: CustomerBundleDto) {
-    this.paymentBundleFrmGroup = this.fb.group({
-      id: bundle.id,
-      bundlePackageName: bundle.bundlePackageName,
-      purchaseDate: bundle.purchaseDate,
-      bundleValue: bundle.bundleValue,
-      bundleNote: bundle.bundleNote,
-      customerId: bundle.customerId,
-      packageDetailList:bundle.packageDetailList,
-      active: bundle.active,
-    });
-    console.warn(this.paymentDetailFrmGroup)
-
+    this.bundleReadOnly = bundle;
+    // this.paymentBundleFrmGroup = this.createReadOnlyFromGroup();
+    // return this.fb.group({
+    //   id: bundle.id,
+    //   bundlePackageName: bundle.bundlePackageName,
+    //   purchaseDate: bundle.purchaseDate,
+    //   bundleValue: bundle.bundleValue,
+    //   bundleNote: bundle.bundleNote,
+    //   customerId: bundle.customerId,
+    //   packageDetailList:bundle.packageDetailList,
+    //   active: bundle.active,
+    // });
   }
 
 }

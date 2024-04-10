@@ -6,7 +6,7 @@
     <nz-form-item>
       <nz-form-label [nzSpan]="1" class="white-label">姓名</nz-form-label>
       <nz-form-control [nzSpan]="4">
-        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a person" formControlName="customerId"
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="请选择客户" formControlName="customerId"
                    class="customer-selector form-selector" [nzDisabled]="!enableEdit" (focus)="handleFocus($event)">
           <nz-option *ngFor="let customer of customerList" [nzValue]="customer.id"
                      [nzLabel]="customer.name"></nz-option>
@@ -20,7 +20,7 @@
       <nz-form-label [nzSpan]="1">电话</nz-form-label>
       <nz-form-control [nzSpan]="6">
         <input class="appointment-field-input-normal customer-phone" type="text" nz-input formControlName="phone"
-               placeholder="phone number" (focus)="handleFocus($event)" [readOnly]="true">
+               placeholder="电话号" (focus)="handleFocus($event)" [readOnly]="true">
         <form-field-errors
           [control]="appointmentFrmGroup.get('phone')"
           [customMessages]="{'pattern': 'Invalid phone number', 'required': 'Phone number is required'}">
@@ -30,7 +30,7 @@
       <nz-form-label [nzSpan]="1">项目</nz-form-label>
       <nz-form-control [nzSpan]="6">
         <nz-select nzShowSearch nzAllowClear
-                   nzPlaceHolder="Select a person"
+                   nzPlaceHolder="请选择项目"
                    class="form-selector"
                    formControlName="treatmentItemId"
                    (focus)="handleFocus($event)"
@@ -50,7 +50,7 @@
       <nz-form-control [nzSpan]="4">
         <nz-select nzShowSearch
                    nzAllowClear
-                   nzPlaceHolder="Select a person"
+                   nzPlaceHolder="请选择治疗师"
                    formControlName="staffId"
                    class="form-selector staff-selector"
                    (focus)="handleFocus($event)" [nzDisabled]="!enableEdit">
@@ -62,16 +62,55 @@
         </form-field-errors>
       </nz-form-control>
 
-      <nz-form-label [nzSpan]="2">开始时间</nz-form-label>
+      <nz-form-label [nzSpan]="1">类型</nz-form-label>
+      <nz-form-control [nzSpan]="6">
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="请选择类型" formControlName="type"
+                   class="type-selector form-selector" [nzDisabled]="!enableEdit" (focus)="handleFocus($event)">
+          <nz-option *ngFor="let type of appointmentTypeList" [nzValue]="type"
+                     [nzLabel]="type"></nz-option>
+        </nz-select>
+        <form-field-errors
+          [control]="appointmentFrmGroup.get('type')"
+          [customMessages]="{'required': 'type is required'}">
+        </form-field-errors>
+      </nz-form-control>
+
+      <nz-form-control [nzSpan]="2"></nz-form-control>
+
+      <nz-form-label [nzSpan]="2">首次预约</nz-form-label>
+      <nz-form-control [nzSpan]="5">
+        <label nz-checkbox formControlName="firstTimeAppointment" [nzDisabled]="!enableEdit"></label>
+      </nz-form-control>
+    </nz-form-item>
+
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="1">日期</nz-form-label>
       <nz-form-control [nzSpan]="5">
         <nz-date-picker
-          nzShowTime
-          nzFormat="yyyy-MM-dd HH:mm:ss"
-          formControlName="startTime"
-          nzPlaceHolder="Start"
+          nzFormat="yyyy-MM-dd"
+          nzPlaceHolder="日期"
+          formControlName="date"
+          [(ngModel)]="selectedDate"
+          (ngModelChange)="onDateChange($event)"
           (focus)="handleFocus($event)"
           [nzDisabled]="!enableEdit"
         ></nz-date-picker>
+      </nz-form-control>
+
+
+      <nz-form-label [nzSpan]="2">开始时间</nz-form-label>
+      <nz-form-control [nzSpan]="4">
+        <nz-time-picker
+          nzFormat="HH:mm"
+          formControlName="startTime"
+          nzPlaceHolder="开始时间"
+          [nzMinuteStep] ="15"
+          [nzDisabledHours]="disabledHours"
+          [nzHideDisabledOptions]="true"
+          (focus)="handleFocus($event)"
+          [nzDisabled]="!enableEdit"
+        ></nz-time-picker>
         <form-field-errors
           [control]="appointmentFrmGroup.get('startTime')"
           [customMessages]="{'required': 'startTime is required'}"
@@ -79,41 +118,24 @@
         </form-field-errors>
       </nz-form-control>
 
-      <nz-form-control [nzSpan]="2"></nz-form-control>
-
       <nz-form-label [nzSpan]="2">结束时间</nz-form-label>
       <nz-form-control [nzSpan]="7">
-        <nz-date-picker
-          nzShowTime
-          nzFormat="yyyy-MM-dd HH:mm:ss"
+        <nz-time-picker
+          nzFormat="HH:mm"
           formControlName="endTime"
-          nzPlaceHolder="End"
+          nzPlaceHolder="结束时间"
+          [nzMinuteStep] ="15"
+          [nzDisabledHours]="disabledHours"
+          [nzHideDisabledOptions]="true"
           (focus)="handleFocus($event)"
           [nzDisabled]="!enableEdit"
-        ></nz-date-picker>
+        ></nz-time-picker>
         <form-field-errors
           [control]="appointmentFrmGroup.get('endTime')"
           [customMessages]="{'required': 'endTime is required'}">
         </form-field-errors>
       </nz-form-control>
-    </nz-form-item>
 
-
-    <nz-form-item>
-      <nz-form-label [nzSpan]="1">类型</nz-form-label>
-      <nz-form-control [nzSpan]="3">
-
-        <input class="appointment-field-input-normal" nz-input formControlName="type" placeholder="type"
-               (focus)="handleFocus($event)" [readOnly]="!enableEdit">
-      </nz-form-control>
-
-      <nz-form-control [nzSpan]="2"></nz-form-control>
-
-      <!--      <nz-form-label [nzSpan]="2">Bonus</nz-form-label>-->
-      <!--      <nz-form-control [nzSpan]="6">-->
-      <!--        <input class="appointment-field-input-normal" nz-input formControlName="staffBonus" placeholder="staffBonus"-->
-      <!--               (focus)="handleFocus($event)" [readOnly]="!enableEdit">-->
-      <!--      </nz-form-control>-->
     </nz-form-item>
 
 
@@ -168,18 +190,19 @@
       </nz-form-item>
 
       <div *ngIf="showPaymentBoard">
+        <nz-divider></nz-divider>
         <h3>请选择付款方式：</h3>
-        <nz-radio-group>
+        <nz-radio-group class="margin-top-small">
           <label nz-radio-button nzValue="normalPay" (click)="normalPay()">付款</label>
           <label nz-radio-button nzValue="payByBundlePackage" (click)="bundlePay()">套餐</label>
         </nz-radio-group>
       </div>
 
-      <div class="normal-payment" *ngIf="selectedPaymentMethod==='normal'" [formGroup]="paymentDetailFrmGroup">
+      <div class="normal-payment margin-top-small" *ngIf="selectedPaymentMethod==='normal'" [formGroup]="paymentDetailFrmGroup">
         <div class="form-panel payment-detail">
           <div>
             <h3>支付详情</h3>
-            <br>
+            <nz-divider></nz-divider>
             <nz-row [nzGutter]="24">
               <div nz-col nzSpan="8">
                 <nz-form-item>
@@ -257,7 +280,7 @@
               </div>
             </nz-row>
           </div>
-          <div class="form-actions">
+          <div class="form-actions margin-bottom-small">
             <button nz-button (click)="cancelNormalPay()" nzType="default">取消</button>
             <button nz-button [disabled]="!paymentDetailFrmGroup.valid" (click)="doNormalPay()" nzType="primary">保存
             </button>
@@ -266,8 +289,8 @@
       </div>
 
 
-      <div class="BundlePackage-payment" *ngIf="selectedPaymentMethod==='bundle'">
-        <div class="show-all-bundles" *ngIf="!selectePaymentBundle">
+      <div class="BundlePackage-payment margin-top-small" *ngIf="selectedPaymentMethod==='bundle'">
+        <div class="show-all-bundles margin-bottom-small" *ngIf="!selectePaymentBundle">
           <h4>可用套餐</h4>
           <nz-divider></nz-divider>
           <div class="bundle-list-item" *ngFor="let bundle of customerBundleList; index as i">
@@ -290,8 +313,9 @@
               </nz-descriptions-item>
             </nz-descriptions>
           </div>
-          <div *ngIf="noActivePaymentBundle"></div>
+          <div *ngIf="noActivePaymentBundle">
           <p>没有可用套餐，请使用付款功能</p>
+          </div>
         </div>
 
         <div class="selected-bundle-board" *ngIf="selectePaymentBundle" >
@@ -323,7 +347,7 @@
     <div *ngIf="readOnlyMode">
       <nz-divider></nz-divider>
       <div *ngIf=" !!appointmentFrmGroup.get('paymentId')?.value">
-        <h3>支付详情(read only)</h3>
+        <h3>支付详情</h3>
         <br>
         <form [formGroup]="paymentDetailFrmGroup">
           <nz-row [nzGutter]="24">
@@ -386,17 +410,15 @@
           </nz-row>
         </form>
       </div>
-      <div *ngIf=" !!!appointmentFrmGroup.get('paymentId')?.value && !!appointmentFrmGroup.get('paymentBundle')?.value">
-        <div class="bundle-list-item" [formGroup]="paymentBundleFrmGroup" >
-          <nz-descriptions nzTitle="使用的套餐" nzBordered ngSkipHydration >
-            <nz-descriptions-item nzTitle="套餐名">{{ paymentBundleFrmGroup.get('bundlePackageName')?.value}} test</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="购买日期">{{ paymentBundleFrmGroup.get('purchaseDate')?.value}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="价值">{{ paymentBundleFrmGroup.get('bundleValue')?.value}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="可用">{{ paymentBundleFrmGroup.get('active')?.value}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="备注">{{ paymentBundleFrmGroup.get('bundleNote')?.value}}</nz-descriptions-item>
-          </nz-descriptions>
-        </div>
-
+      <div *ngIf=" !appointmentFrmGroup.get('paymentId')?.value && !!appointmentFrmGroup.get('paymentBundle')?.value" >
+          <div class="bundle-list-item" >
+                      <nz-descriptions nzTitle="使用的套餐" nzBordered ngSkipHydration >
+                        <nz-descriptions-item nzTitle="套餐名">{{ bundleReadOnly?.bundlePackageName}}</nz-descriptions-item>
+                        <nz-descriptions-item nzTitle="购买日期">{{bundleReadOnly?.purchaseDate}}</nz-descriptions-item>
+                        <nz-descriptions-item nzTitle="价值">{{ bundleReadOnly?.bundleValue}}</nz-descriptions-item>
+                        <nz-descriptions-item nzTitle="可用">{{ bundleReadOnly?.active}}</nz-descriptions-item>
+                        <nz-descriptions-item nzTitle="备注">{{ bundleReadOnly?.bundleNote}}</nz-descriptions-item>
+                      </nz-descriptions>
       </div>
     </div>
   </div>
