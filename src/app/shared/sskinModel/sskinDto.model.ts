@@ -36,6 +36,18 @@ export interface AppointmentDetailDto {
   paymentBundle: string; //paid bundle id
 }
 
+export interface AppointmentWithPaymentDto {
+  appointmentId: string;
+  customerId: string;
+  customerName: string;
+  treatmentItemName: string;
+  startTime: Date;
+  endTime: Date;
+  paymentId: string;
+  totalAmount: string;
+  paidByBundle: boolean;
+}
+
 export interface TreatmentItemDto {
   id: string;
   name: string;

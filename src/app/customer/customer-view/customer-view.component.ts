@@ -1,11 +1,15 @@
 import {Component, Inject, inject, Input, OnInit} from '@angular/core';
-import {CustomerDetailDto} from "@shared/sskinModel/sskinDto.model";
+import {AppointmentWithPaymentDto, CustomerDetailDto} from "@shared/sskinModel/sskinDto.model";
 import {NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
 import {NzDescriptionsComponent, NzDescriptionsItemComponent, NzDescriptionsSize} from "ng-zorro-antd/descriptions";
 import {NzListComponent, NzListItemComponent} from "ng-zorro-antd/list";
 import {NzTableComponent, NzTableModule} from "ng-zorro-antd/table";
 import {NgForOf, NgIf} from "@angular/common";
 import {NzColDirective, NzRowDirective} from "ng-zorro-antd/grid";
+import {NzDividerComponent} from "ng-zorro-antd/divider";
+import {CustomerService} from "../customer.service";
+import {of} from "rxjs";
+import {NzMessageService} from "ng-zorro-antd/message";
 
 class IModalData {
 }
@@ -23,19 +27,27 @@ class IModalData {
     NzColDirective,
     NzRowDirective,
     NgIf,
+    NzDividerComponent,
   ],
   templateUrl: './customer-view.component.html',
   styleUrl: './customer-view.component.scss'
 })
 export class CustomerViewComponent implements OnInit{
   expandSet = new Set<string>();
-  firstTime = "NO";
-  constructor(@Inject(NZ_MODAL_DATA) public data: any) {}
+  appointmentPaymentHistoryList:AppointmentWithPaymentDto[] |any;
+  constructor(@Inject(NZ_MODAL_DATA) public data: any,
+              private customerService: CustomerService,
+              private message: NzMessageService) {}
 
   ngOnInit() {
-    if(this.data.customer?.firstTime){
-      this.firstTime="YES";
-    }
+      this.customerService.getCompletedAppointmentAndPayment(this.data.customer.id).subscribe({
+          next:(data)=>{
+            this.appointmentPaymentHistoryList = data;
+          },
+        error: (error)=>{
+            this.message.error(error)
+        }
+      })
 
   }
 

@@ -4,7 +4,6 @@
     <nz-descriptions-item nzTitle="Id">{{this.data.customer?.id || 'N/A'}}</nz-descriptions-item>
     <nz-descriptions-item nzTitle="姓名" >{{this.data.customer?.name || 'N/A'}}</nz-descriptions-item>
     <nz-descriptions-item nzTitle="联系电话">{{this.data.customer?.contactPhone || 'N/A'}}</nz-descriptions-item>
-    <nz-descriptions-item nzTitle="首次到店">{{this.firstTime || 'N/A'}}</nz-descriptions-item>
     <nz-descriptions-item nzTitle="备注"  [nzSpan]="3">{{this.data.customer?.customerNote || 'N/A'}}</nz-descriptions-item>
   </nz-descriptions>
   <br>
@@ -45,6 +44,34 @@
             <nz-col [nzSpan]="10">{{detail.treatmentItem.name}}</nz-col>
             <nz-col [nzSpan]="5">{{detail.remainCount}}</nz-col>
           </nz-row>
+      </tr>
+    </ng-container>
+    </tbody>
+  </nz-table>
+  <br>
+  <nz-divider></nz-divider>
+  <h4>预约(已完成)历史记录</h4>
+  <nz-table #completedAppointmentTable [nzData]="appointmentPaymentHistoryList"  nzTableLayout="fixed">
+    <thead>
+    <tr>
+      <th></th>
+      <th>项目</th>
+      <th>开始时间</th>
+      <th>结束时间</th>
+      <th>付款</th>
+      <th>套餐支付</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngFor="let appointment of completedAppointmentTable.data ; index as i">
+      <tr>
+        <td>{{ i+1 }}</td>
+        <td>{{ appointment.treatmentItemName }}</td>
+        <td>{{appointment.startTime }}</td>
+        <td>{{ appointment.endTime }}</td>
+        <td>{{ appointment.totalAmount }}</td>
+        <td>{{ appointment.paidByBundle }}</td>
       </tr>
     </ng-container>
     </tbody>

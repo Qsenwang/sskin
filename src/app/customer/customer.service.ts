@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {ApiService} from "@shared/api/api.service";
 import {Observable} from "rxjs";
 import {
+  AppointmentWithPaymentDto,
   CustomerBasicInfoDto,
   CustomerBundleDto,
   CustomerDetailDto, PackageAndPaymentDetailDto, TreatmentItemDto,
@@ -64,6 +65,11 @@ export class CustomerService {
   removeBundlePackage(bundleId: string){
     const url = sskinWebApi.customerEndpoints.removeBundlePackage(bundleId);
     return this.apiService.delete(url);
+  }
+
+  getCompletedAppointmentAndPayment(customerId: string) {
+    const url = sskinWebApi.customerEndpoints.getCompletedAppointmentAndPayment(customerId);
+    return this.apiService.get<AppointmentWithPaymentDto>(url, {})
   }
 
 }
