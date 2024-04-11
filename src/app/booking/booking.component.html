@@ -18,7 +18,11 @@
       <div class="employee-task-board">
         <div class="employee-name">{{ staffTask.staffName}}</div>
         <div class="board-cell-grid">
-          <div *ngFor="let cell of gridMatrix ; let i = index" class="cell no-cursor" [ngClass]="'cell-' + i" [ngStyle]="calculateHeight(staffTask.appointmentBaseDtoList)" (click)="addAppointment()"></div>
+          <div *ngFor="let cell of gridMatrix ; let i = index"
+               class="cell no-cursor" [ngClass]="'cell-' + i"
+               [ngClass]="[getCellClass(i), isTimeSlotPast(cell.time) ? 'past-time-cell' : '']"
+               [ngStyle]="calculateHeight(staffTask.appointmentBaseDtoList)"
+               (click)="addAppointment()"></div>
         </div>
       </div>
       <div *ngFor="let appointment of staffTask.appointmentBaseDtoList" class="appointment no-cursor"

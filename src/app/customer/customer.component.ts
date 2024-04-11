@@ -82,7 +82,7 @@ export class CustomerComponent  implements OnInit {
 
   viewCustomer(customer: CustomerDetailDto) {
     const modal: any = this.modalService.create({
-      nzTitle: 'Customer Info',
+      nzTitle: '客户信息预览',
       nzContent: CustomerViewComponent,
       nzData: {
         customer: customer

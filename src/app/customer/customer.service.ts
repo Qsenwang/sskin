@@ -69,7 +69,7 @@ export class CustomerService {
 
   getCompletedAppointmentAndPayment(customerId: string) {
     const url = sskinWebApi.customerEndpoints.getCompletedAppointmentAndPayment(customerId);
-    return this.apiService.get<AppointmentWithPaymentDto>(url, {})
+    return this.apiService.get<AppointmentWithPaymentDto[]>(url, {})
   }
 
 }

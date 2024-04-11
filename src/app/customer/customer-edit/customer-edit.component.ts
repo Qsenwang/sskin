@@ -99,6 +99,9 @@ export class CustomerEditComponent implements OnInit {
         });
         if (!!customer.bundlePackages) {
           this.bundlePackageList = customer.bundlePackages;
+          this.bundlePackageList.sort((a: CustomerBundleDto, b: CustomerBundleDto) => {
+            return new Date(b.purchaseDate).getTime() - new Date(a.purchaseDate).getTime();
+          });
         }
         this.customerBasicEditForm.readonly = true;
         this.enableEdit = false;

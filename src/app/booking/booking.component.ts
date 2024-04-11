@@ -21,6 +21,7 @@ interface TimeSlot {
 
 interface gridCell {
   emptyContent: string;
+  time: Date;
 }
 
 @Component({
@@ -93,14 +94,36 @@ export class BookingComponent implements OnInit {
   }
 
   generateGrid(): gridCell[] {
+    // const matrix: gridCell[] = [];
+    // for (let i = 10; i < 19; i++) {
+    //   for (let j = 0; j < 60; j += 30) {
+    //     const blank: string = "";
+    //     matrix.push({emptyContent: blank});
+    //   }
+    // }
+    // return matrix;
+
     const matrix: gridCell[] = [];
-    for (let i = 10; i < 19; i++) {
-      for (let j = 0; j < 60; j += 30) {
-        const blank: string = "";
-        matrix.push({emptyContent: blank});
+    const startDate = new Date(); // 假设今天开始
+    startDate.setHours(10, 0, 0, 0); // 从早上10点开始
+
+    for (let hour = 10; hour < 19; hour++) {
+      for (let min = 0; min < 60; min += 30) {
+        const cellTime = new Date(startDate.getTime());
+        cellTime.setHours(hour, min);
+        const cell:gridCell = {
+          emptyContent: "",
+          time: cellTime
+        };
+        matrix.push(cell);
       }
     }
     return matrix;
+  }
+
+  isTimeSlotPast(cellTime: Date): boolean {
+    const now = new Date();
+    return cellTime < now;
   }
 
   addAppointment() {
@@ -190,4 +213,7 @@ export class BookingComponent implements OnInit {
     return appointment.type == "注射";
   }
 
+  getCellClass(i: number): string {
+    return 'slot-' + i;
+  }
 }
