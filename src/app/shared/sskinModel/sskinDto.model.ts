@@ -14,7 +14,7 @@ export interface AppointmentBaseDto {
   endTime: Date;
   overLap: string;
   layer: number;
-  type:string;
+  type: string;
 }
 
 export interface AppointmentDetailDto {
@@ -137,6 +137,17 @@ export interface RevenueDto {
 
   appointmentPayments: AppointmentPayment[];
   bundlePayments: BundlePayment[];
+  totalCustomerCount: number;
+  totalNewCustomerCount: number;
+  totalAppointmentCount: number;
+  totalRevenue: string
+  top5TreatmentItemList: Top5TreatmentItemSummaryDto[];
+}
+
+export interface Top5TreatmentItemSummaryDto {
+  itemId: string;
+  itemCount: number;
+  itemName: string;
 }
 
 export interface AppointmentPayment {

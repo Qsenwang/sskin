@@ -16,6 +16,7 @@ import {
   NzTheadComponent,
   NzThMeasureDirective, NzTrDirective
 } from "ng-zorro-antd/table";
+import {NzDescriptionsComponent, NzDescriptionsItemComponent} from "ng-zorro-antd/descriptions";
 
 @Component({
   selector: 'app-revenue',
@@ -31,7 +32,9 @@ import {
     NzTbodyComponent,
     NzThMeasureDirective,
     NzTheadComponent,
-    NzTrDirective
+    NzTrDirective,
+    NzDescriptionsComponent,
+    NzDescriptionsItemComponent
   ],
   templateUrl: './revenue.component.html',
   styleUrl: './revenue.component.scss'

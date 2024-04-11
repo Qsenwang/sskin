@@ -12,7 +12,7 @@ import {CustomerEditComponent} from "./customer/customer-edit/customer-edit.comp
 export const routes: Routes = [
   {path:'',  redirectTo: '/booking', pathMatch: 'full'},
   {path:'booking', component:BookingComponent},
-  {path:'summary', component:SummaryComponent},
+  // {path:'summary', component:SummaryComponent},
   {path:'customer', component:CustomerComponent},
   {path:'staff', component:StaffComponent},
   {path:'treatment', component:TreatmentComponent},

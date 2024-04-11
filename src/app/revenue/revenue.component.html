@@ -1,41 +1,24 @@
-<!--<div>-->
-<!--  <div class="pick-bar">-->
-<!--    <nz-date-picker [(ngModel)]="startDate"></nz-date-picker>-->
-<!--    <nz-date-picker [(ngModel)]="endDate"></nz-date-picker>-->
-<!--    <button nz-button nzType="primary" type="button" (click)="fetchRevenue()">获取</button>-->
-<!--  </div>-->
+<div class="revenue-panel">
+  <div class="pick-bar">
+    <nz-date-picker [(ngModel)]="startDate"></nz-date-picker>
+    <nz-date-picker class="margin-left-small"  [(ngModel)]="endDate"></nz-date-picker>
+    <button nz-button nzType="primary" type="button" (click)="fetchRevenue()">获取</button>
+  </div>
 
-<!--  <div>-->
-<!--    <nz-table #revenueTable-->
-<!--              [nzData]="filteredStaffList"-->
-<!--              [nzFrontPagination]="true"-->
-<!--              [nzPageSize]="10"-->
-<!--              [nzShowPagination]="true"-->
-<!--              nzTableLayout="fixed"-->
-<!--              ngSkipHydration>-->
-<!--      <thead>-->
-<!--      <tr>-->
-<!--        &lt;!&ndash;        <th>Id</th>&ndash;&gt;-->
-<!--        <th>姓名</th>-->
-<!--        <th>入职日期</th>-->
-<!--        <th>离职日期</th>-->
-<!--        <th>操作</th>-->
-<!--      </tr>-->
-<!--      </thead>-->
-<!--      <tbody>-->
-<!--      <tr *ngFor="let staff of staffTable.data">-->
-<!--        &lt;!&ndash;        <td>{{ staff.id }}</td>&ndash;&gt;-->
-<!--        <td>{{ staff.name }}</td>-->
-<!--        <td>{{ staff.onBoardDate }}</td>-->
-<!--        <td>{{ staff.offBoardDate }}</td>-->
-<!--        <td>-->
-<!--          <a nz-button nzType="primary" (click)="editStaff(staff); $event.stopPropagation();">编辑</a>-->
-<!--          <nz-divider nzType="vertical"></nz-divider>-->
-<!--          <a nz-button nzType="primary" (click)="removeStaff(staff.id); $event.stopPropagation();">删除</a>-->
-<!--        </td>-->
-<!--      </tr>-->
-<!--      </tbody>-->
-<!--    </nz-table>-->
+  <div>
+    <nz-descriptions class="description-board margin-top-small" nzTitle="统计" nzBordered ngSkipHydration="">
+      <nz-descriptions-item nzTitle="总客户数:">{{revenue?.totalCustomerCount || '0'}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="新客数：" >{{revenue?.totalNewCustomerCount || '0'}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="总预约数：">{{revenue?.totalAppointmentCount || '0'}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="总收入；">{{revenue?.totalRevenue || '0.00'}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="最火热预约项目：">
+        <div *ngFor="let item of revenue?.top5TreatmentItemList">
+          <span> 项目名称: {{ item.itemName}}</span> <span> -- </span><span>总次数: {{ item.itemCount }}</span>
+          <br/>
+        </div>
+      </nz-descriptions-item>
 
-<!--  </div>-->
-<!--</div>-->
+    </nz-descriptions>
+
+  </div>
+</div>
