@@ -1,39 +1,41 @@
-<nz-form-item>
-  <nz-form-control [nzSm]="16" [nzXs]="24">
-  <nz-form-label [nzSm]="8" [nzXs]="24">日期</nz-form-label>
-    <nz-date-picker  [formControl]="selectedDateControl"></nz-date-picker>
-  </nz-form-control>
-</nz-form-item>
+<div class="booking-panel">
+  <nz-form-item >
+    <nz-form-control [nzSm]="16" [nzXs]="24">
+      <nz-form-label [nzSm]="8" [nzXs]="24" class="margin-left-small">日期</nz-form-label>
+      <nz-date-picker [formControl]="selectedDateControl"></nz-date-picker>
+    </nz-form-control>
+  </nz-form-item>
 
-<div class="scheduler">
-  <button nz-button class="button-width-large" nzType="primary" type="button" (click)="addAppointment()">添加</button>
-  <div class="timeline">
-    <div *ngFor="let timeSlot of timeSlots; let i = index" class="time-slot"  [ngClass]="'slot-' + i">
-      {{ timeSlot.time }}
+  <div class="scheduler">
+    <button nz-button class="button-width-large" nzType="primary" type="button" (click)="addAppointment()">添加</button>
+    <div class="timeline">
+      <div *ngFor="let timeSlot of timeSlots; let i = index" class="time-slot" [ngClass]="'slot-' + i">
+        {{ timeSlot.time }}
+      </div>
     </div>
-  </div>
-  <div class="task-board-container">
+    <div class="task-board-container">
 
-    <div *ngFor="let staffTask of staffTasks | async " class="board-test">
-      <div class="employee-task-board">
-        <div class="employee-name">{{ staffTask.staffName}}</div>
-        <div class="board-cell-grid">
-          <div *ngFor="let cell of gridMatrix ; let i = index"
-               class="cell no-cursor" [ngClass]="'cell-' + i"
-               [ngClass]="[getCellClass(i), isTimeSlotPast(cell.time) ? 'past-time-cell' : '']"
-               [ngStyle]="calculateHeight(staffTask.appointmentBaseDtoList)"
-               (click)="addAppointment()"></div>
+      <div *ngFor="let staffTask of staffTasks | async " class="board-test">
+        <div class="employee-task-board">
+          <div class="employee-name">{{ staffTask.staffName }}</div>
+          <div class="board-cell-grid">
+            <div *ngFor="let cell of gridMatrix ; let i = index"
+                 class="cell no-cursor" [ngClass]="'cell-' + i"
+                 [ngClass]="[getCellClass(i), isTimeSlotPast(cell.time) ? 'past-time-cell' : '']"
+                 [ngStyle]="calculateHeight(staffTask.appointmentBaseDtoList)"
+                 (click)="addAppointment()"></div>
+          </div>
         </div>
+        <div *ngFor="let appointment of staffTask.appointmentBaseDtoList" class="appointment no-cursor"
+             (click)="editAppointment(staffTask.staffId, appointment.appointmentId, appointment.customerId)"
+             [ngStyle]="calculateAppointmentStyle(appointment)"
+             [ngClass]="{'first-time': appointment.firstTimeAppointment, 'injection-type': isInjection(appointment)}">
+          {{ appointment.customerName }}
+        </div>
+
       </div>
-      <div *ngFor="let appointment of staffTask.appointmentBaseDtoList" class="appointment no-cursor"
-           (click)="editAppointment(staffTask.staffId, appointment.appointmentId, appointment.customerId)"
-           [ngStyle]="calculateAppointmentStyle(appointment)"
-           [ngClass]="{'first-time': appointment.firstTimeAppointment, 'injection-type': isInjection(appointment)}">
-        {{appointment.customerName}}
-      </div>
+
 
     </div>
-
-
   </div>
 </div>

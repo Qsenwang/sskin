@@ -123,7 +123,7 @@ export class BookingComponent implements OnInit {
 
   isTimeSlotPast(cellTime: Date): boolean {
     const now = new Date();
-    return cellTime < now;
+    return cellTime > now;
   }
 
   addAppointment() {

@@ -8,37 +8,55 @@
     </nz-input-group>
 
     <button class="add-new-item margin-left-small" nz-button nzType="primary" (click)="createNewItem()">添加新项目</button>
+    <button class="add-new-item margin-left-small" nz-button nzType="dashed" (click)="createNewType()">添加/编辑分类</button>
 
-    <nz-table #itemTable
-              [nzData]="filteredItemList"
-              [nzFrontPagination]="true"
-              [nzPageSize]="10"
-              [nzShowPagination]="true"
-              nzTableLayout="fixed"
-              ngSkipHydration>
-      <thead>
-      <tr>
-        <!--        <th>Id</th>-->
-        <th>项目名称</th>
-        <th>标准价格</th>
-        <th>备注</th>
-        <th>操作</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let item of itemTable.data">
-        <!--        <td>{{ item.id }}</td>-->
-        <td>{{ item.name }}</td>
-        <td>{{ item.standardPrice }}</td>
-        <td>{{ item.itemNote }}</td>
-        <td>
-          <a nz-button nzType="primary" (click)="editItem(item); $event.stopPropagation();">编辑</a>
-          <nz-divider nzType="vertical"></nz-divider>
-          <a nz-button nzType="primary" (click)="removeItem(item.id); $event.stopPropagation();">删除</a>
-        </td>
-      </tr>
-      </tbody>
-    </nz-table>
+    <div>
+      <nz-divider></nz-divider>
+      <h3>请选择分类：</h3>
+<!--      <nz-radio-group class="margin-top-small" *ngFor="let type of typeList">-->
+<!--          <label nz-radio-button  (click)="selectType(type)">{{type.typeName}}</label>-->
+<!--      </nz-radio-group>-->
+
+      <nz-button-group *ngFor="let type of typeList" class="margin-top-small">
+        <button class="margin-left-small" nz-button nzType="dashed" (click)="selectType(type)">{{type.typeName }}</button>
+      </nz-button-group>
+    </div>
+
+    <div class="treatment-item-list margin-top-small" >
+      <nz-table #itemTable
+                [nzData]="filteredItemList"
+                [nzFrontPagination]="true"
+                [nzPageSize]="10"
+                [nzShowPagination]="true"
+                nzTableLayout="fixed"
+                ngSkipHydration>
+        <thead>
+        <tr>
+          <!--        <th>Id</th>-->
+          <th>项目名称</th>
+          <th>标准价格</th>
+          <th>备注</th>
+          <th>类别</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of itemTable.data">
+          <!--        <td>{{ item.id }}</td>-->
+          <td>{{ item.name }}</td>
+          <td>{{ item.standardPrice }}</td>
+          <td>{{ item.itemNote }}</td>
+          <td>{{ item.classType }}</td>
+          <td>
+            <a nz-button nzType="primary" (click)="editItem(item); $event.stopPropagation();">编辑</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a nz-button nzType="primary" (click)="removeItem(item.id); $event.stopPropagation();">删除</a>
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </div>
+
   </div>
 </div>
 
@@ -74,6 +92,20 @@
               [control]="itemForm.get('standardPrice')"
               [customMessages]="{'required': 'standardPrice is required'}">
             </form-field-errors>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label>类别</nz-form-label>
+          <nz-form-control>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="请选择类别" formControlName="classType"
+                       class="phone-selector form-selector">
+              <nz-option *ngFor="let classType of typeList" [nzValue]="classType.typeName"
+                         [nzLabel]="classType.typeName"></nz-option>
+            </nz-select>
           </nz-form-control>
         </nz-form-item>
       </div>

@@ -123,9 +123,21 @@ export class AppointmentDialogComponent implements OnInit {
     this.appointmentFrmGroup.get('customerId').valueChanges.subscribe((customerId:any) => {
       const selectedCustomer = this.customerList.find(customer => customer.id === customerId);
       if (selectedCustomer) {
-        this.appointmentFrmGroup.get('phone').setValue(selectedCustomer.contactPhone);
+        if(this.appointmentFrmGroup.get('phone').value !== selectedCustomer.contactPhone){
+          this.appointmentFrmGroup.get('phone').setValue(selectedCustomer.contactPhone);
+        }
       }
     });
+
+    this.appointmentFrmGroup.get('phone').valueChanges.subscribe((phone:any) => {
+        const selectedCustomer = this.customerList.find(customer => customer.contactPhone === phone);
+        if (selectedCustomer) {
+          if( this.appointmentFrmGroup.get('customerId').value !== selectedCustomer.id){
+            this.appointmentFrmGroup.get('customerId').setValue(selectedCustomer.id);
+          }
+
+        }
+      });
 
     if (!!this.data.appointmentId) {
       this.fetchAppointmentDetail(this.data.appointmentId)
@@ -207,6 +219,7 @@ export class AppointmentDialogComponent implements OnInit {
                 name: treatmentItem.name,
                 standardPrice: treatmentItem.standardPrice,
                 itemNote: treatmentItem.itemNote,
+                classType: treatmentItem.classType,
                 active: treatmentItem.active
               };
             this.treatmentItems.push(treatmentItemDto);

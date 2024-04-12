@@ -11,9 +11,13 @@ import {CommonModule} from "@angular/common";
 import {NzDividerComponent} from "ng-zorro-antd/divider";
 import {NzIconDirective} from "ng-zorro-antd/icon";
 import {NzTableModule} from "ng-zorro-antd/table";
-import {TreatmentItemDto} from "@shared/sskinModel/sskinDto.model";
+import {TreatmentItemDto, TreatmentItemTypeDto} from "@shared/sskinModel/sskinDto.model";
 import {TreatmentItemService} from "./treatmentItem.service";
 import {NzModalModule, NzModalService} from "ng-zorro-antd/modal";
+import {NzOptionComponent, NzSelectComponent} from "ng-zorro-antd/select";
+import {AppointmentDialogComponent} from "../booking/appointment-dialog/appointment-dialog.component";
+import {TreatmentClassEditComponent} from "./treatment-class-edit/treatment-class-edit.component";
+import {NzRadioButtonDirective, NzRadioComponent, NzRadioGroupComponent} from "ng-zorro-antd/radio";
 
 @Component({
   selector: 'app-treatment',
@@ -31,7 +35,12 @@ import {NzModalModule, NzModalService} from "ng-zorro-antd/modal";
     CommonModule,
     NzIconDirective,
     NzInputDirective,
-    NzModalModule
+    NzModalModule,
+    NzOptionComponent,
+    NzSelectComponent,
+    NzRadioButtonDirective,
+    NzRadioComponent,
+    NzRadioGroupComponent
   ],
   templateUrl: './treatment.component.html',
   styleUrl: './treatment.component.scss'
@@ -41,7 +50,8 @@ export class TreatmentComponent implements OnInit{
   itemList: TreatmentItemDto[] = [];
   filteredItemList: TreatmentItemDto[] = [];
   editEnable: boolean = false;
-
+  typeList:TreatmentItemTypeDto[] = [];
+  selectedType: string ="";
   constructor(private fb: FormBuilder,
               private message: NzMessageService,
               private modal: NzModalService,
@@ -50,6 +60,18 @@ export class TreatmentComponent implements OnInit{
 
   ngOnInit() {
     this.loadItemList();
+    this.itemService.getAllItemTypes().subscribe({
+
+      next: (data) => {
+        // data.forEach(employee => this.itemList.push(employee))
+        this.typeList = data;
+      },
+      error: () => {
+        this.message.error('加载分类')
+      }
+
+    })
+
   }
 
   loadItemList() {
@@ -64,6 +86,13 @@ export class TreatmentComponent implements OnInit{
         }
       }
     )
+  }
+
+  selectType(type: TreatmentItemTypeDto) {
+    this.selectedType = type.typeName;
+    this.filteredItemList = this.itemList.filter(item =>
+      item.classType.toLowerCase().includes(this.selectedType)
+    );
   }
 
   search(event: Event): void {
@@ -84,6 +113,7 @@ export class TreatmentComponent implements OnInit{
       name: [item.name, Validators.required],
       standardPrice: [item.standardPrice, Validators.required],
       itemNote: [item.itemNote || null],
+      classType:[item.classType || null],
       active: [item.active]
     });
     this.editEnable = true
@@ -115,10 +145,19 @@ export class TreatmentComponent implements OnInit{
       name: [null, Validators.required],
       standardPrice: [null, Validators.required],
       itemNote: [null],
+      classType: [null],
       active: [true]
     });
   }
 
+  createNewType (){
+    this.modal.create({
+      nzTitle: '项目分类列表编辑',
+      nzContent: TreatmentClassEditComponent,
+      nzWidth: 600,
+      nzFooter: null
+  })
+  }
   close(): void {
     this.editEnable = false;
   }

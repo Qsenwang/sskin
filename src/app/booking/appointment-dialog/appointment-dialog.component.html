@@ -19,8 +19,11 @@
       <nz-form-control [nzSpan]="1"></nz-form-control>
       <nz-form-label [nzSpan]="1">电话</nz-form-label>
       <nz-form-control [nzSpan]="6">
-        <input class="appointment-field-input-normal customer-phone" type="text" nz-input formControlName="phone"
-               placeholder="电话号" (focus)="handleFocus($event)" [readOnly]="true">
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="请选择电话" formControlName="phone"
+                   class="phone-selector form-selector" [nzDisabled]="!enableEdit" (focus)="handleFocus($event)">
+          <nz-option *ngFor="let customer of customerList" [nzValue]="customer.contactPhone"
+                     [nzLabel]="customer.contactPhone"></nz-option>
+        </nz-select>
         <form-field-errors
           [control]="appointmentFrmGroup.get('phone')"
           [customMessages]="{'pattern': 'Invalid phone number', 'required': 'Phone number is required'}">

@@ -7,6 +7,9 @@ export const sskinWebApi = {
     updateItem: (itemId: string) => `http://localhost:8080/treatment-item/${itemId}`,
     newItem: () => `http://localhost:8080/treatment-item/new`,
     removeItem: (itemId: string) => `http://localhost:8080/treatment-item/${itemId}`,
+    allItemTypes: () => `http://localhost:8080/treatment-item/class-type/all`,
+    updateType: (id:string) => `http://localhost:8080/treatment-item/class-type/${id}`,
+    addNewType: () => `http://localhost:8080/treatment-item/class-type/new`,
   },
   staffEndpoints: {
     getAllStaff: () => `http://localhost:8080/staff/all`,

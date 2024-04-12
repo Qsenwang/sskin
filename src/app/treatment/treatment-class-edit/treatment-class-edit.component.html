@@ -1,0 +1,23 @@
+
+
+<div>
+  <button nz-button class="margin-bottom-small" nzType="primary" type="button" (click)="addItem()">添加</button>
+  <ul nz-list [nzDataSource]="typesList" nzBordered nzSize="large" class="margin-top-small">
+    <li nz-list-item nzNoFlex *ngFor="let itemType of typesList; let i = index">
+      <div nz-row *ngIf="editIndex !== i">
+        <span nz-col nzSpan="18">{{ itemType.typeName }}</span>
+        <span nz-col nzSpan="3"> <button nz-button nzType="default" type="button" (click)="enableEdit(i)">编辑</button></span>
+      </div>
+      <div *ngIf="editIndex === i" nz-row nzGutter="24">
+        <div nz-col nzSpan="12">
+          <input nz-input [(ngModel)]="itemType.typeName" />
+        </div>
+        <div nz-col nz-span="6"></div>
+        <div nz-col nzSpan="3"><button nz-button nzSpan="4" nzType="primary" type="button" (click)="saveEdit(i)">保存</button></div>
+        <div nz-col nzSpan="3"><button nz-button nzSpan="4" nzType="dashed" type="button" nzDanger (click)="cancelEdit(i)">取消</button></div>
+
+
+      </div>
+    </li>
+  </ul>
+</div>

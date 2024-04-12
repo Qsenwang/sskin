@@ -20,6 +20,7 @@
   }
   .navbar-brand {
     margin-bottom: -20px;
+    margin-left: 20px;
   }
   .navbar-nav {
     width: 90%;
@@ -40,7 +41,7 @@
   }
 
   .nav-item:hover:not(.active) {
-    background-color: $color-grey3;
+    background-color: white;
   }
 }
 
@@ -61,5 +62,6 @@
 
   .nav-item:hover:not(.active) {
     background-color: $color-grey3;
+    opacity: 0.5;
   }
 }

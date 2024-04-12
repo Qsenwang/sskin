@@ -53,7 +53,13 @@ export interface TreatmentItemDto {
   name: string;
   standardPrice: number;
   itemNote: string;
+  classType: string;
   active: boolean;
+}
+
+export interface TreatmentItemTypeDto {
+  id: string;
+  typeName: string;
 }
 
 export interface StaffDto {

@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {ApiService} from "@shared/api/api.service";
 import {Observable} from "rxjs";
 import {sskinWebApi} from "@shared/api/sskin-endpoints";
-import {TreatmentItemDto} from "@shared/sskinModel/sskinDto.model";
+import {TreatmentItemDto, TreatmentItemTypeDto} from "@shared/sskinModel/sskinDto.model";
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +35,20 @@ export class TreatmentItemService{
   removeItem(itemId: string) {
     const url = sskinWebApi.treatmentEndpoints.removeItem(itemId);
     return this.apiService.delete(url);
+  }
+
+  getAllItemTypes() {
+    const url = sskinWebApi.treatmentEndpoints.allItemTypes();
+    return this.apiService.get<TreatmentItemTypeDto[]>(url, {})
+  }
+
+  updateType(id: string, data: TreatmentItemTypeDto) {
+    const url = sskinWebApi.treatmentEndpoints.updateType(id);
+    return this.apiService.put<TreatmentItemTypeDto>(url, data, {});
+  }
+  addNewType(data: TreatmentItemTypeDto) {
+    const url = sskinWebApi.treatmentEndpoints.addNewType();
+    return this.apiService.post<TreatmentItemTypeDto>(url, data, {});
   }
 
 }
