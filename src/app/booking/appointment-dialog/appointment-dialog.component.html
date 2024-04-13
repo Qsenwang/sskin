@@ -69,8 +69,8 @@
       <nz-form-control [nzSpan]="6">
         <nz-select nzShowSearch nzAllowClear nzPlaceHolder="请选择类型" formControlName="type"
                    class="type-selector form-selector" [nzDisabled]="!enableEdit" (focus)="handleFocus($event)">
-          <nz-option *ngFor="let type of appointmentTypeList" [nzValue]="type"
-                     [nzLabel]="type"></nz-option>
+          <nz-option *ngFor="let type of appointmentTypeList" [nzValue]="type.typeName"
+                     [nzLabel]="type.typeName"></nz-option>
         </nz-select>
         <form-field-errors
           [control]="appointmentFrmGroup.get('type')"
@@ -138,7 +138,7 @@
           [customMessages]="{'required': 'endTime is required'}">
         </form-field-errors>
       </nz-form-control>
-
+<button (click)="test()">test</button>
     </nz-form-item>
 
 
@@ -158,6 +158,13 @@
               *ngIf="!readOnlyMode">编辑
       </button>
     </nz-form-item>
+
+    <small *ngIf="appointmentFrmGroup.errors?.timeRangeInvalid &&
+              (appointmentFrmGroup.touched || appointmentFrmGroup.dirty)" class="validator-error-waning">
+      结束时间必须晚于开始时间
+    </small>
+
+
     <nz-form-item *ngIf="enableEdit">
       <nz-form-control [nzSpan]="14" [nzOffset]="10">
         <button *ngIf="appointmentFrmGroup.get('appointmentId').value" nz-button class="margin-right-small"
@@ -172,6 +179,8 @@
         <!--        <button (click)="test()">test</button>-->
       </nz-form-control>
     </nz-form-item>
+
+
   </form>
 
 

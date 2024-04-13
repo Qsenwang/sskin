@@ -17,7 +17,7 @@ import {NzModalModule, NzModalService} from "ng-zorro-antd/modal";
 import {NzOptionComponent, NzSelectComponent} from "ng-zorro-antd/select";
 import {AppointmentDialogComponent} from "../booking/appointment-dialog/appointment-dialog.component";
 import {TreatmentClassEditComponent} from "./treatment-class-edit/treatment-class-edit.component";
-import {NzRadioButtonDirective, NzRadioComponent, NzRadioGroupComponent} from "ng-zorro-antd/radio";
+import {NzRadioComponent, NzRadioGroupComponent, NzRadioModule} from "ng-zorro-antd/radio";
 
 @Component({
   selector: 'app-treatment',
@@ -38,7 +38,7 @@ import {NzRadioButtonDirective, NzRadioComponent, NzRadioGroupComponent} from "n
     NzModalModule,
     NzOptionComponent,
     NzSelectComponent,
-    NzRadioButtonDirective,
+    NzRadioModule,
     NzRadioComponent,
     NzRadioGroupComponent
   ],

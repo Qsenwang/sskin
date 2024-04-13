@@ -92,13 +92,13 @@ appointment:hover {
   top: 0;
   border: 1px solid #ccc;
   height: 50px;
-  background-color: $color-button-blue;
+  background-color: $color-blue;
   z-index: 2;
   min-width: 30px;
 }
 
 .first-time {
-  background-color:$color-button-pink
+  background-color:$color-purple
 }
 .injection-type {
   background-color:$color-selected

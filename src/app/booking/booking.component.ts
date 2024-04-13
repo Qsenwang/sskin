@@ -51,6 +51,8 @@ export class BookingComponent implements OnInit {
   selectedDateControl = new FormControl('');
   staffTasks: Observable<staffDailyTaskDto[]> | any;
   _subscriptions: Subscription = new Subscription()
+  selectedDate : Date | any;
+
   constructor(private modalService: NzModalService, private bookingService: BookingService, private datePipe: DatePipe) {
   }
 
@@ -59,6 +61,7 @@ export class BookingComponent implements OnInit {
       this.selectedDateControl.valueChanges.subscribe((newDate) => {
         if (newDate !== null) {
           this.fetchAppointmentInfoByDate(newDate)
+          this.selectedDate = newDate;
         }
       })
     )
@@ -123,7 +126,7 @@ export class BookingComponent implements OnInit {
 
   isTimeSlotPast(cellTime: Date): boolean {
     const now = new Date();
-    return cellTime > now;
+    return cellTime < now || this.selectedDate<now;
   }
 
   addAppointment() {

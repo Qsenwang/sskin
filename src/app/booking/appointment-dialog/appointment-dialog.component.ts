@@ -1,9 +1,17 @@
 import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule, ValidationErrors,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import {
   CustomerBundleDto, CustomerDetailDto, PackageDetailDto, PaymentDto,
   StaffDto,
-  TreatmentItemDto
+  TreatmentItemDto, TreatmentItemTypeDto
 } from "@shared/sskinModel/sskinDto.model"
 import {BookingService} from "../booking.service";
 import {CommonModule, DatePipe, JsonPipe} from "@angular/common";
@@ -29,6 +37,8 @@ import {NzDescriptionsComponent, NzDescriptionsItemComponent} from "ng-zorro-ant
 import moment from "moment";
 import {NzCardComponent, NzCardModule} from "ng-zorro-antd/card";
 import {CustomerService} from "../../customer/customer.service";
+import {TreatmentItemService} from "../../treatment/treatmentItem.service";
+import {ValidatorsService} from "./validators.service";
 
 @Component({
   selector: 'app-appointment-dialog',
@@ -85,7 +95,7 @@ export class AppointmentDialogComponent implements OnInit {
   readOnlyMode = false;
   noActivePaymentBundle = false;
   selectePaymentBundle = false;
-  appointmentTypeList = ["美容","注射"]
+  appointmentTypeList: TreatmentItemTypeDto[] = []
   selectedDate: Date | null = null;
   bundleReadOnly:CustomerBundleDto | any;
   constructor(
@@ -96,6 +106,8 @@ export class AppointmentDialogComponent implements OnInit {
     private message: NzMessageService,
     private modalService: NzModalService,
     private customerService: CustomerService,
+    private itemService: TreatmentItemService,
+    private validatorsService:ValidatorsService
   ) {
     this.paymentDetailFrmGroup = this.fb.group({
       id: [null],
@@ -114,6 +126,7 @@ export class AppointmentDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadAllTypes();
     this.appointmentFrmGroup = this.buildEmptyAppointForm();
     this.appointmentFrmGroup.markAllAsTouched()
     this.getAllTreatmentItems();
@@ -146,6 +159,17 @@ export class AppointmentDialogComponent implements OnInit {
     }
   }
 
+  loadAllTypes() {
+    this.itemService.getAllItemTypes().subscribe({
+      next: (data) => {
+        // data.forEach(employee => this.itemList.push(employee))
+        this.appointmentTypeList = data;
+      },
+      error: () => {
+        this.message.error('加载分类')
+      }
+    })
+  }
   onDateChange(event: Date): void {
     if (this.selectedDate) {
       const newDateTime = new Date(this.selectedDate);
@@ -192,7 +216,7 @@ export class AppointmentDialogComponent implements OnInit {
         complete: [false, Validators.required],
         paymentBundle:[null],
         active: [true],
-      })
+      },  { validators: this.validatorsService.timeRangeValidator })
   }
 
   fetchAppointmentDetail(appointmentId: string) {
@@ -640,4 +664,7 @@ export class AppointmentDialogComponent implements OnInit {
     // });
   }
 
+  test(){
+    console.warn(this.appointmentFrmGroup)
+  }
 }
