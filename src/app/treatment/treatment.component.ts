@@ -60,17 +60,7 @@ export class TreatmentComponent implements OnInit{
 
   ngOnInit() {
     this.loadItemList();
-    this.itemService.getAllItemTypes().subscribe({
-
-      next: (data) => {
-        // data.forEach(employee => this.itemList.push(employee))
-        this.typeList = data;
-      },
-      error: () => {
-        this.message.error('加载分类')
-      }
-
-    })
+    this.loadAllTypes();
 
   }
 
@@ -86,6 +76,18 @@ export class TreatmentComponent implements OnInit{
         }
       }
     )
+  }
+
+  loadAllTypes() {
+    this.itemService.getAllItemTypes().subscribe({
+      next: (data) => {
+        // data.forEach(employee => this.itemList.push(employee))
+        this.typeList = data;
+      },
+      error: () => {
+        this.message.error('加载分类')
+      }
+    })
   }
 
   selectType(type: TreatmentItemTypeDto) {
@@ -151,12 +153,13 @@ export class TreatmentComponent implements OnInit{
   }
 
   createNewType (){
-    this.modal.create({
+    const modal = this.modal.create({
       nzTitle: '项目分类列表编辑',
       nzContent: TreatmentClassEditComponent,
       nzWidth: 600,
       nzFooter: null
   })
+    modal.afterClose.subscribe(()=>{this.loadAllTypes()})
   }
   close(): void {
     this.editEnable = false;

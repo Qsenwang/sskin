@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormsModule} from "@angular/forms";
 import {NzMessageService} from "ng-zorro-antd/message";
-import {NzModalService} from "ng-zorro-antd/modal";
+import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {TreatmentItemService} from "../treatmentItem.service";
 import {TreatmentItemTypeDto} from "@shared/sskinModel/sskinDto.model";
 import {NzListModule} from "ng-zorro-antd/list";
@@ -28,12 +28,18 @@ import {NzInputDirective} from "ng-zorro-antd/input";
   styleUrl: './treatment-class-edit.component.scss'
 })
 export class TreatmentClassEditComponent implements OnInit {
+  @Output() closeModalEvent = new EventEmitter<void>();
+
   typesList: TreatmentItemTypeDto[] = [];
 
   constructor(private fb: FormBuilder,
               private message: NzMessageService,
               private modal: NzModalService,
+              private modalRef: NzModalRef,
               private itemService: TreatmentItemService) {
+    this.modalRef.afterClose.subscribe(
+      ()=>{   this.closeModalEvent.emit(); }
+    )
   }
 
   ngOnInit() {
