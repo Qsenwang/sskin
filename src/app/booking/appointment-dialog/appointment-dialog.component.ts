@@ -603,7 +603,10 @@ export class AppointmentDialogComponent implements OnInit {
       nzOnOk: () => this.doCompleteAndBundlePay()
     });
   }
-
+  cancelBundlePay(){
+    this.useBundle(this.paymentBundleFrmGroup.get('id').value);
+    this.selectePaymentBundle = false;
+  }
   doCompleteAndBundlePay() {
     if (this.paymentBundleFrmGroup.get('id')){
       // 表单数据有效，可以提交

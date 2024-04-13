@@ -138,7 +138,6 @@
           [customMessages]="{'required': 'endTime is required'}">
         </form-field-errors>
       </nz-form-control>
-<button (click)="test()">test</button>
     </nz-form-item>
 
 
@@ -329,7 +328,6 @@
           <p>没有可用套餐，请使用付款功能</p>
           </div>
         </div>
-
         <div class="selected-bundle-board" *ngIf="selectePaymentBundle" >
           <div class="selected-bundle-board" [formGroup]="paymentBundleFrmGroup" >
             <nz-card nzTitle="选择的服务包" class="selected-bundle-card">
@@ -346,7 +344,8 @@
                   </div>
                 </div>
               </div>
-              <button nz-button nzType="primary" (click)="completeAndPayByBundle()">提交</button>
+              <button nz-button nzType="primary" (click)="completeAndPayByBundle()">确定</button>
+              <button nz-button nzType="dashed" (click)="cancelBundlePay()">取消</button>
             </nz-card>
           </div>
         </div>
@@ -434,5 +433,5 @@
       </div>
     </div>
   </div>
-
+  </div>
 </div>
