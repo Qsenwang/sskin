@@ -327,11 +327,10 @@ export class AppointmentDialogComponent implements OnInit {
 
   private updateAppointmentFrmGroup(data: any) {
     const staff = this.matchStaff(this.data.staffId)
-    const customer = this.matchCustomer(data.customerId)
     const treatmentItem = this.matchTreatmentItem(data.treatmentItemId)
     this.appointmentFrmGroup.get('appointmentId').setValue(data.appointmentId)
-    this.appointmentFrmGroup.get('customerId').setValue(customer.id)
-    this.appointmentFrmGroup.get('phone').setValue(customer.contactPhone)
+    this.appointmentFrmGroup.get('customerId').setValue(data.customerId)
+    this.appointmentFrmGroup.get('phone').setValue(data.phone)
     this.appointmentFrmGroup.get('treatmentItemId').setValue(treatmentItem.id)
     this.appointmentFrmGroup.get('date').setValue(new Date(data.startTime.replace('Z', '')))
     this.appointmentFrmGroup.get('startTime').setValue(new Date(data.startTime.replace('Z', '')))
