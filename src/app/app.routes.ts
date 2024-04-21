@@ -18,5 +18,5 @@ export const routes: Routes = [
   {path:'revenue', component:RevenueComponent},
   {path:'customer/:customerId/edit', component:CustomerEditComponent},
   {path:'customer/newCustomer', component:CustomerEditComponent},
-  {path: 'customer/**', redirectTo: '/customer'},
+  {path: '**', redirectTo: '/booking'},
 ];
