@@ -213,7 +213,7 @@ export class BookingComponent implements OnInit {
   }
 
   isInjection(appointment:AppointmentBaseDto){
-    return appointment.type == "注射";
+    return appointment.type == "注射类";
   }
 
   getCellClass(i: number): string {

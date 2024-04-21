@@ -544,11 +544,12 @@ export class AppointmentDialogComponent implements OnInit {
                   active: bundle.active,
                 };
               this.customerBundleList.push(customerBundleDto);
-              if(this.customerBundleList.length === 0) {
-                this.noActivePaymentBundle = true;
-              }
             }
           )
+
+          if(this.customerBundleList.length === 0) {
+            this.noActivePaymentBundle = true;
+          }
         },
         error: (error) => {
           console.error(error)
